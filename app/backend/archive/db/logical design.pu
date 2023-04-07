@@ -1,0 +1,98 @@
+@startuml failure-story
+
+' hide the spot
+hide circle
+
+' avoid problems with angled crows feet
+skinparam linetype ortho
+
+entity "User" as user {
+    *id : int <<primary key>>
+    --
+    *email: String
+    createdAt: DateTime
+    updatedAt: dateTime
+    *hashedPassword :String
+    answers: Answer[]
+}
+
+entity "Municipality" as manicipality {
+    *id : Int <<primary key>>
+    --
+    createdAt :DateTime                  
+    updatedAt :DateTime                  
+    name: String
+    municipalSymbolPath: String
+    prefectureId: Int <<foreign key>>
+    subsidies: Subsidy[]
+}
+
+entity "Information" as information {
+    *id: int <<primary key>>
+    --
+    *title: String
+    *body: String
+    createdAt: DateTime
+    updatedAt: DateTime
+}
+
+entity "Prefecture" as prefecture {
+    *id: Int <<primary key>>
+    --
+    createdAt: DateTime
+    updatedAt: DateTime
+    name: String
+    municipalities: Municipality[]
+}
+
+entity "Subsidy" as subsidy {
+    +id: Int <<primary key>>
+  --
+    *name: String <<unique>>
+    *deadlineForReceipt DateTime // 受給期限
+    *ageLimit           String // 年齢制限
+    *amountReceived     Int // 受給額
+    *applicationAddress String // 申請先
+    *applicationMethod String // 申請方法
+    *applicationRequirements String // 申請条件
+    description        String // 説明
+    status: String // 助成金の更新・廃止などの状態
+    *municipalityId: Int <<foreign>>
+}
+
+' 一問一答の質問
+entity "Question" as question {
+    *id: Int <<primary key>>
+    --
+    *answerType: String
+    text: String
+    *manicipalityId: Int <<foreign key>>
+}
+
+' ユーザーの答えを保存するテーブル
+entity "Answer" as answer {
+    *id: Int <<primary key>>
+    --
+    *questionId: Int <<foreign key>>
+    user: User
+    createdAt: DateTime
+}
+
+entity "Question_Manicipality" as questionOnManicipality {
+    *id: Int <<primary key>> 
+    --
+    *questionId: Int <<foreign key>>
+    *manicipalityId: Int <<foreign key>>
+    createdAt: DateTime
+}
+
+manicipality }o--|| prefecture
+question ||--o{ answer
+question ||--|{ questionOnManicipality
+manicipality ||--|{ questionOnManicipality
+subsidy }o--|| manicipality
+user ||--o{ answer
+
+
+
+@enduml
