@@ -11,7 +11,7 @@ entity "User" as user {
     --
     *email: String
     createdAt: DateTime
-    updatedAt: dateTime
+    updatedAt: DateTime
     *hashedPassword :String
     answers: Answer[]
 }
@@ -21,10 +21,10 @@ entity "Municipality" as manicipality {
     --
     createdAt :DateTime                  
     updatedAt :DateTime                  
-    name: String
-    municipalSymbolPath: String
-    prefectureId: Int <<foreign key>>
-    subsidies: Subsidy[]
+    *name: String
+    *municipalSymbolPath: String
+    *prefectureId: Int <<foreign key>>
+    *subsidies: Subsidy[]
 }
 
 entity "Information" as information {
@@ -41,8 +41,8 @@ entity "Prefecture" as prefecture {
     --
     createdAt: DateTime
     updatedAt: DateTime
-    name: String
-    municipalities: Municipality[]
+    *name: String
+    *municipalities: Municipality[]
 }
 
 entity "Subsidy" as subsidy {
@@ -58,6 +58,8 @@ entity "Subsidy" as subsidy {
     description        String // 説明
     status: String // 助成金の更新・廃止などの状態
     *municipalityId: Int <<foreign>>
+    createdAt: DateTime
+    updatedAt: DateTime
 }
 
 ' 一問一答の質問
@@ -67,6 +69,8 @@ entity "Question" as question {
     *answerType: String
     text: String
     *manicipalityId: Int <<foreign key>>
+    createdAt: DateTime
+    updatedAt: DateTime
 }
 
 ' ユーザーの答えを保存するテーブル
@@ -75,6 +79,7 @@ entity "Answer" as answer {
     --
     *questionId: Int <<foreign key>>
     user: User
+    *userId: Int <<foreign key>>
     createdAt: DateTime
 }
 

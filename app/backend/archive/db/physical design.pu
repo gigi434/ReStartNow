@@ -1,0 +1,109 @@
+@startuml failure-story
+
+' hide the spot
+hide circle
+
+' avoid problems with angled crows feet
+skinparam linetype ortho
+
+entity "User" as user {
+    *id : int @id @default(autoincrement())
+    --
+    *email: String
+    createdAt: DateTime @default(now())
+    updatedAt: DateTime @updatedAt
+    *hashedPassword :String
+    answers: Answer[]
+}
+
+entity "Municipality" as manicipality {
+    *id : Int @id @default(autoincrement())
+    --
+    createdAt: DateTime @default(now())                  
+    updatedAt: DateTime @updatedAt                  
+    *name: String
+    *municipalSymbolPath: String
+    *prefectureId: Int
+    prefecture: Prefecture @relation(fields: [prefectureId], references: [id])
+    *subsidies: Subsidy[]
+}
+
+entity "Information" as information {
+    *id: int @id @default(autoincrement())
+    --
+    *title: String
+    *body: String
+    createdAt: DateTime @default(now())
+    updatedAt: DateTime @updatedAt
+}
+
+entity "Prefecture" as prefecture {
+    *id: Int @id @default(autoincrement())
+    --
+    createdAt: DateTime @default(now())
+    updatedAt: DateTime @updatedAt
+    *name: String
+    *municipalities: Municipality[]
+}
+
+entity "Subsidy" as subsidy {
+    +id: Int @id @default(autoincrement())
+  --
+    *name: String <<unique>>
+    *deadlineForReceipt DateTime // 受給期限
+    *ageLimit String // 年齢制限
+    *amountReceived Int // 受給額
+    *applicationAddress String // 申請先
+    *applicationMethod String // 申請方法
+    *applicationRequirements String // 申請条件
+    description String // 説明
+    status: String // 助成金の更新・廃止などの状態
+    *municipalityId: Int
+    Municipality: Manicipality @relation(fields: [manicipalityId], references: [id])
+    createdAt: DateTime @default(now())
+    updatedAt: DateTime @updatedAt
+}
+
+' 一問一答の質問
+entity "Question" as question {
+    *id: Int @id @default(autoincrement())
+    --
+    *answerType: String
+    *text: String
+    *manicipalityId: Int
+    manicipality: Manicipality @relation(fields: [manicipalityId], references: [id])
+    createdAt: DateTime @default(now())
+    updatedAt: DateTime @updatedAt
+}
+
+' ユーザーの答えを保存するテーブル
+entity "Answer" as answer {
+    *id: Int @id @default(autoincrement())
+    --
+    *questionId: Int
+    question: Question @relation(fields: [questionId], references: [id])
+    user: User @relation(fields: [userId], references: [id])
+    *userId: Int 
+    createdAt: DateTime @default(now())
+}
+
+entity "Question_Manicipality" as questionOnManicipality {
+    *id: Int @id @default(autoincrement())
+    --
+    question: Question @relation(fields: [questionId], references: [id])
+    *questionId: Int
+    manicipality: Manicipality @relation(fields: [manicipalityId], references: [id])
+    *manicipalityId: Int
+    createdAt: DateTime @default(now())
+}
+
+manicipality }o--|| prefecture
+question ||--o{ answer
+question ||--|{ questionOnManicipality
+manicipality ||--|{ questionOnManicipality
+subsidy }o--|| manicipality
+user ||--o{ answer
+
+
+
+@enduml

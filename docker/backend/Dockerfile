@@ -17,7 +17,7 @@ RUN apt-get update \
     && npm i -g prisma \
     && apt-get install -y procps
 
-# 共有ディレクトリの権限をnodeで777に設定する
+# ディレクトリの保有者をnodeに変更する
 RUN chown -R node:node ${HOME}
 
 # ユーザーをrootからnodeへ変更する
