@@ -10,11 +10,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-generator erd {
-  provider = "prisma-erd-generator"
-  output   = "./ERD.md"
-}
-
 // お知らせ
 model Information {
   id        Int      @id @default(autoincrement())
@@ -26,25 +21,25 @@ model Information {
 
 // ユーザー
 model User {
-  id                       Int                       @id @default(autoincrement())
-  email                    String                    @unique
-  createdAt                DateTime                  @default(now())
-  updatedAt                DateTime                  @updatedAt
-  hashedPassword           String
-  questionAndAnswerResults QuestionAndAnswerResult[]
+  id             Int      @id @default(autoincrement())
+  email          String   @unique
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  hashedPassword String
+  answers        Answer[]
 }
 
 // 市町区村
 model Municipality {
-  id                       Int                       @id @default(autoincrement())
-  createdAt                DateTime                  @default(now())
-  updatedAt                DateTime                  @updatedAt
-  name                     String                    @unique
-  municipalSymbol          String                    @unique
-  questionAndAnswerResults QuestionAndAnswerResult[]
-  prefectureId             Int
-  prefecture               Prefecture                @relation(fields: [prefectureId], references: [id])
-  subsidies                Subsidy[]
+  id                  Int        @id @default(autoincrement())
+  createdAt           DateTime   @default(now())
+  updatedAt           DateTime   @updatedAt
+  name                String     @unique
+  municipalSymbolPath String
+  prefectureId        Int
+  prefecture          Prefecture @relation(fields: [prefectureId], references: [id])
+  subsidies           Subsidy[]
+  Question            Question[]
 }
 
 // 都道府県
@@ -58,52 +53,41 @@ model Prefecture {
 
 // 助成金
 model Subsidy {
-  id                 Int          @id @default(autoincrement())
-  name               String       @unique
-  deadlineForReceipt DateTime // 受給期限
-  ageLimit           String // 年齢制限
-  amountReceived     Int // 受給額
-  addressApplication String // 申請先
-  description        String // 説明
-  municipality       Municipality @relation(fields: [municipalityId], references: [id])
-  municipalityId     Int
+  id                      Int      @id @default(autoincrement())
+  name                    String   @unique
+  deadlineForReceipt      DateTime // 受給期限
+  ageLimit                String // 年齢制限
+  amountReceived          Int // 受給額
+  applicationAddress      String // 申請先
+  applicationMethod       String // 申請方法
+  applicationRequirements String // 申請条件
+  description             String // 説明
+  status                  String // 助成金の更新・廃止などの状態
+  municipalityId          Int
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+
+  municipality Municipality @relation(fields: [municipalityId], references: [id])
 }
 
-// 一問一答の条件
-model QuestionAndAnswerRequirements {
-  id                                   Int     @id @default(autoincrement())
-  addressForApplication                String
-  // 離職等により経済的に困窮し、家賃の支払いが困難で、住居を喪失した、または住居喪失のおそれがある
-  encryptedIsEconomicallyDistressed    Boolean
-  encryptedIsHomeless                  Boolean
-  // 下記条件のどちらかに当てはまる
-  //  イ）申請日において、離職・自営業の廃業の日から2年以内である。
-  //  ロ）給与等を得る機会が本人の責に帰すべき理由、本人の都合によらないで減少し、離職や廃業と同程度の状況にある。
-  encryptedHasRecentlyLostJobOrIncome  Boolean
-  // 下記条件のどちらかに当てはまる
-  //  イ）離職等の日において、その属する世帯の生計を主として維持していた。
-  //  ロ）申請日の属する月において、その属する世帯の生計を主として維持している。
-  encryptedIsMainEarnerOfHousehold     Boolean
-  // 誠実かつ熱心に求職活動を行うこと
-  encryptedIsActivelySeekingEmployment Boolean
-  // 申請を行う月に、申請者および申請者と同一の世帯に属する方の収入額（※）の合計が、次の表の「基準額」と実家賃の合計額を超えていないこと。
-  encryptedHasRegisteredWithHelloWork  Boolean
-  encryptedHouseholdIncome             Int
-  encryptedRent                        Int
-  // 申請日において、申請者及び申請者と同一の世帯に属する方の所有する金融資産（現金、預貯金）の合計額が次の表の金額以下であること。
-  encryptedHouseholdSize               Int
-  encryptedFinancialAssets             Int
-  encryptedIsFinancialAssetsBelowLimit Boolean
-  // 国の雇用施策による貸付（職業訓練受講給付金）または地方公共団体が実施する類似の雇用対策給付等を、申請者及び申請者と同一の世帯に属する方が受けていないこ
-  encryptedIsEligible                  Boolean
-}
-
-// 一問一答結果
-model QuestionAndAnswerResult {
+// 一問一答の質問
+model Question {
   id             Int          @id @default(autoincrement())
+  answerType     String
+  text           String
+  manicipalityId Int
+  manicipality   Municipality @relation(fields: [manicipalityId], references: [id])
   createdAt      DateTime     @default(now())
-  authorId       Int?         @unique
-  author         User?        @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  municipalityId Int          @unique
-  municipality   Municipality @relation(fields: [municipalityId], references: [id])
+  updatedAt      DateTime     @updatedAt
+  Answer         Answer[]
+}
+
+// ユーザーの答えを保存するテーブル
+model Answer {
+  id         Int      @id @default(autoincrement())
+  questionId Int
+  question   Question @relation(fields: [questionId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int
+  createdAt  DateTime @default(now())
 }
