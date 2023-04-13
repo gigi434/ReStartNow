@@ -5,7 +5,7 @@ import { AuthDto } from './dto/auth.dto';
 import * as bcrypt from 'bcrypt';
 import { Prisma } from '@prisma/client';
 import { Msg } from './interfaces/auth.interfaces';
-import { RedisService } from '@liaoliaots/nestjs-redis';
+import { RedisService } from 'src/redis/redis.service';
 import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
@@ -13,9 +13,10 @@ export class AuthService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly config: ConfigService,
-    private readonly redis: RedisService,
+    private readonly redisService: RedisService,
   ) {}
-  /* ユーザー作成 */
+
+  /* ユーザーの作成 */
   async signUp(dto: AuthDto): Promise<Msg> {
     // パスワードからハッシュ値を計算する
     const hashed = await bcrypt.hash(dto.password, 12);
@@ -48,12 +49,23 @@ export class AuthService {
     const isValid = await bcrypt.compare(dto.password, user.hashedPassword);
     if (!isValid) throw new ForbiddenException('Email or password incorrect');
 
-    // セッションIDを作成してログイン済みのユーザー情報をRedisに保存する
+    return user;
+  }
+
+  // セッションIDを作成してログイン済みのユーザー情報をRedisに保存する
+  async createSessionID(userId: number) {
     const sessionId = uuidv4();
-    const client = this.redis.getClient();
-    await client.set(sessionId, JSON.stringify(user));
-    await client.expire(sessionId, 3600); // セッションの有効期限を1時間に設定
+    const expiresIn = 3600; // セッションの有効期限を1時間に設定
+    await this.redisService.setValue(
+      sessionId,
+      JSON.stringify(userId),
+      expiresIn,
+    );
 
     return sessionId;
+  }
+
+  async deleteSessionID(sessionId: string) {
+    return await this.redisService.delete(sessionId);
   }
 }

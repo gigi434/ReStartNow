@@ -4,12 +4,15 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  Req,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { AuthDto } from './dto/auth.dto';
 import { Msg } from './interfaces/auth.interfaces';
 import { AuthService } from './auth.service';
-import { Response } from 'express';
+import { Request, Response } from 'express';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')
 export class AuthController {
@@ -29,7 +32,9 @@ export class AuthController {
     // JSONでのシリアライズと@Resデコレーターを両立するためにpassthroughをtrueにする
     @Res({ passthrough: true }) res: Response,
   ): Promise<Msg> {
-    const sessionId = await this.authService.login(dto);
+    const user = await this.authService.login(dto);
+    const sessionId = await this.authService.createSessionID(user.id);
+
     res.cookie('session-id', sessionId, {
       httpOnly: true,
       secure: false,
@@ -42,9 +47,15 @@ export class AuthController {
     };
   }
 
+  @UseGuards(AuthGuard('cookie'))
   @HttpCode(HttpStatus.OK)
   @Post('logout')
-  async logout(@Res({ passthrough: true }) res: Response): Promise<Msg> {
+  async logout(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<Msg> {
+    await this.authService.deleteSessionID(req.cookies['session-id']);
+
     res.cookie('session-id', '', {
       httpOnly: true,
       secure: false,
