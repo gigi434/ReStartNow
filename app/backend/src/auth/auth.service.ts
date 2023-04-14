@@ -5,16 +5,20 @@ import { AuthDto } from './dto/auth.dto';
 import * as bcrypt from 'bcrypt';
 import { Prisma } from '@prisma/client';
 import { Msg } from './interfaces/auth.interfaces';
-import { RedisService } from 'src/redis/redis.service';
+import { RedisService } from '@liaoliaots/nestjs-redis';
 import { v4 as uuidv4 } from 'uuid';
+import Redis from 'ioredis';
 
 @Injectable()
 export class AuthService {
+  private readonly redis: Redis;
   constructor(
     private readonly prisma: PrismaService,
     private readonly config: ConfigService,
     private readonly redisService: RedisService,
-  ) {}
+  ) {
+    this.redis = this.redisService.getClient();
+  }
 
   /* ユーザーの作成 */
   async signUp(dto: AuthDto): Promise<Msg> {
@@ -56,16 +60,13 @@ export class AuthService {
   async createSessionID(userId: number) {
     const sessionId = uuidv4();
     const expiresIn = 3600; // セッションの有効期限を1時間に設定
-    await this.redisService.setValue(
-      sessionId,
-      JSON.stringify(userId),
-      expiresIn,
-    );
+    await this.redis.set(sessionId, JSON.stringify(userId));
+    await this.redis.expire(sessionId, expiresIn);
 
     return sessionId;
   }
 
   async deleteSessionID(sessionId: string) {
-    return await this.redisService.delete(sessionId);
+    return await this.redis.del(sessionId);
   }
 }

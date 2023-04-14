@@ -12,8 +12,8 @@ import { AuthModule } from './auth/auth.module';
 import { ResultModule } from './result/result.module';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { ConfigModule } from '@nestjs/config';
-import { RedisService } from './redis/redis.service';
 import { AuthService } from './auth/auth.service';
+import { RedisConfigService } from 'src/redis/redis.service';
 
 @Module({
   imports: [
@@ -26,7 +26,7 @@ import { AuthService } from './auth/auth.service';
     AuthModule,
     ResultModule,
     RedisModule.forRootAsync({
-      useClass: RedisService,
+      useClass: RedisConfigService,
     }),
   ],
   controllers: [

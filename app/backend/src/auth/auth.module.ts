@@ -5,10 +5,9 @@ import { AuthController } from './auth.controller';
 import { LocalStrategy } from './strategy/local.strategy';
 import { CookieStrategy } from './strategy/cookie.strategy';
 import { PassportModule } from '@nestjs/passport';
-import { RedisModule } from '@liaoliaots/nestjs-redis';
 
 @Module({
-  imports: [PrismaModule, PassportModule, RedisModule],
+  imports: [PrismaModule, PassportModule],
   controllers: [AuthController],
   providers: [AuthService, LocalStrategy, CookieStrategy],
 })
