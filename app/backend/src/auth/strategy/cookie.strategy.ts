@@ -7,13 +7,13 @@ import Redis from 'ioredis';
 
 @Injectable()
 export class CookieStrategy extends PassportStrategy(Strategy, 'cookie') {
-  private readonly redis: Redis;
+  private readonly redisService: Redis;
   constructor(
-    private readonly redisService: RedisService,
+    private readonly nestRedisService: RedisService,
     private readonly prismaService: PrismaService,
   ) {
     super({ cookieName: 'session-id', signed: false });
-    this.redis = this.redisService.getClient();
+    this.redisService = this.nestRedisService.getClient();
   }
 
   async validate(token: string) {
@@ -22,7 +22,7 @@ export class CookieStrategy extends PassportStrategy(Strategy, 'cookie') {
     }
 
     // RedisからセッションIDを取得
-    const userId = parseInt(await this.redis.get(token));
+    const userId = parseInt(await this.redisService.get(token));
 
     // セッションデータに含まれるuserIdを使用して、Prismaを介してユーザーを取得
     const user = await this.prismaService.user.findUnique({
@@ -32,7 +32,5 @@ export class CookieStrategy extends PassportStrategy(Strategy, 'cookie') {
     if (userId === user.id) {
       return user;
     }
-
-    return false;
   }
 }

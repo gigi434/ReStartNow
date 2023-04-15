@@ -11,13 +11,13 @@ import Redis from 'ioredis';
 
 @Injectable()
 export class AuthService {
-  private readonly redis: Redis;
+  private readonly redisService: Redis;
   constructor(
-    private readonly prisma: PrismaService,
-    private readonly config: ConfigService,
-    private readonly redisService: RedisService,
+    private readonly prismaService: PrismaService,
+    private readonly configService: ConfigService,
+    private readonly nestRedisService: RedisService,
   ) {
-    this.redis = this.redisService.getClient();
+    this.redisService = this.nestRedisService.getClient();
   }
 
   /* ユーザーの作成 */
@@ -25,7 +25,7 @@ export class AuthService {
     // パスワードからハッシュ値を計算する
     const hashed = await bcrypt.hash(dto.password, 12);
     try {
-      await this.prisma.user.create({
+      await this.prismaService.user.create({
         data: {
           email: dto.email,
           hashedPassword: hashed,
@@ -42,9 +42,10 @@ export class AuthService {
       }
     }
   }
+
   /* ユーザーのログイン */
   async login(dto: AuthDto) {
-    const user = await this.prisma.user.findUnique({
+    const user = await this.prismaService.user.findUnique({
       where: {
         email: dto.email,
       },
@@ -60,13 +61,13 @@ export class AuthService {
   async createSessionID(userId: number) {
     const sessionId = uuidv4();
     const expiresIn = 3600; // セッションの有効期限を1時間に設定
-    await this.redis.set(sessionId, JSON.stringify(userId));
-    await this.redis.expire(sessionId, expiresIn);
+    await this.redisService.set(sessionId, JSON.stringify(userId));
+    await this.redisService.expire(sessionId, expiresIn);
 
     return sessionId;
   }
 
   async deleteSessionID(sessionId: string) {
-    return await this.redis.del(sessionId);
+    return await this.redisService.del(sessionId);
   }
 }
