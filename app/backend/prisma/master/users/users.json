@@ -1,0 +1,14 @@
+{
+  "result": [
+    {
+      "email": "alice@prisma.io",
+      "hashedPassword": "$2b$12$5GkMTPy0QkC1eZaSFk3ZleXdfp6kQUv8HLoFuIab1M.zeuEiRqr1S",
+      "role": "Admin"
+    },
+    {
+      "email": "bob@prisma.io",
+      "hashedPassword": "$2b$12$w2x9znsG.c8ltw6CNfyDdORVXCW/VVgCJaNJ2LXkTPPIOIq8gplPe",
+      "role": "User"
+    }
+  ]
+}

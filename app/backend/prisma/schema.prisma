@@ -10,6 +10,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  User
+  Admin
+}
+
 // お知らせ
 model Information {
   id        Int      @id @default(autoincrement())
@@ -27,6 +32,7 @@ model User {
   updatedAt      DateTime @updatedAt
   hashedPassword String
   answers        Answer[]
+  role           Role     @default(User)
 }
 
 // 市町区村
@@ -36,6 +42,7 @@ model Municipality {
   updatedAt           DateTime   @updatedAt
   name                String     @unique
   municipalSymbolPath String
+  isSupported         Boolean    @default(false)
   prefectureId        Int
   prefecture          Prefecture @relation(fields: [prefectureId], references: [id])
   subsidies           Subsidy[]

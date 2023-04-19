@@ -13,6 +13,7 @@ entity "User" as user {
     createdAt: DateTime @default(now())
     updatedAt: DateTime @updatedAt
     *hashedPassword :String
+    role: Enum
     answers: Answer[]
 }
 
@@ -23,6 +24,7 @@ entity "Municipality" as manicipality {
     updatedAt: DateTime @updatedAt                  
     *name: String
     *municipalSymbolPath: String
+    *isSupported: Boolean
     *prefectureId: Int
     prefecture: Prefecture @relation(fields: [prefectureId], references: [id])
     *subsidies: Subsidy[]

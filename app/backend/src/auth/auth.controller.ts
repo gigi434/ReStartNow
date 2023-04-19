@@ -13,7 +13,6 @@ import { Msg } from './interfaces/auth.interfaces';
 import { AuthService } from './auth.service';
 import { Request, Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
-
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}

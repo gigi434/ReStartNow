@@ -36,7 +36,7 @@ export class AuthService {
       };
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        if (error.code === 'P2020') {
+        if (error.code === 'P2002') {
           throw new ForbiddenException('This email is already taken');
         }
       }

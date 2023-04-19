@@ -14,6 +14,8 @@ import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { ConfigModule } from '@nestjs/config';
 import { AuthService } from './auth/auth.service';
 import { RedisConfigService } from 'src/redis/redis.service';
+import { RegionService } from './region/region.service';
+import { RegionModule } from './region/region.module';
 
 @Module({
   imports: [
@@ -28,6 +30,7 @@ import { RedisConfigService } from 'src/redis/redis.service';
     RedisModule.forRootAsync({
       useClass: RedisConfigService,
     }),
+    RegionModule,
   ],
   controllers: [
     AppController,
@@ -35,6 +38,6 @@ import { RedisConfigService } from 'src/redis/redis.service';
     ResultController,
     AuthController,
   ],
-  providers: [AppService, AuthService],
+  providers: [AppService, AuthService, RegionService],
 })
 export class AppModule {}
