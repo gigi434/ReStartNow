@@ -13,6 +13,7 @@ entity "User" as user {
     createdAt: DateTime
     updatedAt: DateTime
     *hashedPassword :String
+    role: Enum
     answers: Answer[]
 }
 
@@ -23,6 +24,7 @@ entity "Municipality" as manicipality {
     updatedAt :DateTime                  
     *name: String
     *municipalSymbolPath: String
+    *isSupported: Boolean
     *prefectureId: Int <<foreign key>>
     *subsidies: Subsidy[]
 }
@@ -60,6 +62,7 @@ entity "Subsidy" as subsidy {
     *municipalityId: Int <<foreign>>
     createdAt: DateTime
     updatedAt: DateTime
+    question: Question[]
 }
 
 ' 一問一答の質問
@@ -68,7 +71,7 @@ entity "Question" as question {
     --
     *answerType: String
     text: String
-    *manicipalityId: Int <<foreign key>>
+    *subsidyId: Int <<foreign key>>
     createdAt: DateTime
     updatedAt: DateTime
 }
@@ -83,18 +86,9 @@ entity "Answer" as answer {
     createdAt: DateTime
 }
 
-entity "Question_Manicipality" as questionOnManicipality {
-    *id: Int <<primary key>> 
-    --
-    *questionId: Int <<foreign key>>
-    *manicipalityId: Int <<foreign key>>
-    createdAt: DateTime
-}
-
 manicipality }o--|| prefecture
 question ||--o{ answer
-question ||--|{ questionOnManicipality
-manicipality ||--|{ questionOnManicipality
+question }o--|| subsidy
 subsidy }o--|| manicipality
 user ||--o{ answer
 

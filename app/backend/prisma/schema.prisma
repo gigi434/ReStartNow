@@ -15,6 +15,11 @@ enum Role {
   Admin
 }
 
+enum subsidyStatus {
+  Abolition
+  Continuation
+}
+
 // お知らせ
 model Information {
   id        Int      @id @default(autoincrement())
@@ -46,7 +51,6 @@ model Municipality {
   prefectureId        Int
   prefecture          Prefecture @relation(fields: [prefectureId], references: [id])
   subsidies           Subsidy[]
-  Question            Question[]
 }
 
 // 都道府県
@@ -62,28 +66,28 @@ model Prefecture {
 model Subsidy {
   id                      Int      @id @default(autoincrement())
   name                    String   @unique
-  deadlineForReceipt      DateTime // 受給期限
+  deadlineForReceipt      Int // 受給期限
   ageLimit                String // 年齢制限
-  amountReceived          Int // 受給額
+  amountReceived          Int[] // 受給額
   applicationAddress      String // 申請先
   applicationMethod       String // 申請方法
   applicationRequirements String // 申請条件
   description             String // 説明
-  status                  String // 助成金の更新・廃止などの状態
+  status                  subsidyStatus @default(Continuation) // 助成金の更新・廃止などの状態
   municipalityId          Int
   createdAt               DateTime @default(now())
   updatedAt               DateTime @updatedAt
-
-  municipality Municipality @relation(fields: [municipalityId], references: [id])
+  questions               Question[]
+  municipality            Municipality @relation(fields: [municipalityId], references: [id])
 }
 
 // 一問一答の質問
 model Question {
   id             Int          @id @default(autoincrement())
-  answerType     String
-  text           String
-  manicipalityId Int
-  manicipality   Municipality @relation(fields: [manicipalityId], references: [id])
+  answerType     String // YesとNoで答えられる質問か、数値など具体的な回答を要する質問なのか
+  text           String // 質問文
+  subsidyId      Int
+  subsidy        Subsidy @relation(fields: [subsidyId], references: [id])
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
   Answer         Answer[]

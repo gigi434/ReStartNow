@@ -64,6 +64,7 @@ entity "Subsidy" as subsidy {
     Municipality: Manicipality @relation(fields: [manicipalityId], references: [id])
     createdAt: DateTime @default(now())
     updatedAt: DateTime @updatedAt
+    question: Question[]
 }
 
 ' 一問一答の質問
@@ -72,8 +73,8 @@ entity "Question" as question {
     --
     *answerType: String
     *text: String
-    *manicipalityId: Int
-    manicipality: Manicipality @relation(fields: [manicipalityId], references: [id])
+    *subsidyId: Int
+    subsidy: Subsidy @relation(fields: [SubsidyId], references: [id])
     createdAt: DateTime @default(now())
     updatedAt: DateTime @updatedAt
 }
@@ -89,20 +90,9 @@ entity "Answer" as answer {
     createdAt: DateTime @default(now())
 }
 
-entity "Question_Manicipality" as questionOnManicipality {
-    *id: Int @id @default(autoincrement())
-    --
-    question: Question @relation(fields: [questionId], references: [id])
-    *questionId: Int
-    manicipality: Manicipality @relation(fields: [manicipalityId], references: [id])
-    *manicipalityId: Int
-    createdAt: DateTime @default(now())
-}
-
 manicipality }o--|| prefecture
 question ||--o{ answer
-question ||--|{ questionOnManicipality
-manicipality ||--|{ questionOnManicipality
+question }o--|| subsidy
 subsidy }o--|| manicipality
 user ||--o{ answer
 

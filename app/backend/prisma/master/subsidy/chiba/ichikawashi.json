@@ -1,0 +1,26 @@
+[
+  {
+    "name": "住居確保給付金",
+    "deadlineForReceipt": 730,
+    "ageLimit": "特になし",
+    "amountReceived": [46000, 55000, 59800, 59800, 59800, 59800, 64000, 71800],
+    "applicationAddress": "最寄りの自立相談支援機関",
+    "applicationMethod": "書類による手渡し",
+    "applicationRequirements": "特になし",
+    "description": "失業やコロナ禍等を原因とする収入の減少により、住居を喪失するおそれのある方を対象に、就労支援を実施し、住宅及び就労機会の確保に向けた支援を行うとともに、賃貸住宅の家賃を支給するものです。",
+    "status": "Continuation",
+    "municipalityId": 9
+  },
+  {
+    "name": "新型コロナウイルス感染症対応休業支援金・給付金",
+    "deadlineForReceipt": 0,
+    "ageLimit": "特になし",
+    "amountReceived": [11000],
+    "applicationAddress": "厚生労働省（オンラインまたは郵送）",
+    "applicationMethod": "厚生労働省（オンラインまたは郵送）",
+    "applicationRequirements": "",
+    "description": "失業やコロナ禍等を原因とする収入の減少により、住居を喪失するおそれのある方を対象に、就労支援を実施し、住宅及び就労機会の確保に向けた支援を行うとともに、賃貸住宅の家賃を支給するものです。",
+    "status": "Abolition",
+    "municipalityId": 9
+  }
+]

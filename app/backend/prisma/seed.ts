@@ -1,31 +1,41 @@
-import { PrismaClient, User } from '@prisma/client';
+import { PrismaClient, User, Subsidy } from '@prisma/client';
 import * as fs from 'fs';
 import * as path from 'path';
 
 const prisma = new PrismaClient();
 
-const doUserSeed = async () => {
-  interface JsonData {
-    result: User[];
-  }
+function getUsersFromJsonDirectory<T>(directoryPath: string): T[] {
+  const objects: T[] = [];
 
-  const users = await (function getUsersFromJsonDirectory(
-    directoryPath: string,
-  ): User[] {
-    const objects: User[] = [];
+  fs.readdirSync(directoryPath).forEach((filename) => {
+    const filePath = path.join(directoryPath, filename);
+    const stat = fs.statSync(filePath);
 
-    fs.readdirSync(directoryPath).forEach((filename) => {
-      const filePath = path.join(directoryPath, filename);
-      const stat = fs.statSync(filePath);
+    if (stat.isFile() && path.extname(filename) === '.json') {
+      const data: T[] = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+      objects.push(...data);
+    }
+  });
 
-      if (stat.isFile() && path.extname(filename) === '.json') {
-        const data: JsonData = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-        objects.push(...data.result);
-      }
+  return objects as T[];
+}
+
+const doSubsidySeed = async () => {
+  const subsidies = await getUsersFromJsonDirectory<Subsidy>(
+    'prisma/master/subsidy/chiba',
+  );
+
+  for (const subsidy of subsidies) {
+    await prisma.subsidy.create({
+      data: {
+        ...subsidy,
+      },
     });
+  }
+};
 
-    return objects;
-  })('prisma/master/users');
+const doUserSeed = async () => {
+  const users = await getUsersFromJsonDirectory<User>('prisma/master/users');
 
   for (const user of users) {
     await prisma.user.create({
@@ -37,33 +47,13 @@ const doUserSeed = async () => {
 };
 
 const doPrefectureSeed = async () => {
-  interface ResultObject {
+  interface PrefectureInJsonData {
     prefCode: number;
     prefName: string;
   }
-
-  interface JsonData {
-    message: null;
-    result: ResultObject[];
-  }
-
-  const prefectures = await (function getObjectsFromJsonDirectory(
-    directoryPath: string,
-  ): ResultObject[] {
-    const objects: ResultObject[] = [];
-
-    fs.readdirSync(directoryPath).forEach((filename) => {
-      const filePath = path.join(directoryPath, filename);
-      const stat = fs.statSync(filePath);
-
-      if (stat.isFile() && path.extname(filename) === '.json') {
-        const data: JsonData = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-        objects.push(...data.result);
-      }
-    });
-
-    return objects;
-  })('prisma/master/prefectures');
+  const prefectures = await getUsersFromJsonDirectory<PrefectureInJsonData>(
+    'prisma/master/prefectures',
+  );
 
   for (const prefecture of prefectures) {
     await prisma.prefecture.create({
@@ -75,37 +65,19 @@ const doPrefectureSeed = async () => {
 };
 
 const doManicipalitySeed = async () => {
-  interface ResultObject {
+  interface MunicipalityInJsonData {
     prefCode: number;
     cityCode: string;
     cityName: string;
     bigCityFlag: string;
   }
 
-  interface JsonData {
-    message: null;
-    result: ResultObject[];
-  }
+  const municipalities =
+    await getUsersFromJsonDirectory<MunicipalityInJsonData>(
+      'prisma/master/municipalities',
+    );
 
-  const manicipalities = await (function getObjectsFromJsonDirectory(
-    directoryPath: string,
-  ): ResultObject[] {
-    const objects: ResultObject[] = [];
-
-    fs.readdirSync(directoryPath).forEach((filename) => {
-      const filePath = path.join(directoryPath, filename);
-      const stat = fs.statSync(filePath);
-
-      if (stat.isFile() && path.extname(filename) === '.json') {
-        const data: JsonData = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-        objects.push(...data.result);
-      }
-    });
-
-    return objects;
-  })('prisma/master/cities');
-
-  for (const municipality of manicipalities) {
+  for (const municipality of municipalities) {
     await prisma.municipality.create({
       data: {
         name: municipality.cityName,
@@ -122,6 +94,7 @@ const main = async () => {
   await doUserSeed();
   await doPrefectureSeed();
   await doManicipalitySeed();
+  await doSubsidySeed();
 
   console.log(`Seeding finished.`);
 };

@@ -5,5 +5,6 @@ import { PrismaModule } from 'src/prisma/prisma.module';
 @Module({
   providers: [QuestionService],
   imports: [PrismaModule],
+  exports: [QuestionService],
 })
 export class QuestionModule {}
