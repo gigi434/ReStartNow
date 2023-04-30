@@ -20,6 +20,13 @@ enum subsidyStatus {
   Continuation
 }
 
+
+enum CustomFieldType {
+  Number
+  Date
+  String
+}
+
 // お知らせ
 model Information {
   id        Int      @id @default(autoincrement())
@@ -51,6 +58,8 @@ model Municipality {
   prefectureId        Int
   prefecture          Prefecture @relation(fields: [prefectureId], references: [id])
   subsidies           Subsidy[]
+  housingSubsidyCondition HousingSubsidyCondition?
+  childbirthSubsidyCondition ChildbirthSubsidyCondition?
 }
 
 // 都道府県
@@ -64,8 +73,8 @@ model Prefecture {
 
 // 助成金
 model Subsidy {
-  id                      Int      @id @default(autoincrement())
-  name                    String   @unique
+  id                      Int           @id @default(autoincrement())
+  name                    String        @unique
   deadlineForReceipt      Int // 受給期限
   ageLimit                String // 年齢制限
   amountReceived          Int[] // 受給額
@@ -75,22 +84,24 @@ model Subsidy {
   description             String // 説明
   status                  subsidyStatus @default(Continuation) // 助成金の更新・廃止などの状態
   municipalityId          Int
-  createdAt               DateTime @default(now())
-  updatedAt               DateTime @updatedAt
+  createdAt               DateTime      @default(now())
+  updatedAt               DateTime      @updatedAt
   questions               Question[]
-  municipality            Municipality @relation(fields: [municipalityId], references: [id])
+  municipality            Municipality  @relation(fields: [municipalityId], references: [id])
+  housingSubsidyCondition HousingSubsidyCondition?
+  childbirthSubsidyCondition ChildbirthSubsidyCondition?
 }
 
 // 一問一答の質問
 model Question {
-  id             Int          @id @default(autoincrement())
-  answerType     String // YesとNoで答えられる質問か、数値など具体的な回答を要する質問なのか
-  text           String // 質問文
-  subsidyId      Int
-  subsidy        Subsidy @relation(fields: [subsidyId], references: [id])
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
-  Answer         Answer[]
+  id         Int      @id @default(autoincrement())
+  answerType String // YesとNoで答えられる質問か、数値など具体的な回答を要する質問なのか
+  text       String // 質問文
+  subsidyId  Int
+  subsidy    Subsidy  @relation(fields: [subsidyId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  Answer     Answer[]
 }
 
 // ユーザーの答えを保存するテーブル
@@ -101,4 +112,29 @@ model Answer {
   user       User     @relation(fields: [userId], references: [id])
   userId     Int
   createdAt  DateTime @default(now())
+}
+
+model HousingSubsidyCondition {
+  municipalityId          Int @unique
+  municipality            Municipality @relation(fields: [municipalityId], references: [id])
+  subsidyId               Int @unique
+  subsidy                 Subsidy @relation(fields: [subsidyId], references: [id])
+  incomeThresholds        Int[] // 収入額
+  financialAssetThresholds       Int[] // 金融資産の閾値
+  maximumBenefitPayments  Int[] // 最大受給金額
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+  @@id([municipalityId, subsidyId])
+}
+
+model ChildbirthSubsidyCondition {
+  municipalityId          Int @unique
+  municipality            Municipality @relation(fields: [municipalityId], references: [id])
+  subsidyId               Int @unique
+  subsidy                 Subsidy @relation(fields: [subsidyId], references: [id])
+  maximumBenefitPayments  Int[] // 最大受給金額
+  isResidency             Boolean // 現在市町区村に住民票があるか
+  isChildcareInterview    Boolean // 妊娠届出時に面談をしたか
+  isPregnancyInterview    Boolean // 出産後面談をしたか
+  @@id([municipalityId, subsidyId])
 }

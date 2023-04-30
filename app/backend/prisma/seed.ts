@@ -1,4 +1,11 @@
-import { PrismaClient, User, Subsidy } from '@prisma/client';
+import {
+  PrismaClient,
+  User,
+  Subsidy,
+  Question,
+  HousingSubsidyCondition,
+  ChildbirthSubsidyCondition,
+} from '@prisma/client';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -88,6 +95,50 @@ const doManicipalitySeed = async () => {
   }
 };
 
+const doQuestionsSeed = async () => {
+  const questions = await getUsersFromJsonDirectory<Omit<Question, 'id'>>(
+    'prisma/master/questions',
+  );
+
+  for (const question of questions) {
+    await prisma.question.create({
+      data: {
+        ...question,
+      },
+    });
+  }
+};
+
+const doHousingSubsidyCondtion = async () => {
+  const housingSubsidyConditions =
+    await getUsersFromJsonDirectory<HousingSubsidyCondition>(
+      'prisma/master/housingSubsidyCondition',
+    );
+
+  for (const housingSubsidyCondition of housingSubsidyConditions) {
+    await prisma.housingSubsidyCondition.create({
+      data: {
+        ...housingSubsidyCondition,
+      },
+    });
+  }
+};
+
+const doChildBirthSubsidyCondtion = async () => {
+  const childBirthSubsidyCondtions =
+    await getUsersFromJsonDirectory<ChildbirthSubsidyCondition>(
+      'prisma/master/childbirthSubsidyCondition',
+    );
+
+  for (const childBirthSubsidyCondtion of childBirthSubsidyCondtions) {
+    await prisma.childbirthSubsidyCondition.create({
+      data: {
+        ...childBirthSubsidyCondtion,
+      },
+    });
+  }
+};
+
 const main = async () => {
   console.log(`Start seeding ...`);
 
@@ -95,6 +146,9 @@ const main = async () => {
   await doPrefectureSeed();
   await doManicipalitySeed();
   await doSubsidySeed();
+  await doQuestionsSeed();
+  await doHousingSubsidyCondtion();
+  await doChildBirthSubsidyCondtion();
 
   console.log(`Seeding finished.`);
 };

@@ -9,10 +9,11 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   // CORSの設定
   app.enableCors({
-    credentials: true,
-    origin: ['http://nextjs_container:8080'],
+    credentials: false,
+    origin: ['*'],
+    allowedHeaders: ['Origin, X-Requested-With, Content-Type, Accept'],
   });
-  // クッキーから値を取得する
+  // クッキーから値を取得する;
   app.use(cookieParser());
   await app.listen(3005);
 }

@@ -5,6 +5,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class RegionService {
   constructor(private readonly prismaService: PrismaService) {}
 
+  /* 対応している市町区村をすべて取得する */
   async getSupportedMunicipality() {
     const supportedMunicipality =
       await this.prismaService.municipality.findMany({

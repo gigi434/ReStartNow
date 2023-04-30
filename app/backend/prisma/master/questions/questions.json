@@ -2,16 +2,26 @@
   {
     "answerType": "boolean",
     "text": "離職等により経済的に困窮し、家賃の支払いが困難で、住居を喪失した、または住居喪失のおそれがある",
-    "subisdyId": 1
+    "subsidyId": 1
   },
   {
     "answerType": "number",
     "text": "申請者及び申請者と同一の世帯に属する方の所有する金融資産（現金、預貯金）の合計額を入力してください",
-    "subisdyId": 1
+    "subsidyId": 1
   },
   {
     "answerType": "boolean",
     "text": "国の雇用施策による貸付（職業訓練受講給付金）または地方公共団体が実施する類似の雇用対策給付等を受けていますか？",
-    "subisdyId": 1
+    "subsidyId": 1
+  },
+  {
+    "answerType": "boolean",
+    "text": "妊娠届出時に面談を行った",
+    "subsidyId": 3
+  },
+  {
+    "answerType": "boolean",
+    "text": "出生届出後に面談を行った",
+    "subsidyId": 3
   }
 ]

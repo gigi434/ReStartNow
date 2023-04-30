@@ -1,0 +1,9 @@
+[
+  {
+    "municipalityId": 9,
+    "subsidyId": 1,
+    "incomeThresholds": [84000, 130000, 172000, 214000, 255000, 297000, 334000],
+    "financialAssetThresholds": [504000, 780000, 1000000],
+    "maximumBenefitPayments": [46000, 55000, 59800, 59800, 59800, 64000, 71800]
+  }
+]
