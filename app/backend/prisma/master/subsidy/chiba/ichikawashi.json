@@ -9,7 +9,16 @@
     "applicationRequirements": "特になし",
     "description": "失業やコロナ禍等を原因とする収入の減少により、住居を喪失するおそれのある方を対象に、就労支援を実施し、住宅及び就労機会の確保に向けた支援を行うとともに、賃貸住宅の家賃を支給するものです",
     "status": "Continuation",
-    "municipalityId": 9
+    "municipalityId": 9,
+    "eligibilityRequirements": {
+      "incomeThresholds": [
+        84000, 130000, 172000, 214000, 255000, 297000, 334000
+      ],
+      "financialAssetThresholds": [504000, 780000, 1000000],
+      "maximumBenefitPayments": [
+        46000, 55000, 59800, 59800, 59800, 64000, 71800
+      ]
+    }
   },
   {
     "name": "新型コロナウイルス感染症対応休業支援金・給付金",
@@ -21,7 +30,10 @@
     "applicationRequirements": "",
     "description": "新型コロナウイルス感染症及びそのまん延防止の措置の影響により休業させられた労働者のうち、休業中に賃金（休業手当）を受けることができなかった方に対し、支給します。",
     "status": "Abolition",
-    "municipalityId": 9
+    "municipalityId": 9,
+    "eligibilityRequirements": {
+      "maximumBenefitPayments": [100000]
+    }
   },
   {
     "name": "出産・子育て応援給付金",
@@ -33,6 +45,12 @@
     "applicationRequirements": "",
     "description": "国において、妊娠期から出産・子育て期まで一貫して身近で相談に応じ、必要な支援につなぐ「伴走型相談支援」と、妊婦や子育て世帯への「経済的支援」を一体的に実施する事業が創設されました。本市においても、3月9日に事業を開始します。令和4年4月1日以降に妊娠届出、出産をされた方が対象になります。",
     "status": "Continuation",
-    "municipalityId": 9
+    "municipalityId": 9,
+    "eligibilityRequirements": {
+      "isResidency": true,
+      "isChildcareInterview": true,
+      "isPregnancyInterview": true,
+      "maximumBenefitPayments": [50000, 100000]
+    }
   }
 ]

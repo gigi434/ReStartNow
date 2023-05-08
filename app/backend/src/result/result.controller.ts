@@ -27,7 +27,7 @@ export class ResultController {
       if (amountOfBenefit) {
         return amountOfBenefit;
       }
-      // falseの場合は受給要件を満たしていない
+      // 受給要件を満たしていない場合はfalseを返す
       return false;
     } catch (err) {
       throw new Error(err.toString());

@@ -20,13 +20,6 @@ enum subsidyStatus {
   Continuation
 }
 
-
-enum CustomFieldType {
-  Number
-  Date
-  String
-}
-
 // お知らせ
 model Information {
   id        Int      @id @default(autoincrement())
@@ -58,8 +51,6 @@ model Municipality {
   prefectureId        Int
   prefecture          Prefecture @relation(fields: [prefectureId], references: [id])
   subsidies           Subsidy[]
-  housingSubsidyCondition HousingSubsidyCondition?
-  childbirthSubsidyCondition ChildbirthSubsidyCondition?
 }
 
 // 都道府県
@@ -88,8 +79,7 @@ model Subsidy {
   updatedAt               DateTime      @updatedAt
   questions               Question[]
   municipality            Municipality  @relation(fields: [municipalityId], references: [id])
-  housingSubsidyCondition HousingSubsidyCondition?
-  childbirthSubsidyCondition ChildbirthSubsidyCondition?
+  eligibilityRequirements Json
 }
 
 // 一問一答の質問
@@ -112,29 +102,4 @@ model Answer {
   user       User     @relation(fields: [userId], references: [id])
   userId     Int
   createdAt  DateTime @default(now())
-}
-
-model HousingSubsidyCondition {
-  municipalityId          Int @unique
-  municipality            Municipality @relation(fields: [municipalityId], references: [id])
-  subsidyId               Int @unique
-  subsidy                 Subsidy @relation(fields: [subsidyId], references: [id])
-  incomeThresholds        Int[] // 収入額
-  financialAssetThresholds       Int[] // 金融資産の閾値
-  maximumBenefitPayments  Int[] // 最大受給金額
-  createdAt               DateTime @default(now())
-  updatedAt               DateTime @updatedAt
-  @@id([municipalityId, subsidyId])
-}
-
-model ChildbirthSubsidyCondition {
-  municipalityId          Int @unique
-  municipality            Municipality @relation(fields: [municipalityId], references: [id])
-  subsidyId               Int @unique
-  subsidy                 Subsidy @relation(fields: [subsidyId], references: [id])
-  maximumBenefitPayments  Int[] // 最大受給金額
-  isResidency             Boolean // 現在市町区村に住民票があるか
-  isChildcareInterview    Boolean // 妊娠届出時に面談をしたか
-  isPregnancyInterview    Boolean // 出産後面談をしたか
-  @@id([municipalityId, subsidyId])
 }
