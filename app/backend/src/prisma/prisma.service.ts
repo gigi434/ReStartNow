@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { PrismaClient } from '@prisma/client';
+import { Injectable } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
+import { PrismaClient } from '@prisma/client'
 
 // PrismaClientを継承することでDBにアクセスするメソッドが使えるようになる
 @Injectable()
@@ -13,6 +13,6 @@ export class PrismaService extends PrismaClient {
           url: config.get('DATABASE_URL'),
         },
       },
-    });
+    })
   }
 }

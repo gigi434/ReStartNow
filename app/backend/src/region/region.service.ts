@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { Injectable } from '@nestjs/common'
+import { PrismaService } from 'src/prisma/prisma.service'
 
 @Injectable()
 export class RegionService {
@@ -11,8 +11,8 @@ export class RegionService {
       await this.prismaService.municipality.findMany({
         orderBy: { id: 'asc' },
         where: { isSupported: true },
-      });
+      })
 
-    return supportedMunicipality;
+    return supportedMunicipality
   }
 }

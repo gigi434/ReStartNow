@@ -1,7 +1,7 @@
-import { Module } from '@nestjs/common';
-import { ResultService } from './result.service';
-import { PrismaModule } from 'src/prisma/prisma.module';
-import { ResultController } from './result.controller';
+import { Module } from '@nestjs/common'
+import { ResultService } from './result.service'
+import { PrismaModule } from 'src/prisma/prisma.module'
+import { ResultController } from './result.controller'
 
 @Module({
   providers: [ResultService],

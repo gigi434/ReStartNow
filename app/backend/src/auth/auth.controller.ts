@@ -7,19 +7,19 @@ import {
   Req,
   Res,
   UseGuards,
-} from '@nestjs/common';
-import { AuthDto } from './dto/auth.dto';
-import { Msg } from './interfaces/auth.interfaces';
-import { AuthService } from './auth.service';
-import { Request, Response } from 'express';
-import { AuthGuard } from '@nestjs/passport';
+} from '@nestjs/common'
+import { AuthDto } from './dto/auth.dto'
+import { Msg } from './interfaces/auth.interfaces'
+import { AuthService } from './auth.service'
+import { Request, Response } from 'express'
+import { AuthGuard } from '@nestjs/passport'
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('signup')
   signUp(@Body() dto: AuthDto): Promise<Msg> {
-    return this.authService.signUp(dto);
+    return this.authService.signUp(dto)
   }
 
   // Postリクエストはすべてステータスコードが201(created)になるため、Postリクエストだが作成はしない場合は適宜デコレーターで変更する
@@ -31,19 +31,19 @@ export class AuthController {
     // JSONでのシリアライズと@Resデコレーターを両立するためにpassthroughをtrueにする
     @Res({ passthrough: true }) res: Response,
   ): Promise<Msg> {
-    const user = await this.authService.login(dto);
-    const sessionId = await this.authService.createSessionID(user.id);
+    const user = await this.authService.login(dto)
+    const sessionId = await this.authService.createSessionID(user.id)
 
     res.cookie('session-id', sessionId, {
       httpOnly: true,
       secure: false,
       sameSite: 'none',
       path: '/',
-    });
+    })
 
     return {
       message: 'ok',
-    };
+    }
   }
 
   @UseGuards(AuthGuard('cookie'))
@@ -53,17 +53,17 @@ export class AuthController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ): Promise<Msg> {
-    await this.authService.deleteSessionID(req.cookies['session-id']);
+    await this.authService.deleteSessionID(req.cookies['session-id'])
 
     res.cookie('session-id', '', {
       httpOnly: true,
       secure: false,
       sameSite: 'none',
       path: '/',
-    });
+    })
 
     return {
       message: 'ok',
-    };
+    }
   }
 }

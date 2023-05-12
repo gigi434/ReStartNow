@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common'
 import {
   RedisModuleOptions,
   RedisOptionsFactory,
-} from '@liaoliaots/nestjs-redis';
+} from '@liaoliaots/nestjs-redis'
 
 @Injectable()
 export class RedisConfigService implements RedisOptionsFactory {
@@ -14,6 +14,6 @@ export class RedisConfigService implements RedisOptionsFactory {
         port: 6379,
         password: 'authpassword',
       },
-    };
+    }
   }
 }

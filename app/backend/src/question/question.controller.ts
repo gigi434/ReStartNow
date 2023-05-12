@@ -1,5 +1,5 @@
-import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
-import { QuestionService } from './question.service';
+import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common'
+import { QuestionService } from './question.service'
 
 @Controller('question')
 export class QuestionController {
@@ -12,8 +12,8 @@ export class QuestionController {
   ) {
     const Questions = await this.questionService.getQuestionsBySubsidyId(
       subsidyId,
-    );
+    )
 
-    return Questions;
+    return Questions
   }
 }

@@ -1,5 +1,5 @@
-import { Controller, Get } from '@nestjs/common';
-import { RegionService } from './region.service';
+import { Controller, Get } from '@nestjs/common'
+import { RegionService } from './region.service'
 
 @Controller('region')
 export class RegionController {
@@ -10,9 +10,9 @@ export class RegionController {
   @Get()
   async getSupportedMunicipalitiesData() {
     try {
-      return await this.regionService.getSupportedMunicipality();
+      return await this.regionService.getSupportedMunicipality()
     } catch (err) {
-      throw new Error(err.toString());
+      throw new Error(err.toString())
     }
   }
 }

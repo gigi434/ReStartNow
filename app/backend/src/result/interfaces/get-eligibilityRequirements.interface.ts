@@ -1,12 +1,12 @@
 export interface HousingGrant {
-  incomeThresholds?: number[];
-  financialAssetThresholds?: number[];
-  maximumBenefitPayments?: number[];
+  incomeThresholds?: number[]
+  financialAssetThresholds?: number[]
+  maximumBenefitPayments?: number[]
 }
 
 export interface ChildbirthSupportGrant {
-  isResidency?: boolean;
-  isChildcareInterview?: boolean;
-  isPregnancyInterview?: boolean;
-  maximumBenefitPayments?: number[];
+  isResidency?: boolean
+  isChildcareInterview?: boolean
+  isPregnancyInterview?: boolean
+  maximumBenefitPayments?: number[]
 }

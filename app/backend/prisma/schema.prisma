@@ -80,6 +80,7 @@ model Subsidy {
   questions               Question[]
   municipality            Municipality  @relation(fields: [municipalityId], references: [id])
   eligibilityRequirements Json
+  answers                 Answer[]
 }
 
 // 一問一答の質問
@@ -91,15 +92,15 @@ model Question {
   subsidy    Subsidy  @relation(fields: [subsidyId], references: [id])
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
-  Answer     Answer[]
 }
 
 // ユーザーの答えを保存するテーブル
 model Answer {
   id         Int      @id @default(autoincrement())
-  questionId Int
-  question   Question @relation(fields: [questionId], references: [id])
+  subsidyId  Int
+  subsidy    Subsidy  @relation(fields: [subsidyId], references: [id])
   user       User     @relation(fields: [userId], references: [id])
   userId     Int
   createdAt  DateTime @default(now())
+  answers    Json
 }

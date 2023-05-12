@@ -4,15 +4,15 @@ import {
   IsString,
   MinLength,
   MaxLength,
-} from 'class-validator';
+} from 'class-validator'
 
 export class AuthDto {
   @IsEmail()
   @IsNotEmpty()
-  email: string;
+  email: string
   @IsString()
   @IsNotEmpty()
   @MinLength(8)
   @MaxLength(20)
-  password: string;
+  password: string
 }

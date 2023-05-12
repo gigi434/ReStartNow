@@ -6,9 +6,9 @@ import {
   Param,
   Post,
   ParseIntPipe,
-} from '@nestjs/common';
-import { AvailableSubsidiesDto } from './dto/get-available-subsidies.dto';
-import { ResultService } from './result.service';
+} from '@nestjs/common'
+import { AvailableSubsidiesDto } from './dto/get-available-subsidies.dto'
+import { ResultService } from './result.service'
 
 @Controller('result')
 export class ResultController {
@@ -22,15 +22,15 @@ export class ResultController {
   ): Promise<number | boolean> {
     try {
       const amountOfBenefit =
-        await this.resultService.getBenefitThroughTheQuestion(dto, subsidyId);
+        await this.resultService.getBenefitThroughTheQuestion(dto, subsidyId)
 
       if (amountOfBenefit) {
-        return amountOfBenefit;
+        return amountOfBenefit
       }
       // 受給要件を満たしていない場合はfalseを返す
-      return false;
+      return false
     } catch (err) {
-      throw new Error(err.toString());
+      throw new Error(err.toString())
     }
   }
 }
