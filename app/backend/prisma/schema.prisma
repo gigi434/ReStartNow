@@ -20,13 +20,22 @@ enum subsidyStatus {
   Continuation
 }
 
+enum informationImportance {
+  High
+  Middle
+  Low
+}
+
 // お知らせ
 model Information {
-  id        Int      @id @default(autoincrement())
-  title     String
-  body      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         Int      @id @default(autoincrement())
+  title      String
+  body       String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  importance informationImportance @default(Low)
+  authorId   Int
+  author     User @relation(fields: [authorId], references: [id])
 }
 
 // ユーザー
@@ -38,6 +47,7 @@ model User {
   hashedPassword String
   answers        Answer[]
   role           Role     @default(User)
+  information    Information[]
 }
 
 // 市町区村
