@@ -3,44 +3,50 @@ import {
   Controller,
   HttpCode,
   HttpStatus,
+  InternalServerErrorException,
   Patch,
   Post,
   Req,
+  Res,
   UseGuards,
 } from '@nestjs/common'
 import { UserService } from './user.service'
-import { BadRequestException } from '@nestjs/common'
 import { Msg } from './interface/user.interface'
-import { Request } from 'express'
-import { AuthGuard } from '@nestjs/passport'
+import { Request, Response } from 'express'
 import { UpdateUserDto } from './dto/update-user.dto'
-
+import { AuthenticatedGuard } from '../auth/guard/local.guard'
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @UseGuards(AuthGuard('cookie'))
+  @UseGuards(AuthenticatedGuard)
   @HttpCode(HttpStatus.OK)
-  @Post()
-  async deleteUserById(@Req() req: Request): Promise<Msg> {
+  @Post('delete')
+  async deleteUserById(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<Msg> {
     try {
-      await this.userService.deleteOneUserById(req.cookies['session-id'])
-    } catch {
-      throw new BadRequestException(
-        'User cannot be deleted. Please reopen the browser again or delete the cache.',
-      )
-    }
-
-    return {
-      message: 'User account deletion is complete.',
+      await this.userService.deleteOneUserById(req.user.id)
+      req.session.destroy((err) => {
+        if (err) {
+          throw new InternalServerErrorException('Failed to destroy session')
+        }
+      })
+      res.clearCookie('session-id')
+      return {
+        message: 'complete user account deletion',
+      }
+    } catch (err) {
+      throw new Error(err.toString())
     }
   }
 
-  @UseGuards(AuthGuard('cookie'))
+  @UseGuards(AuthenticatedGuard)
   @HttpCode(HttpStatus.OK)
-  @Patch(':id/password')
+  @Patch('/password')
   async changeUserPassword(@Req() req: Request, @Body() dto: UpdateUserDto) {
-    await this.userService.changeUserPassword(req.cookies['session-id'], dto)
+    await this.userService.changeUserPassword(req.user.id, dto)
 
     return {
       message: 'User account password has been changed.',

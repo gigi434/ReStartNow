@@ -3,6 +3,7 @@ import {
   Controller,
   HttpCode,
   HttpStatus,
+  InternalServerErrorException,
   Post,
   Req,
   Res,
@@ -12,7 +13,8 @@ import { AuthDto } from './dto/auth.dto'
 import { Msg } from './interfaces/auth.interfaces'
 import { AuthService } from './auth.service'
 import { Request, Response } from 'express'
-import { AuthGuard } from '@nestjs/passport'
+import { AuthenticatedGuard, LocalAuthGuard } from './guard/local.guard'
+
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -22,48 +24,36 @@ export class AuthController {
     return this.authService.signUp(dto)
   }
 
-  // Postリクエストはすべてステータスコードが201(created)になるため、Postリクエストだが作成はしない場合は適宜デコレーターで変更する
+  @UseGuards(LocalAuthGuard)
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  async login(
-    @Body() dto: AuthDto,
-    // NestJSではデフォルトで返り値はJSONに初期化されるstandard modeだが、@Resデコレーターを使用するとExpressの仕様になるためこのモードが無効化される。
-    // JSONでのシリアライズと@Resデコレーターを両立するためにpassthroughをtrueにする
-    @Res({ passthrough: true }) res: Response,
-  ): Promise<Msg> {
-    const user = await this.authService.login(dto)
-    const sessionId = await this.authService.createSessionID(user.id)
-
-    res.cookie('session-id', sessionId, {
-      httpOnly: true,
-      secure: false,
-      sameSite: 'none',
-      path: '/',
-    })
-
+  async login(): Promise<Msg> {
     return {
       message: 'ok',
     }
   }
 
-  @UseGuards(AuthGuard('cookie'))
+  @UseGuards(AuthenticatedGuard)
   @HttpCode(HttpStatus.OK)
   @Post('logout')
   async logout(
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ): Promise<Msg> {
-    await this.authService.deleteSessionID(req.cookies['session-id'])
+    try {
+      req.session.destroy((err) => {
+        if (err) {
+          return res.status(500).json({ message: 'Failed to destroy session' })
+        }
+      })
 
-    res.cookie('session-id', '', {
-      httpOnly: true,
-      secure: false,
-      sameSite: 'none',
-      path: '/',
-    })
+      res.clearCookie('session-id')
 
-    return {
-      message: 'ok',
+      return {
+        message: 'complete logout',
+      }
+    } catch (err) {
+      throw new InternalServerErrorException()
     }
   }
 }
