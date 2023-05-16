@@ -22,7 +22,7 @@ async function bootstrap() {
     session({
       name: 'session-id',
       store: redisStore, // RedisStoreを初期化する
-      secret: 'sss',
+      secret: process.env.REDIS_SECRET,
       resave: false,
       saveUninitialized: false,
       cookie: {
