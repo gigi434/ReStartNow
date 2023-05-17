@@ -10,13 +10,13 @@ import { QuestionModule } from './question/question.module'
 import { AuthController } from './auth/auth.controller'
 import { AuthModule } from './auth/auth.module'
 import { ResultModule } from './result/result.module'
-import { RedisModule } from '@liaoliaots/nestjs-redis'
 import { ConfigModule } from '@nestjs/config'
 import { AuthService } from './auth/auth.service'
-import { RedisConfigService } from 'src/redis/redis.service'
 import { RegionService } from './region/region.service'
 import { RegionModule } from './region/region.module'
 import { AnswerModule } from './answer/answer.module'
+import { PassportModule } from '@nestjs/passport'
+import { UserController } from './user/user.controller'
 
 @Module({
   imports: [
@@ -28,9 +28,7 @@ import { AnswerModule } from './answer/answer.module'
     QuestionModule,
     AuthModule,
     ResultModule,
-    RedisModule.forRootAsync({
-      useClass: RedisConfigService,
-    }),
+    PassportModule.register({ session: true }),
     RegionModule,
     AnswerModule,
   ],
@@ -39,6 +37,7 @@ import { AnswerModule } from './answer/answer.module'
     QuestionController,
     ResultController,
     AuthController,
+    UserController,
   ],
   providers: [AppService, AuthService, RegionService],
 })

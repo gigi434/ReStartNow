@@ -1,38 +1,26 @@
 import { PassportStrategy } from '@nestjs/passport'
 import { Injectable, UnauthorizedException } from '@nestjs/common'
-import { RedisService } from '@liaoliaots/nestjs-redis'
-import { PrismaService } from 'src/prisma/prisma.service'
 import { Strategy } from 'passport-local'
+import { AuthService } from '../auth.service'
 
-/*
+/**
  * ユーザーを認証するためのカスタムロジック
  */
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
-  constructor(
-    private readonly redisService: RedisService,
-    private readonly prismaService: PrismaService,
-  ) {
-    super()
+  constructor(private readonly authService: AuthService) {
+    super({ usernameField: 'email', passwordField: 'password' })
   }
 
-  /*
-   * @params token: Redisに格納されているセッションキー
+  /**
+   * @params email string リクエストボディに格納されているEmail
+   * @params password string リクエストボディに格納されているpassword
    */
-  async validate(token: string) {
-    const redisClient = await this.redisService.getClient()
-    console.log(token)
-    const sessionData = await redisClient.get(token)
+  async validate(email: string, password: string) {
+    console.log('Inside LocalStrategy.validate')
+    const user = await this.authService.validateUser(email, password)
 
-    if (!sessionData) {
-      throw new UnauthorizedException()
-    }
-
-    const { userId } = JSON.parse(sessionData)
-
-    const user = await this.prismaService.user.findUnique({
-      where: { id: userId },
-    })
+    if (!user) throw new UnauthorizedException()
 
     return user
   }

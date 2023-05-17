@@ -10,26 +10,20 @@ import {
   Post,
   Body,
   Delete,
+  HttpStatus,
+  HttpCode,
 } from '@nestjs/common'
 import { AnswerService } from './answer.service'
-import { RedisService } from '@liaoliaots/nestjs-redis'
-import { Redis } from 'ioredis'
 import { Request } from 'express'
-import { AuthGuard } from '@nestjs/passport'
 import { Prisma } from '@prisma/client'
+import { AuthenticatedGuard } from 'src/auth/guard/local.guard'
 
 @Controller('answer')
 export class AnswerController {
-  private readonly redisService: Redis
-  constructor(
-    private readonly answerService: AnswerService,
-    private readonly nestRedisService: RedisService,
-  ) {
-    this.redisService = this.nestRedisService.getClient()
-  }
+  constructor(private readonly answerService: AnswerService) {}
 
-  /**ユーザーに紐づけられた回答をすべて取得する */
-  @UseGuards(AuthGuard('cookie'))
+  /** ユーザーに紐づけられた回答をすべて取得する */
+  @UseGuards(AuthenticatedGuard)
   @Get()
   async getAllAnswersByUser(@Req() req: Request) {
     try {
@@ -46,8 +40,8 @@ export class AnswerController {
     }
   }
 
-  /**ユーザーに紐づけられた1つの回答を取得する */
-  @UseGuards(AuthGuard('cookie'))
+  /** ユーザーに紐づけられた1つの回答を取得する */
+  @UseGuards(AuthenticatedGuard)
   @Get('/:answerId')
   async getOneAnswerByUser(
     @Req() req: Request,
@@ -72,7 +66,7 @@ export class AnswerController {
   }
 
   /** ユーザーが質問に回答した際に１つの回答を保存する*/
-  @UseGuards(AuthGuard('cookie'))
+  @UseGuards(AuthenticatedGuard)
   @Post('/:subsidyId')
   async createOneAnswer(
     @Req() req: Request,
@@ -80,7 +74,6 @@ export class AnswerController {
     @Param('subsidyId', ParseIntPipe) subsidyId: number,
   ) {
     try {
-      // Prismaを用いてDBに回答を保存する
       const ansewr = await this.answerService.createOneAnswer(
         dto,
         req.user.id,
@@ -98,7 +91,8 @@ export class AnswerController {
   }
 
   /** ユーザーに紐づいた１つの回答を削除する */
-  @UseGuards(AuthGuard('cookie'))
+  @UseGuards(AuthenticatedGuard)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Delete('/:answerId')
   async deleteOneAnswer(@Param('answerId', ParseIntPipe) answerId: number) {
     try {
@@ -106,7 +100,6 @@ export class AnswerController {
 
       return {
         message: 'ok',
-        statusCode: '204',
       }
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
