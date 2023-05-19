@@ -1,5 +1,5 @@
 import React, { CSSProperties } from 'react';
-import styles from './index.module.css';
+import styles from './index.module.scss';
 
 interface SampleButtonProps {
   primary?: boolean;
