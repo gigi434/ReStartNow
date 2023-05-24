@@ -1,15 +1,28 @@
+import { Roboto } from 'next/font/google'
 import { createTheme } from '@mui/material'
-import { blueGrey, cyan, pink } from '@mui/material/colors'
+import { blueGrey, cyan, pink, red, indigo } from '@mui/material/colors'
+
+export const roboto = Roboto({
+  weight: ['300', '400', '500', '700'],
+  subsets: ['latin'],
+  display: 'swap',
+  fallback: ['Helvetica', 'Arial', 'sans-serif'],
+})
 
 export const lightTheme = createTheme({
   palette: {
-    mode: 'light',
     primary: {
-      main: cyan['A200'],
+      main: indigo.A400,
     },
     secondary: {
-      main: pink['A400'],
+      main: cyan.A400,
     },
+    error: {
+      main: red.A400,
+    },
+  },
+  typography: {
+    fontFamily: roboto.style.fontFamily,
   },
 })
 
