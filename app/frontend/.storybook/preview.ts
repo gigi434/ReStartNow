@@ -22,6 +22,10 @@ const preview: Preview = {
 
 export default preview
 
+/**
+ * Storybookのコンポーネントにグローバルにテーマを適用する配列オブジェクト
+ * @see https://storybook.js.org/recipes/styled-components
+ */
 export const decorators = [
   withThemeFromJSXProvider({
     themes: {
