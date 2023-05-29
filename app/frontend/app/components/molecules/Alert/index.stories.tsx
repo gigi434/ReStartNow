@@ -5,7 +5,7 @@ import AlertTitle from '@mui/material/AlertTitle'
 import { Typography } from '@mui/material'
 
 const meta: Meta<typeof Alert> = {
-  title: 'Atomic/Alert',
+  title: 'Molecules/Alert',
   component: Alert,
   tags: ['autodocs'],
   argTypes: {
@@ -63,6 +63,7 @@ export const Warning: Story = {
 }
 export const Error: Story = {
   args: {
+    severity: 'error',
     content: 'example text',
     children: (
       <>
@@ -75,6 +76,12 @@ export const Error: Story = {
 export const Standard: Story = {
   args: {
     variant: 'standard',
+    children: (
+      <>
+        <AlertTitle>Example</AlertTitle>
+        <Typography>test</Typography>
+      </>
+    ),
   },
 }
 export const Filled: Story = {

@@ -6,7 +6,7 @@ ENV APP_HOME="$HOME/nextjs"
 WORKDIR $APP_HOME
 
 # 共有ディレクトリの権限をnodeで777に設定する
-RUN chown -R node:node ${HOME}
+RUN chown -R node:node ${APP_HOME}
 
 # ユーザーをrootからnodeへ変更する
 USER node
