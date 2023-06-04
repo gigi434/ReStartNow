@@ -46,32 +46,29 @@ export interface CustomizedAccordionsProps {
    * アコーディオンの見出し
    */
   summaryContent: string
-  /**
-   * アコーディオンの内容
-   */
+  /** アコーディオンの内容 */
   detailsContent: string
+  /** エリアコントロールやidなどのアクセシビリティに必要な数値 */
   id: number
 }
 
-export default function Accordion({
+export function CustomAccordion({
   summaryContent,
   detailsContent,
   id,
 }: CustomizedAccordionsProps) {
   return (
-    <>
-      <CustomizedAccordion>
-        <CustomizedAccordionSummary
-          aria-controls={`panel${id}d-content`}
-          id={`panel${id}d-header`}
-        >
-          <HelpOutlineIcon sx={{ marginRight: '0.5rem' }} />
-          <MuiTypography>{summaryContent}</MuiTypography>
-        </CustomizedAccordionSummary>
-        <CustomizedAccordionDetails>
-          <MuiTypography>{detailsContent}</MuiTypography>
-        </CustomizedAccordionDetails>
-      </CustomizedAccordion>
-    </>
+    <CustomizedAccordion>
+      <CustomizedAccordionSummary
+        aria-controls={`panel${id}d-content`}
+        id={`panel${id}d-header`}
+      >
+        <HelpOutlineIcon sx={{ marginRight: '0.5rem' }} />
+        <MuiTypography>{summaryContent}</MuiTypography>
+      </CustomizedAccordionSummary>
+      <CustomizedAccordionDetails>
+        <MuiTypography>{detailsContent}</MuiTypography>
+      </CustomizedAccordionDetails>
+    </CustomizedAccordion>
   )
 }

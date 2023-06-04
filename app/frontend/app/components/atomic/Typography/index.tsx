@@ -15,7 +15,7 @@ interface TypographyProps extends MuiTypographyProps {
   component?: React.ElementType
 }
 
-export default function Typography({
+export function Typography({
   variant,
   component = 'span',
   children,

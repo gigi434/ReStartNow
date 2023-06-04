@@ -1,37 +1,36 @@
 import * as React from 'react'
-import { Box, Link } from '@mui/material'
+import { List, ListItem, ListItemButton, ListItemText } from '@mui/material'
 
-interface NavigationMenuProps {
+export interface NavigationMenuProps {
   href: string
   content: string
 }
 
-const NavigationItem: NavigationMenuProps[] = [
-  { href: '/results', content: '結果閲覧' },
-  { href: '/information', content: 'お知らせ' },
-  { href: '/profile', content: 'プロフィール' },
-]
-
-const clickHandle = (event: React.SyntheticEvent) => event.preventDefault()
-
-export default function NavigationMenu() {
+export function NavigationMenu({
+  navItems,
+}: {
+  navItems: NavigationMenuProps[]
+}) {
   return (
-    <Box
-      sx={{
-        typography: 'body1',
-        '& > :not(style) + :not(style)': {
-          ml: 3,
-        },
-      }}
-      onClick={clickHandle}
-    >
-      {NavigationItem.map((item, idx) => {
-        return (
-          <Link key={idx} href={item.href} color="inherit" underline="none">
-            {item.content}
-          </Link>
-        )
-      })}
-    </Box>
+    <nav aria-label="navigation menu">
+      <List sx={{ display: 'flex', flexDirection: 'row', gap: '16px' }}>
+        {navItems.map((item) => (
+          <ListItem key={item.content} disablePadding>
+            <ListItemButton
+              href={item.href}
+              sx={{
+                display: 'block',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              <ListItemText
+                primary={item.content}
+                primaryTypographyProps={{ color: 'textPrimary' }}
+              />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+    </nav>
   )
 }

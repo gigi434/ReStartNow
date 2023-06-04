@@ -1,4 +1,4 @@
-import Snackbar from './index'
+import {Snackbar} from './index'
 import type { Meta, StoryObj } from '@storybook/react'
 const meta: Meta<typeof Snackbar> = {
   title: 'Molecules/Snackbar',

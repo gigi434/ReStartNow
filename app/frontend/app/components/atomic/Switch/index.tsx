@@ -4,7 +4,7 @@ import {
   SwitchProps as MuiSwitchProps,
 } from '@mui/material'
 
-export default function Switch({
+export function Switch({
   defaultChecked = false,
   required = false,
   disabled = false,

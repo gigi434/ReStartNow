@@ -18,7 +18,7 @@ type SnackbarProps = {
 }
 
 /** スナックバーを表示するコンポーネント */
-export default function Snackbar({
+export function Snackbar({
   open,
   message,
   severity = 'info',

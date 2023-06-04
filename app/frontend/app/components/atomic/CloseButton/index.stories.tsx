@@ -1,4 +1,4 @@
-import CloseButton from './index'
+import { CloseButton } from './index'
 import type { Meta, StoryObj } from '@storybook/react'
 
 // More on default export: https://storybook.js.org/docs/preact/writing-stories/introduction#default-export

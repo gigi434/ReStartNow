@@ -1,4 +1,4 @@
-import Switch from './index'
+import { Switch } from './index'
 import type { Meta, StoryObj } from '@storybook/react'
 
 const meta: Meta<typeof Switch> = {

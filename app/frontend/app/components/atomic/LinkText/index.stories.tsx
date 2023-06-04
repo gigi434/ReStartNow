@@ -1,6 +1,5 @@
 import * as React from 'react'
-import LinkText from './index'
-import Typography from '@/components/atomic/Typography'
+import { Typography, LinkText } from '@/components'
 import type { Meta, StoryObj } from '@storybook/react'
 
 const meta: Meta<typeof LinkText> = {

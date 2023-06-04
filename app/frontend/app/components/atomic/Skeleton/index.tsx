@@ -3,7 +3,7 @@ import MuiSkeleton, {
   SkeletonProps as MuiSkeletonProps,
 } from '@mui/material/Skeleton'
 
-export default function Skeleton({
+export function Skeleton({
   variant,
   width,
   height,

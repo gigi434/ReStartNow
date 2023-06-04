@@ -9,7 +9,7 @@ interface RadioButtonProps {
   onClick?: () => void
 }
 
-export default function RadioButton({
+export function RadioButton({
   color = 'primary',
   disabled,
   size = 'medium',

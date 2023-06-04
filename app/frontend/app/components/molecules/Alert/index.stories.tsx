@@ -1,4 +1,4 @@
-import Alert from './index'
+import { Alert } from '@/components'
 import React from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
 import AlertTitle from '@mui/material/AlertTitle'

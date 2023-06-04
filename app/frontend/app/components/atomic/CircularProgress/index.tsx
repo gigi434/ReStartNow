@@ -7,6 +7,6 @@ interface CircularProgressProps extends MuiCircularProgressProps {
   color?: 'primary'
 }
 
-export default function CircularProgress({ color }: CircularProgressProps) {
+export function CircularProgress({ color }: CircularProgressProps) {
   return <MuiCircularProgress color={color} />
 }

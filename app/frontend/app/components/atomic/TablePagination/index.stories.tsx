@@ -1,4 +1,4 @@
-import TablePagination from './index'
+import { TablePagination } from './index'
 import type { Meta, StoryObj } from '@storybook/react'
 
 const meta: Meta<typeof TablePagination> = {

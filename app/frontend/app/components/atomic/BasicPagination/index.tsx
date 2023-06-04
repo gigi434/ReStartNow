@@ -6,16 +6,16 @@ import MuiPagination, {
 interface BasicPaginationProps
   extends Pick<
     MuiPaginationProps,
-    'color' | 'disabled' | 'count' | 'onChange'
-  > {
-  color: 'primary'
-}
+    'color' | 'disabled' | 'count' | 'onChange' | 'page' | 'variant'
+  > {}
 
-export default function BasicPagination({
+export function BasicPagination({
   color = 'primary',
   disabled = false,
   count,
   onChange,
+  page,
+  variant,
 }: BasicPaginationProps) {
   return (
     <MuiPagination
@@ -23,6 +23,8 @@ export default function BasicPagination({
       color={color}
       disabled={disabled}
       onChange={onChange}
+      page={page}
+      variant={variant}
     />
   )
 }

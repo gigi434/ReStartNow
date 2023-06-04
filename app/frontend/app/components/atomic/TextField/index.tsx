@@ -4,7 +4,7 @@ import {
   TextFieldProps as MuiTextFieldProps,
 } from '@mui/material'
 
-export default function TextField({
+export function TextField({
   error,
   helperText = ' ', // helperTextの値がない場合とある場合で要素の高さが異なるため、スペースを格納し高さを揃える
   disabled,

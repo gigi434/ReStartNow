@@ -1,5 +1,4 @@
-import * as React from 'react'
-import NavigationMenu from './index'
+import { NavigationMenu, NavigationMenuProps } from './index'
 import type { Meta, StoryObj } from '@storybook/react'
 
 const meta: Meta<typeof NavigationMenu> = {
@@ -11,4 +10,12 @@ const meta: Meta<typeof NavigationMenu> = {
 export default meta
 type Story = StoryObj<typeof NavigationMenu>
 
-export const Default: Story = {}
+const NavigationItems: NavigationMenuProps[] = [
+  { href: '/results', content: '結果閲覧' },
+  { href: '/information', content: 'お知らせ' },
+  { href: '/profile', content: 'プロフィール' },
+]
+
+export const Default: Story = {
+  args: { navItems: NavigationItems },
+}

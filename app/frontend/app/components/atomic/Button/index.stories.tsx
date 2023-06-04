@@ -1,4 +1,4 @@
-import Button from './index'
+import { Button } from './index'
 import React from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
 import Typography from '@mui/material/Typography'

@@ -1,4 +1,4 @@
-import Typography from './index'
+import { Typography } from './index'
 import type { Meta, StoryObj } from '@storybook/react'
 
 const meta: Meta<typeof Typography> = {

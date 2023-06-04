@@ -4,7 +4,7 @@ import {
   DividerProps as MuiDividerProps,
 } from '@mui/material'
 
-export default function Divider({
+export function Divider({
   textAlign,
   children,
   orientation = 'horizontal',

@@ -3,7 +3,7 @@ import MuiTablePagination, {
   TablePaginationProps as MuiTablePaginationProps,
 } from '@mui/material/TablePagination'
 
-export default function TablePagination({ count }: MuiTablePaginationProps) {
+export function TablePagination({ count }: MuiTablePaginationProps) {
   const [page, setPage] = React.useState(2)
   const [rowsPerPage, setRowsPerPage] = React.useState(10)
 

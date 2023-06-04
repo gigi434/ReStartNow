@@ -1,7 +1,7 @@
 import * as React from 'react'
 import MuiLink, { LinkProps as MuiLinkProps } from '@mui/material/Link'
 
-export default function LinkText({
+export function LinkText({
   color,
   href,
   variant = 'inherit',

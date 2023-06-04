@@ -9,7 +9,7 @@ interface CloseButtonProps {
   onClick?: () => void
 }
 
-export default function CloseButton({
+export function CloseButton({
   disabled = false,
   color = 'default',
   size = 'medium',

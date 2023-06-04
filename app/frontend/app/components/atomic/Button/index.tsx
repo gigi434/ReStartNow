@@ -1,7 +1,7 @@
 import React from 'react'
 import MuiButton, { ButtonProps as MuiButtonProps } from '@mui/material/Button'
 
-export default function Button({
+export function Button({
   color = 'primary',
   children,
   size = 'medium',
