@@ -8,20 +8,24 @@ import Typography from '@mui/material/Typography'
 
 const steps = ['Select campaign settings', 'Create an ad group', 'Create an ad']
 
-export default function HorizontalLinearStepper() {
-  const [activeStep, setActiveStep] = React.useState(0)
-  const [skipped, setSkipped] = React.useState(new Set<number>())
+export function HorizontalLinearStepper() {
+  const [activeStep, setActiveStep] = React.useState(0) // アクティブなステップのインデックスを管理するstate
+  const [skipped, setSkipped] = React.useState(new Set<number>()) // スキップされたステップのインデックスを管理するSetオブジェクトのstate
 
+  /** ステップがオプションかどうかを判定する関数 */
   const isStepOptional = (step: number) => {
     return step === 1
   }
 
+  /** ステップがスキップされたかどうかを判定する関数 */
   const isStepSkipped = (step: number) => {
     return skipped.has(step)
   }
 
+  /** 次のステップに進むための関数 */
   const handleNext = () => {
     let newSkipped = skipped
+    // ステップがスキップされた場合、スキップを解除する
     if (isStepSkipped(activeStep)) {
       newSkipped = new Set(newSkipped.values())
       newSkipped.delete(activeStep)
@@ -31,17 +35,15 @@ export default function HorizontalLinearStepper() {
     setSkipped(newSkipped)
   }
 
+  /** 前のステップに戻るための関数 */
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1)
   }
 
-  /**
-   * 現在捜査しているStepperの段階を一つスキップするコールバック関数
-   */
+  /** ステップをスキップするための関数 */
   const handleSkip = () => {
     if (!isStepOptional(activeStep)) {
-      // You probably want to guard against something like this,
-      // it should never occur unless someone's actively trying to break something.
+      // オプションではないステップをスキップしようとする場合はエラーをスローする（通常は発生しない想定）
       throw new Error("You can't skip a step that isn't optional.")
     }
 
@@ -53,6 +55,7 @@ export default function HorizontalLinearStepper() {
     })
   }
 
+  /** ステップをリセットするための関数 */
   const handleReset = () => {
     setActiveStep(0)
   }
@@ -80,8 +83,9 @@ export default function HorizontalLinearStepper() {
           )
         })}
       </Stepper>
+      {/* 最後のステップが完了した場合の表示 */}
       {activeStep === steps.length ? (
-        <React.Fragment>
+        <>
           <Typography sx={{ mt: 2, mb: 1 }}>
             All steps completed - you&apos;re finished
           </Typography>
@@ -89,11 +93,12 @@ export default function HorizontalLinearStepper() {
             <Box sx={{ flex: '1 1 auto' }} />
             <Button onClick={handleReset}>Reset</Button>
           </Box>
-        </React.Fragment>
+        </>
       ) : (
-        <React.Fragment>
+        <>
           <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
           <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+            {/* 戻るボタン */}
             <Button
               color="inherit"
               disabled={activeStep === 0}
@@ -102,6 +107,7 @@ export default function HorizontalLinearStepper() {
             >
               Back
             </Button>
+            {/* スキップボタン */}
             <Box sx={{ flex: '1 1 auto' }} />
             {isStepOptional(activeStep) && (
               <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
@@ -112,7 +118,7 @@ export default function HorizontalLinearStepper() {
               {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
             </Button>
           </Box>
-        </React.Fragment>
+        </>
       )}
     </Box>
   )

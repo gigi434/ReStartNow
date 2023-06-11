@@ -107,7 +107,7 @@ const headCells: readonly HeadCell[] = [
   {
     id: 'name',
     numeric: false,
-    disablePadding: true,
+    disablePadding: false,
     label: 'Dessert (100g serving)',
   },
   {
@@ -219,11 +219,6 @@ export function EnhancedTable() {
           <Typography variant="h6" id="tableTitle" component="div">
             Nutrition
           </Typography>
-          <Tooltip title="Filter list">
-            <IconButton>
-              <FilterListIcon />
-            </IconButton>
-          </Tooltip>
         </Toolbar>
         <TableContainer>
           <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
@@ -244,12 +239,7 @@ export function EnhancedTable() {
                     key={row.name}
                     sx={{ cursor: 'pointer' }}
                   >
-                    <TableCell
-                      component="th"
-                      id={labelId}
-                      scope="row"
-                      padding="none"
-                    >
+                    <TableCell component="th" id={labelId} scope="row">
                       {row.name}
                     </TableCell>
                     <TableCell align="right">{row.calories}</TableCell>
