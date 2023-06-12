@@ -1,4 +1,4 @@
-import { AreYouSureDialog } from '@/components'
+import { AreYouSureDialog } from '../../index'
 import type { Meta, StoryObj } from '@storybook/react'
 const meta: Meta<typeof AreYouSureDialog> = {
   title: 'organisms/AreYouSureDialog',

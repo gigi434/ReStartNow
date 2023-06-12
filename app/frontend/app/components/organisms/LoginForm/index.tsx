@@ -1,4 +1,4 @@
-import { Stack, TextField, Button, Container, Grid, Link } from '@mui/material'
+import { Stack, TextField, Button, Box, Paper, Grid, Link } from '@mui/material'
 import { useForm, SubmitHandler, Controller } from 'react-hook-form'
 import React from 'react'
 
@@ -37,7 +37,7 @@ export function LoginForm() {
   }
 
   return (
-    <Container>
+    <Box sx={{ width: '100%' }}>
       <Stack
         component="form"
         noValidate
@@ -120,6 +120,6 @@ export function LoginForm() {
           </Grid>
         </Grid>
       </Stack>
-    </Container>
+    </Box>
   )
 }
