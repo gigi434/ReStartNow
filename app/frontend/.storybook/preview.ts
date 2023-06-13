@@ -7,6 +7,10 @@ import '@fontsource/material-icons'
 import { CssBaseline, ThemeProvider } from '@mui/material'
 import { withThemeFromJSXProvider } from '@storybook/addon-styling'
 import { lightTheme, darkTheme } from '../app/themes'
+import { initialize, mswLoader } from 'msw-storybook-addon'
+
+// Initialize MSW
+initialize()
 
 const preview: Preview = {
   parameters: {
@@ -18,6 +22,7 @@ const preview: Preview = {
       },
     },
   },
+  loaders: [mswLoader],
 }
 
 export default preview

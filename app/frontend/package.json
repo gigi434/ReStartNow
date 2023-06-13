@@ -20,12 +20,14 @@
     "@types/node": "20.1.7",
     "@types/react": "18.2.6",
     "@types/react-dom": "18.2.4",
+    "axios": "^1.4.0",
     "eslint": "8.40.0",
     "eslint-config-next": "13.4.2",
     "next": "^13.4.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.44.3",
+    "react-query": "^3.39.3",
     "typescript": "5.0.4"
   },
   "devDependencies": {
@@ -41,9 +43,14 @@
     "@types/styled-jsx": "^3.4.4",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-storybook": "^0.6.12",
+    "msw": "^1.2.2",
+    "msw-storybook-addon": "^1.8.0",
     "prettier": "^2.8.8",
     "sass": "^1.62.1",
     "storybook": "^7.0.12",
     "storybook-css-modules": "^1.0.8"
+  },
+  "msw": {
+    "workerDirectory": "public"
   }
 }

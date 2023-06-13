@@ -1,11 +1,11 @@
-import { Stack, TextField, Button, Box, Paper, Grid, Link } from '@mui/material'
+import { Stack, TextField, Button, Box, Grid, Link } from '@mui/material'
 import { useForm, SubmitHandler, Controller } from 'react-hook-form'
 import React from 'react'
-
+import { useLogin } from '../../../../hooks/useLogin'
 // フォームで扱うデータ型を定義します。
 type Inputs = {
-  mailAddress: string | null
-  password: string | null
+  mailAddress: string
+  password: string
 }
 
 export function LoginForm() {
@@ -14,7 +14,14 @@ export function LoginForm() {
     handleSubmit,
     formState: { errors },
     watch,
-  } = useForm<Inputs>()
+  } = useForm<Inputs>({
+    defaultValues: {
+      mailAddress: '',
+      password: '',
+    },
+  })
+
+  const { login } = useLogin()
 
   const watchAll = watch()
 
@@ -34,6 +41,7 @@ export function LoginForm() {
   // フォームが送信されたときの処理を定義します。
   const onSubmit: SubmitHandler<Inputs> = (data: Inputs) => {
     console.log(`submit: `, data)
+    login(data.password, data.mailAddress)
   }
 
   return (
