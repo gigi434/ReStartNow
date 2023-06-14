@@ -6,7 +6,7 @@ import '@fontsource/roboto/700.css'
 import '@fontsource/material-icons'
 import { CssBaseline, ThemeProvider } from '@mui/material'
 import { withThemeFromJSXProvider } from '@storybook/addon-styling'
-import { lightTheme, darkTheme } from '../app/themes'
+import { lightTheme, darkTheme } from '@/src/app/themes'
 import { initialize, mswLoader } from 'msw-storybook-addon'
 
 // Initialize MSW
