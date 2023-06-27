@@ -1,39 +1,18 @@
 import { LoginForm } from '@/src/components'
 import type { Meta, StoryObj } from '@storybook/react'
-import { handlers } from '@/mocks/handler'
 import { rest } from 'msw'
-import { QueryClient, QueryClientProvider } from 'react-query'
-import { store } from '@/src/store'
-import { Provider } from 'react-redux'
-
-const queryClient = new QueryClient()
 
 const meta: Meta<typeof LoginForm> = {
   title: 'organisms/LoginForm',
   component: LoginForm,
   tags: ['autodocs'],
-  decorators: [
-    (Story) => (
-      <Provider store={store}>
-        <QueryClientProvider client={queryClient}>
-          <Story />
-        </QueryClientProvider>
-      </Provider>
-    ),
-  ],
 }
 
 export default meta
 
 type Story = StoryObj<typeof LoginForm>
 
-const Template: Story = {
-  parameters: {
-    msw: {
-      handlers,
-    },
-  },
-}
+const Template: Story = {}
 export const Success: Story = {
   ...Template,
   name: 'フォームに正しい値を入植し、ログインできた場合',

@@ -1,4 +1,13 @@
-import { rest } from 'msw'
-import { mockLogin } from './api/auth'
+import {
+  mockGetInformations,
+  mockChangePassword,
+  mockLogin,
+  mockGetOneInformation,
+} from './api'
 
-export const handlers = { auth: rest.post(`/login`, mockLogin) }
+export const handlers = {
+  mockLogin,
+  mockChangePassword,
+  mockGetInformations,
+  mockGetOneInformation,
+}

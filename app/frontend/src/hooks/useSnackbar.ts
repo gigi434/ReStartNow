@@ -1,7 +1,7 @@
 // スナックバーを表示させるカスタムフック
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/src/store'
-import { show, hide } from '@/src/slice/snackbarSlice'
+import { show, hide } from '@/src/slice'
 import React from 'react'
 
 export const useSnackbar = () => {

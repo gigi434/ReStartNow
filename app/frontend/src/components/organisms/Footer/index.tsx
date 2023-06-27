@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { NavigationMenu, Copyright, Logo, Divider } from '@/src/components'
+import { NavigationMenu, Copyright, Logo, Divider, LinkText } from '@/src/components'
 import { Box, Container, Button } from '@mui/material'
 
 /**
