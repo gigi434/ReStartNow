@@ -19,7 +19,7 @@ interface CardProps {
   /**
    * カードの説明
    */
-  description: string
+  description?: string
 }
 
 export function Card({ image, title, description }: CardProps) {
@@ -34,7 +34,7 @@ export function Card({ image, title, description }: CardProps) {
           style={{ objectFit: 'contain' }}
         />
         <MuiCardContent>
-          <Typography gutterBottom variant="h5" component="div">
+          <Typography gutterBottom variant="body1" component="div">
             {title}
           </Typography>
           <Typography variant="body2" color="text.secondary">

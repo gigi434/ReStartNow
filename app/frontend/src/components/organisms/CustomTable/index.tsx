@@ -16,6 +16,7 @@ import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 import FilterListIcon from '@mui/icons-material/FilterList'
 import { visuallyHidden } from '@mui/utils'
+import { useTheme } from '@mui/material'
 
 interface Data {
   calories: number
@@ -143,13 +144,14 @@ interface EnhancedTableProps {
 }
 
 function EnhancedTableHead(props: EnhancedTableProps) {
+  const theme = useTheme()
   const { onRequestSort, order, orderBy } = props
   const createSortHandler = (property: keyof Data) => () => {
     onRequestSort(property)
   }
 
   return (
-    <TableHead>
+    <TableHead sx={{ bgcolor: theme.palette.grey[100] }}>
       <TableRow>
         {headCells.map((headCell) => (
           <TableCell
@@ -177,7 +179,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
   )
 }
 
-export function EnhancedTable() {
+export function CustomTable() {
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] = React.useState<keyof Data>('calories')
   const [page, setPage] = React.useState(0)
@@ -215,11 +217,6 @@ export function EnhancedTable() {
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
-        <Toolbar>
-          <Typography variant="h6" id="tableTitle" component="div">
-            Nutrition
-          </Typography>
-        </Toolbar>
         <TableContainer>
           <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
             <EnhancedTableHead
@@ -237,7 +234,9 @@ export function EnhancedTable() {
                     role="checkbox"
                     tabIndex={-1}
                     key={row.name}
-                    sx={{ cursor: 'pointer' }}
+                    sx={{
+                      cursor: 'pointer',
+                    }}
                   >
                     <TableCell component="th" id={labelId} scope="row">
                       {row.name}

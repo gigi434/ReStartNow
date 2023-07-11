@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 
 export interface passwordValidationRulesProps {
-  test: RegExp
   message: string
   isPassed: boolean
 }

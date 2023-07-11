@@ -13,6 +13,7 @@ export const lightTheme = createTheme({
   palette: {
     primary: {
       main: indigo.A400,
+      light: indigo.A100,
     },
     secondary: {
       main: cyan.A400,

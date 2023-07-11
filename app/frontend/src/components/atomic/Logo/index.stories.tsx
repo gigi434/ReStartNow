@@ -2,7 +2,7 @@ import { Logo } from '@/src/components'
 import type { Meta, StoryObj } from '@storybook/react'
 
 const meta: Meta<typeof Logo> = {
-  title: 'Atomic/Logo',
+  title: 'Atoms/Logo',
   component: Logo,
   tags: ['autodocs'],
   argTypes: {},

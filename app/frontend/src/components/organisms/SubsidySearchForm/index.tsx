@@ -36,7 +36,6 @@ export function SubsidySearchForm() {
         noValidate
         onSubmit={handleSubmit(onSubmit)}
         spacing={2}
-        sx={{ m: 2, width: '25ch' }}
       >
         {/* フォームの見出し */}
         <Typography variant="h6" component="h2">

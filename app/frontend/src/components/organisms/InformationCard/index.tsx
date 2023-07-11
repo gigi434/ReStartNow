@@ -1,9 +1,10 @@
 import { Grid, Stack, Typography, Link } from '@mui/material'
 import * as React from 'react'
-import { Information } from '@prisma/client'
+import type { ClientSideInformation } from '@/src/types'
+import { format, parseISO } from 'date-fns'
 
 type InformationCardProps = {
-  information: Information
+  information: ClientSideInformation
 }
 
 export function InformationCard({ information }: InformationCardProps) {
@@ -11,9 +12,16 @@ export function InformationCard({ information }: InformationCardProps) {
     <Stack key={information.id} spacing={2}>
       <Typography variant="h6">{information.title}</Typography>
       <Grid container justifyContent="space-between">
-        <Typography>{information.createdAt.toISOString()}</Typography>
+        <Typography variant="caption">
+          {information?.createdAt
+            ? `公開日：${format(
+                parseISO(information.createdAt),
+                'yyyy-MM-dd HH:mm:ss'
+              )}`
+            : undefined}
+        </Typography>
         <Link
-          href={`/information/${information.id}`}
+          href={`/informations/${information.id}`}
           underline="none"
           color="primary"
         >

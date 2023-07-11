@@ -64,72 +64,69 @@ export function RegionSearchForm() {
   }
 
   return (
-    <section>
-      <Stack
-        component="form"
-        noValidate
-        onSubmit={handleSubmit(onSubmit)}
-        spacing={2}
-        sx={{ m: 2, width: '25ch' }}
-      >
-        {/* フォームの見出し */}
-        <Typography variant="h6" component="h2">
-          地域検索
-        </Typography>
-        {/* 都道府県のインプット */}
-        <Controller
-          name="prefecture"
-          control={control}
-          rules={validationRules.prefecture}
-          render={({ field }) => (
-            <Autocomplete
-              options={prefectures}
-              value={prefectureValue} // 内部状態を参照
-              onChange={(event, newValue) => {
-                onPrefectureChange(event, newValue)
-                field.onChange(newValue)
-              }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="都道府県"
-                  variant="outlined"
-                  error={errors.prefecture !== undefined}
-                  helperText={errors.prefecture?.message}
-                />
-              )}
-            />
-          )}
-        />
-        {/* 市町区村のインプット */}
-        <Controller
-          name="city"
-          control={control}
-          rules={validationRules.city}
-          render={({ field }) => (
-            <Autocomplete
-              options={cityOptions}
-              value={cityValue} // 内部状態を参照
-              onChange={(event, newValue) => {
-                onCityChange(event, newValue)
-                field.onChange(newValue)
-              }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="市区町村"
-                  variant="outlined"
-                  error={errors.city !== undefined}
-                  helperText={errors.city?.message}
-                />
-              )}
-            />
-          )}
-        />
-        <Button variant="contained" type="submit" color="primary">
-          検索
-        </Button>
-      </Stack>
-    </section>
+    <Stack
+      component="form"
+      noValidate
+      onSubmit={handleSubmit(onSubmit)}
+      spacing={2}
+    >
+      {/* フォームの見出し */}
+      <Typography variant="h6" component="h2">
+        地域検索
+      </Typography>
+      {/* 都道府県のインプット */}
+      <Controller
+        name="prefecture"
+        control={control}
+        rules={validationRules.prefecture}
+        render={({ field }) => (
+          <Autocomplete
+            options={prefectures}
+            value={prefectureValue} // 内部状態を参照
+            onChange={(event, newValue) => {
+              onPrefectureChange(event, newValue)
+              field.onChange(newValue)
+            }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="都道府県"
+                variant="outlined"
+                error={errors.prefecture !== undefined}
+                helperText={errors.prefecture?.message}
+              />
+            )}
+          />
+        )}
+      />
+      {/* 市町区村のインプット */}
+      <Controller
+        name="city"
+        control={control}
+        rules={validationRules.city}
+        render={({ field }) => (
+          <Autocomplete
+            options={cityOptions}
+            value={cityValue} // 内部状態を参照
+            onChange={(event, newValue) => {
+              onCityChange(event, newValue)
+              field.onChange(newValue)
+            }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="市区町村"
+                variant="outlined"
+                error={errors.city !== undefined}
+                helperText={errors.city?.message}
+              />
+            )}
+          />
+        )}
+      />
+      <Button variant="contained" type="submit" color="primary">
+        検索
+      </Button>
+    </Stack>
   )
 }

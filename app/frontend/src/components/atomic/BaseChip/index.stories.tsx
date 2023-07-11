@@ -3,7 +3,7 @@ import * as React from 'react'
 import { BaseChip } from '@/src/components'
 
 const meta: Meta<typeof BaseChip> = {
-  title: 'atomic/BaseChip',
+  title: 'Atoms/BaseChip',
   component: BaseChip,
   tags: ['autodocs'],
   decorators: [(Story) => <Story />],

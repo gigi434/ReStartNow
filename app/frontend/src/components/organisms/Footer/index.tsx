@@ -1,5 +1,11 @@
 import * as React from 'react'
-import { NavigationMenu, Copyright, Logo, Divider, LinkText } from '@/src/components'
+import {
+  NavigationMenu,
+  Copyright,
+  Logo,
+  Divider,
+  LinkText,
+} from '@/src/components'
 import { Box, Container, Button } from '@mui/material'
 
 /**
@@ -7,7 +13,7 @@ import { Box, Container, Button } from '@mui/material'
  */
 export function Footer() {
   return (
-    <Container maxWidth="lg">
+    <section>
       {/* 分割線 */}
       <Divider />
       <Box
@@ -45,6 +51,6 @@ export function Footer() {
           <Copyright />
         </Box>
       </Box>
-    </Container>
+    </section>
   )
 }

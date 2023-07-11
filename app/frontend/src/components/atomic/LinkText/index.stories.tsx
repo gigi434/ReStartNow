@@ -3,7 +3,7 @@ import { Typography, LinkText } from '@/src/components'
 import type { Meta, StoryObj } from '@storybook/react'
 
 const meta: Meta<typeof LinkText> = {
-  title: 'Atomic/LinkText',
+  title: 'Atoms/LinkText',
   component: LinkText,
   tags: ['autodocs'],
   argTypes: {

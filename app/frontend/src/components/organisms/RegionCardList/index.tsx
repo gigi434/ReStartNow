@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
-import { Grid } from '@mui/material'
+import { Grid, Stack } from '@mui/material'
 import { BasicPagination, Card } from '@/src/components'
 
 interface CardData {
   image: string
   title: string
-  description: string
+  description?: string
 }
 
 interface RegionCardListProps {
@@ -29,8 +29,8 @@ export function RegionCardList({ cards }: RegionCardListProps) {
     const startIndex = (page - 1) * cardsPerPage
     const endIndex = startIndex + cardsPerPage
 
-    return cards.slice(startIndex, endIndex).map((card, index) => (
-      <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
+    return cards.slice(startIndex, endIndex).map((card) => (
+      <Grid item key={card.title} xs={6} sm={6} md={3}>
         <Card
           image={card.image}
           title={card.title}
@@ -41,17 +41,25 @@ export function RegionCardList({ cards }: RegionCardListProps) {
   }
 
   return (
-    <div>
+    <Grid
+      container
+      direction="column"
+      spacing={2}
+      sx={{ flexGrow: 1 }}
+      width={'100%'}
+    >
       {/* 市町区村のカード一覧 */}
-      <Grid container spacing={2}>
+      <Grid container spacing={2} sx={{ flexGrow: 1 }}>
         {renderCards()}
       </Grid>
       {/* 都道府県しか検索条件に記載していない場合の市町区村ページャー */}
-      <BasicPagination
-        count={totalPages}
-        page={page}
-        onChange={handlePageChange}
-      />
-    </div>
+      <Grid item xs={12} container justifyContent="flex-end">
+        <BasicPagination
+          count={totalPages}
+          page={page}
+          onChange={handlePageChange}
+        />
+      </Grid>
+    </Grid>
   )
 }

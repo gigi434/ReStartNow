@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 
 // More on default export: https://storybook.js.org/docs/preact/writing-stories/introduction#default-export
 const meta: Meta<typeof CloseButton> = {
-  title: 'Atomic/Button/CloseButton',
+  title: 'Atoms/Button/CloseButton',
   component: CloseButton,
   tags: ['autodocs'],
   // More on argTypes: https://storybook.js.org/docs/preact/api/argtypes

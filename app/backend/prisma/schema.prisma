@@ -78,7 +78,7 @@ model Subsidy {
   name                    String        @unique
   deadlineForReceipt      Int // 受給期限
   ageLimit                String // 年齢制限
-  amountReceived          Int[] // 受給額
+  amountReceived          String // 受給額
   applicationAddress      String // 申請先
   applicationMethod       String // 申請方法
   applicationRequirements String // 申請条件

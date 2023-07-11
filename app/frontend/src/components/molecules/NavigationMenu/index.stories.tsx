@@ -12,7 +12,7 @@ type Story = StoryObj<typeof NavigationMenu>
 
 const NavigationItems: NavigationMenuProps[] = [
   { href: '/results', content: '結果閲覧' },
-  { href: '/information', content: 'お知らせ' },
+  { href: '/informations', content: 'お知らせ' },
   { href: '/profile', content: 'プロフィール' },
 ]
 
