@@ -2,8 +2,6 @@ import * as React from 'react'
 import {
   Header,
   Footer,
-  RegionSearchForm,
-  RegionCardList,
   SubsidySearchForm,
   CustomTable,
 } from '@/src/components'
@@ -15,13 +13,17 @@ import {
   Typography,
   useTheme,
 } from '@mui/material'
-import { Subsidy } from '@prisma/client'
+import { ClientSideSubsidy } from '@/src/types'
 
 type SubsidySearchProps = {
-  Subsidies: Subsidy[]
+  Subsidies: ClientSideSubsidy[]
+  municipalityId: number
 }
 
-export function SubsidySearch({ Subsidies }: SubsidySearchProps) {
+export function SubsidySearch({
+  Subsidies,
+  municipalityId,
+}: SubsidySearchProps) {
   const theme = useTheme()
   return (
     <Grid container direction="column">
@@ -58,7 +60,7 @@ export function SubsidySearch({ Subsidies }: SubsidySearchProps) {
               {/* 見出し */}
               <Typography variant="h6">助成金一覧</Typography>
               {/* 助成金一覧 */}
-              <CustomTable />
+              <CustomTable Subsidies={Subsidies} />
             </Stack>
           </Grid>
         </Grid>

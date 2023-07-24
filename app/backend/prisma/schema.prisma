@@ -84,12 +84,11 @@ model Subsidy {
   applicationRequirements String // 申請条件
   description             String // 説明
   status                  subsidyStatus @default(Continuation) // 助成金の更新・廃止などの状態
-  municipalityId          Int
   createdAt               DateTime      @default(now())
   updatedAt               DateTime      @updatedAt
-  questions               Question[]
+  municipalityId          Int
   municipality            Municipality  @relation(fields: [municipalityId], references: [id])
-  eligibilityRequirements Json
+  questions               Question[]
   answers                 Answer[]
 }
 
@@ -102,6 +101,7 @@ model Question {
   subsidy    Subsidy  @relation(fields: [subsidyId], references: [id])
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+  propertyName String // クライアントサイドでリクエストに格納される回答のプロパティ
 }
 
 // ユーザーの答えを保存するテーブル

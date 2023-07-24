@@ -10,14 +10,11 @@ import {
 } from '@/src/components'
 import axios from 'axios'
 import { useTheme } from '@mui/system'
+import { ClientSideInformation } from '@/src/types'
 
 // Define the type for the component's props
 type ListWithChipFilterProps = {
   id: number
-}
-type ClientSideInformation = Omit<Information, 'createdAt' | 'updatedAt'> & {
-  createdAt: string
-  updatedAt: string
 }
 
 export function ListWithChipFilter({ id }: ListWithChipFilterProps) {

@@ -5,7 +5,7 @@ import MuiCardMedia from '@mui/material/CardMedia'
 import Typography from '@mui/material/Typography'
 import { CardActionArea as MuiCardActionArea } from '@mui/material'
 
-interface CardProps {
+export interface CardProps {
   /**
    * カードの画像のURL
    */
@@ -34,7 +34,7 @@ export function Card({ image, title, description }: CardProps) {
           style={{ objectFit: 'contain' }}
         />
         <MuiCardContent>
-          <Typography gutterBottom variant="body1" component="div">
+          <Typography gutterBottom variant="body1">
             {title}
           </Typography>
           <Typography variant="body2" color="text.secondary">

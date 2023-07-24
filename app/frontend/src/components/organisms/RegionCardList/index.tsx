@@ -1,43 +1,58 @@
-import React, { useState } from 'react'
-import { Grid, Stack } from '@mui/material'
-import { BasicPagination, Card } from '@/src/components'
+import React, { useState, useEffect } from 'react'
+import { Grid } from '@mui/material'
+import { BasicPagination, Card, LinkCard } from '@/src/components'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/src/store'
+import { useFetchMunicipalities } from '@/src/hooks'
+import { ClientSideMunicipality } from '@/src/types'
 
-interface CardData {
-  image: string
-  title: string
-  description?: string
-}
-
-interface RegionCardListProps {
-  cards: CardData[]
-}
-
-export function RegionCardList({ cards }: RegionCardListProps) {
+export function RegionCardList() {
+  const { data: municipalities, isError: fetchMunicipalitiesError } =
+    useFetchMunicipalities()
+  const region = useSelector((state: RootState) => state.region)
   const [page, setPage] = useState(1)
+  const [relatedMunicipalities, setRelatedMunicipalities] = useState<
+    ClientSideMunicipality[]
+  >([])
   const cardsPerPage = 8
-  const totalCards = cards.length
+  const totalCards = relatedMunicipalities.length
   const totalPages = Math.ceil(totalCards / cardsPerPage)
+  const startIndex = (page - 1) * cardsPerPage
+  const endIndex = startIndex + cardsPerPage
+
+  useEffect(() => {
+    if (region.municipality) {
+      setRelatedMunicipalities(
+        municipalities?.filter(
+          (municipality) => municipality.id === region.municipality?.id
+        ) || []
+      )
+    } else if (region.prefecture) {
+      setRelatedMunicipalities(
+        municipalities?.filter(
+          (municipality) => municipality.prefectureId === region.prefecture?.id
+        ) || []
+      )
+    } else {
+      setRelatedMunicipalities(municipalities || [])
+    }
+  }, [region, municipalities])
+
+  if (fetchMunicipalitiesError || !municipalities) {
+    return <div>Error fetching municipalities</div>
+  }
+
+  function getFileName(path: string): string {
+    const fileNameWithExtension = path.split('/').pop()
+    const fileName = fileNameWithExtension?.split('.').shift()
+    return fileName || ''
+  }
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
     setPage(value)
-  }
-
-  const renderCards = () => {
-    const startIndex = (page - 1) * cardsPerPage
-    const endIndex = startIndex + cardsPerPage
-
-    return cards.slice(startIndex, endIndex).map((card) => (
-      <Grid item key={card.title} xs={6} sm={6} md={3}>
-        <Card
-          image={card.image}
-          title={card.title}
-          description={card.description}
-        />
-      </Grid>
-    ))
   }
 
   return (
@@ -49,10 +64,18 @@ export function RegionCardList({ cards }: RegionCardListProps) {
       width={'100%'}
     >
       {/* 市町区村のカード一覧 */}
-      <Grid container spacing={2} sx={{ flexGrow: 1 }}>
-        {renderCards()}
+      <Grid container spacing={2} sx={{ flexGrow: 1 }} minHeight={'440px'}>
+        {relatedMunicipalities?.slice(startIndex, endIndex).map((card) => (
+          <Grid item key={card.name} xs={6} sm={6} md={3}>
+            <LinkCard
+              image={card.municipalSymbolPath}
+              title={card.name}
+              href={`/municipalities/${getFileName(card.municipalSymbolPath)}`}
+            />
+          </Grid>
+        ))}
       </Grid>
-      {/* 都道府県しか検索条件に記載していない場合の市町区村ページャー */}
+      {/* ページャー */}
       <Grid item xs={12} container justifyContent="flex-end">
         <BasicPagination
           count={totalPages}

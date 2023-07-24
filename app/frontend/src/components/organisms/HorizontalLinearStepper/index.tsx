@@ -5,12 +5,26 @@ import Step from '@mui/material/Step'
 import StepLabel from '@mui/material/StepLabel'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
+import { TextField, RadioGroup, FormControlLabel, Radio } from '@mui/material'
+import { ClientSideQuestion } from '@/src/types'
+import axios from 'axios'
 
-const steps = ['Select campaign settings', 'Create an ad group', 'Create an ad']
+type HorizontalLinearStepperProps = {
+  fetchedQuestions: ClientSideQuestion[]
+}
 
-export function HorizontalLinearStepper() {
+export function HorizontalLinearStepper({
+  fetchedQuestions,
+}: HorizontalLinearStepperProps) {
   const [activeStep, setActiveStep] = React.useState(0) // アクティブなステップのインデックスを管理するstate
   const [skipped, setSkipped] = React.useState(new Set<number>()) // スキップされたステップのインデックスを管理するSetオブジェクトのstate
+  const [questions, setQuestions] = React.useState(
+    fetchedQuestions.map((question) => question.text)
+  ) // フェッチした質問を格納する
+  const [answers, setAnswers] = React.useState<{
+    [key: string]: string | boolean
+  }>({}) // 利用者の回答を格納する
+  const [grantAmount, setGrantAmount] = React.useState<number | boolean>()
 
   /** ステップがオプションかどうかを判定する関数 */
   const isStepOptional = (step: number) => {
@@ -31,7 +45,7 @@ export function HorizontalLinearStepper() {
       newSkipped.delete(activeStep)
     }
 
-    setActiveStep((prevActiveStep) => prevActiveStep + 1)
+    setActiveStep((prevActiveStep) => prevActiveStep + 1) // ここで次のステップに進めます
     setSkipped(newSkipped)
   }
 
@@ -60,45 +74,86 @@ export function HorizontalLinearStepper() {
     setActiveStep(0)
   }
 
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setAnswers((prevAnswers) => {
+      return {
+        ...prevAnswers,
+        [fetchedQuestions[activeStep].propertyName]: event.target.value,
+      }
+    })
+  }
+
+  /** 最後の質問が表示された後、結果を表示するためのコールバック関数 */
+  const handleSubmit = async () => {
+    try {
+      const response = await axios.post(
+        process.env.NODE_ENV === 'development' ? `/result/1` : '/api/result',
+        {
+          ...answers,
+        }
+      )
+      await setGrantAmount(response.data.amount as number | boolean)
+      handleNext() // ステップを進める
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   return (
     <Box sx={{ width: '100%' }}>
       <Stepper activeStep={activeStep}>
-        {steps.map((label, index) => {
-          const stepProps: { completed?: boolean } = {}
-          const labelProps: {
-            optional?: React.ReactNode
-          } = {}
-          if (isStepOptional(index)) {
-            labelProps.optional = (
-              <Typography variant="caption">Optional</Typography>
-            )
-          }
-          if (isStepSkipped(index)) {
-            stepProps.completed = false
-          }
-          return (
-            <Step key={label} {...stepProps}>
-              <StepLabel {...labelProps}>{label}</StepLabel>
-            </Step>
-          )
-        })}
+        {questions.map((question, index) => (
+          <Step key={index}>
+            <StepLabel>{question}</StepLabel>
+          </Step>
+        ))}
       </Stepper>
-      {/* 最後のステップが完了した場合の表示 */}
-      {activeStep === steps.length ? (
-        <>
-          <Typography sx={{ mt: 2, mb: 1 }}>
-            All steps completed - you&apos;re finished
-          </Typography>
-          <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-            <Box sx={{ flex: '1 1 auto' }} />
-            <Button onClick={handleReset}>Reset</Button>
-          </Box>
-        </>
+      {activeStep === questions.length ? (
+        <Typography sx={{ mt: 2, mb: 1 }}>
+          {/* 返り値の型がbooleanであれば受給資格なし */}
+          {typeof grantAmount === 'boolean'
+            ? '受給資格がありません'
+            : `受給額： ${grantAmount}`}
+        </Typography>
       ) : (
-        <>
-          <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
+        <Box sx={{ display: 'flex', flexDirection: 'column', pt: 2 }}>
+          {/* 質問本文 */}
+          <Typography variant="h6">
+            {fetchedQuestions[activeStep].text}
+          </Typography>
+
+          {/* 回答するためのインプット要素 */}
+          {fetchedQuestions[activeStep].answerType === 'boolean' ? (
+            <RadioGroup
+              aria-label={`question-${fetchedQuestions[activeStep].propertyName}`}
+              name={`question-${fetchedQuestions[activeStep].propertyName}`}
+              value={answers[fetchedQuestions[activeStep].propertyName] || ''}
+              onChange={handleChange}
+            >
+              <FormControlLabel value="true" control={<Radio />} label="はい" />
+              <FormControlLabel
+                value="false"
+                control={<Radio />}
+                label="いいえ"
+              />
+            </RadioGroup>
+          ) : fetchedQuestions[activeStep].answerType === 'number' ? (
+            <TextField
+              id={`question-${fetchedQuestions[activeStep].propertyName}`}
+              type="number"
+              value={answers[fetchedQuestions[activeStep].propertyName] || ''}
+              onChange={handleChange}
+            />
+          ) : (
+            <TextField
+              id={`question-${fetchedQuestions[activeStep].propertyName}`}
+              type="number"
+              value={answers[fetchedQuestions[activeStep].propertyName] || ''}
+              onChange={handleChange}
+            />
+          )}
+          {/* 一つ前の質問に戻るボタン */}
           <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-            {/* 戻るボタン */}
             <Button
               color="inherit"
               disabled={activeStep === 0}
@@ -107,18 +162,16 @@ export function HorizontalLinearStepper() {
             >
               Back
             </Button>
-            {/* スキップボタン */}
-            <Box sx={{ flex: '1 1 auto' }} />
-            {isStepOptional(activeStep) && (
-              <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
-                Skip
-              </Button>
-            )}
-            <Button onClick={handleNext}>
-              {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+            {/* 次の質問に進むボタン　質問がなければ結果を見るボタンになる */}
+            <Button
+              onClick={
+                activeStep === questions.length - 1 ? handleSubmit : handleNext
+              }
+            >
+              {activeStep === questions.length - 1 ? 'Submit' : 'Next'}
             </Button>
           </Box>
-        </>
+        </Box>
       )}
     </Box>
   )

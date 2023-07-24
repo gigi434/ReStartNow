@@ -28,7 +28,7 @@ const generateMunicipalities = (count: number) => {
 
 const Template: Story = {
   args: {
-    Municipalities: generateMunicipalities(12),
+    municipalities: generateMunicipalities(12),
   },
 }
 

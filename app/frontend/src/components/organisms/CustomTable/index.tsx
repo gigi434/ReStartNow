@@ -9,54 +9,11 @@ import TableHead from '@mui/material/TableHead'
 import TablePagination from '@mui/material/TablePagination'
 import TableRow from '@mui/material/TableRow'
 import TableSortLabel from '@mui/material/TableSortLabel'
-import Toolbar from '@mui/material/Toolbar'
-import Typography from '@mui/material/Typography'
 import Paper from '@mui/material/Paper'
-import IconButton from '@mui/material/IconButton'
-import Tooltip from '@mui/material/Tooltip'
-import FilterListIcon from '@mui/icons-material/FilterList'
 import { visuallyHidden } from '@mui/utils'
 import { useTheme } from '@mui/material'
-
-interface Data {
-  calories: number
-  carbs: number
-  fat: number
-  name: string
-  protein: number
-}
-
-function createData(
-  name: string,
-  calories: number,
-  fat: number,
-  carbs: number,
-  protein: number
-): Data {
-  return {
-    name,
-    calories,
-    fat,
-    carbs,
-    protein,
-  }
-}
-
-const rows = [
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Donut', 452, 25.0, 51, 4.9),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
-  createData('Honeycomb', 408, 3.2, 87, 6.5),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Jelly Bean', 375, 0.0, 94, 0.0),
-  createData('KitKat', 518, 26.0, 65, 7.0),
-  createData('Lollipop', 392, 0.2, 98, 0.0),
-  createData('Marshmallow', 318, 0, 81, 2.0),
-  createData('Nougat', 360, 19.0, 9, 37.0),
-  createData('Oreo', 437, 18.0, 63, 4.0),
-]
+import { ClientSideSubsidy } from '@/src/types'
+import { Prisma } from '@prisma/client'
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -74,8 +31,8 @@ function getComparator<Key extends keyof any>(
   order: Order,
   orderBy: Key
 ): (
-  a: { [key in Key]: number | string },
-  b: { [key in Key]: number | string }
+  a: { [key in Key]: number | string | Prisma.JsonValue },
+  b: { [key in Key]: number | string | Prisma.JsonValue }
 ) => number {
   return order === 'desc'
     ? (a, b) => descendingComparator(a, b, orderBy)
@@ -99,7 +56,7 @@ function stableSort<T>(
 
 interface HeadCell {
   disablePadding: boolean
-  id: keyof Data
+  id: keyof ClientSideSubsidy
   label: string
   numeric: boolean
 }
@@ -109,36 +66,48 @@ const headCells: readonly HeadCell[] = [
     id: 'name',
     numeric: false,
     disablePadding: false,
-    label: 'Dessert (100g serving)',
+    label: '助成金',
   },
   {
-    id: 'calories',
+    id: 'ageLimit',
     numeric: true,
     disablePadding: false,
-    label: 'Calories',
+    label: '最大受給年齢',
   },
   {
-    id: 'fat',
-    numeric: true,
+    id: 'applicationAddress',
+    numeric: false,
     disablePadding: false,
-    label: 'Fat (g)',
+    label: '申請先',
   },
   {
-    id: 'carbs',
-    numeric: true,
+    id: 'applicationMethod',
+    numeric: false,
     disablePadding: false,
-    label: 'Carbs (g)',
+    label: '申請方法',
   },
   {
-    id: 'protein',
-    numeric: true,
+    id: 'applicationRequirements',
+    numeric: false,
     disablePadding: false,
-    label: 'Protein (g)',
+    label: '申請資格',
+  },
+  {
+    id: 'amountReceived',
+    numeric: false,
+    disablePadding: false,
+    label: '受給額',
+  },
+  {
+    id: 'deadlineForReceipt',
+    numeric: false,
+    disablePadding: false,
+    label: '受付締切日',
   },
 ]
 
 interface EnhancedTableProps {
-  onRequestSort: (property: keyof Data) => void
+  onRequestSort: (property: keyof ClientSideSubsidy) => void
   order: Order
   orderBy: string
 }
@@ -146,7 +115,7 @@ interface EnhancedTableProps {
 function EnhancedTableHead(props: EnhancedTableProps) {
   const theme = useTheme()
   const { onRequestSort, order, orderBy } = props
-  const createSortHandler = (property: keyof Data) => () => {
+  const createSortHandler = (property: keyof ClientSideSubsidy) => () => {
     onRequestSort(property)
   }
 
@@ -179,13 +148,13 @@ function EnhancedTableHead(props: EnhancedTableProps) {
   )
 }
 
-export function CustomTable() {
+export function CustomTable({ Subsidies }: { Subsidies: ClientSideSubsidy[] }) {
   const [order, setOrder] = React.useState<Order>('asc')
-  const [orderBy, setOrderBy] = React.useState<keyof Data>('calories')
+  const [orderBy, setOrderBy] = React.useState<keyof ClientSideSubsidy>('name')
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
 
-  const handleRequestSort = (property: keyof Data) => {
+  const handleRequestSort = (property: keyof ClientSideSubsidy) => {
     const isAsc = orderBy === property && order === 'asc'
     setOrder(isAsc ? 'desc' : 'asc')
     setOrderBy(property)
@@ -204,15 +173,15 @@ export function CustomTable() {
 
   const visibleRows = React.useMemo(
     () =>
-      stableSort(rows, getComparator(order, orderBy)).slice(
-        page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage
-      ),
-    [order, orderBy, page, rowsPerPage]
+      stableSort<ClientSideSubsidy>(
+        Subsidies,
+        getComparator(order, orderBy)
+      ).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
+    [order, orderBy, page, rowsPerPage, Subsidies]
   )
 
   const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage)
+    rowsPerPage - Math.min(rowsPerPage, Subsidies.length - page * rowsPerPage)
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -241,10 +210,18 @@ export function CustomTable() {
                     <TableCell component="th" id={labelId} scope="row">
                       {row.name}
                     </TableCell>
-                    <TableCell align="right">{row.calories}</TableCell>
-                    <TableCell align="right">{row.fat}</TableCell>
-                    <TableCell align="right">{row.carbs}</TableCell>
-                    <TableCell align="right">{row.protein}</TableCell>
+                    <TableCell align="right">{row.ageLimit}</TableCell>
+                    <TableCell align="right">
+                      {row.applicationAddress}
+                    </TableCell>
+                    <TableCell align="right">{row.applicationMethod}</TableCell>
+                    <TableCell align="right">
+                      {row.applicationRequirements}
+                    </TableCell>
+                    <TableCell align="right">{row.amountReceived}</TableCell>
+                    <TableCell align="right">
+                      {row.deadlineForReceipt}
+                    </TableCell>
                   </TableRow>
                 )
               })}
@@ -259,7 +236,7 @@ export function CustomTable() {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={rows.length}
+          count={Subsidies.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

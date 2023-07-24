@@ -27,9 +27,9 @@ export class HousingGrantDto {
 
 export class ChildbirthSupportGrantDto {
   @IsBoolean()
-  hasResidence?: boolean // 現在住んでいる市町区村に住民票があるか
+  isResidency?: boolean // 現在住んでいる市町区村に住民票があるか
   @IsBoolean()
-  hasPregnancyInterview?: boolean
+  haveChildcareInterview?: boolean // 妊娠届出時に面談を実施したか
   @IsBoolean()
-  hasChildcareInterview?: boolean
+  havePregnancyInterview?: boolean // 出生届出時に面談を実施したか
 }

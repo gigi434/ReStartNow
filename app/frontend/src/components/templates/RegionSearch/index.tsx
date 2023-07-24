@@ -16,13 +16,13 @@ import {
 import { Municipality } from '@prisma/client'
 
 type RegionSearchProps = {
-  Municipalities: {
+  municipalities: {
     image: Municipality['municipalSymbolPath']
     title: Municipality['name']
   }[]
 }
 
-export function RegionSearch({ Municipalities }: RegionSearchProps) {
+export function RegionSearch({ municipalities }: RegionSearchProps) {
   const theme = useTheme()
   return (
     <Grid container direction="column">
@@ -59,7 +59,7 @@ export function RegionSearch({ Municipalities }: RegionSearchProps) {
               {/* 見出し */}
               <Typography variant="h6">地域一覧</Typography>
               {/* 地域一覧 */}
-              <RegionCardList cards={Municipalities} />
+              <RegionCardList />
             </Stack>
           </Grid>
         </Grid>
