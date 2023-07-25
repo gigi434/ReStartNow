@@ -48,5 +48,6 @@ export const Default: Story = {
         updatedAt: '2023-06-28T06:06:12.028Z',
       },
     ],
+    municipalityId: 2,
   },
 }

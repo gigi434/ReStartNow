@@ -10,4 +10,8 @@ export default meta
 
 type Story = StoryObj<typeof SubsidySearchForm>
 
-export const Default: Story = {}
+export const Default: Story = {
+  args: {
+    municipalityId: 2,
+  },
+}

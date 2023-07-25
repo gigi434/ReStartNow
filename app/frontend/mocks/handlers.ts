@@ -7,6 +7,7 @@ import {
   mockGetQuestions,
   mockGetPrefectures,
   mockGetMunicipalities,
+  mockGetSubsidies,
 } from './api'
 
 export const handlers = [
@@ -18,4 +19,5 @@ export const handlers = [
   mockGetQuestions,
   mockGetPrefectures,
   mockGetMunicipalities,
+  mockGetSubsidies,
 ]

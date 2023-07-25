@@ -52,7 +52,7 @@ export function SubsidySearch({
           <Grid item xs={12} md={3}>
             <Box maxWidth={{ xs: '100%', md: 248 }}>
               {/* 助成金検索フォーム */}
-              <SubsidySearchForm />
+              <SubsidySearchForm municipalityId={municipalityId} />
             </Box>
           </Grid>
           <Grid item xs={12} md={9} flexGrow={1}>
