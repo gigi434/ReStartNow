@@ -1,61 +1,66 @@
-import { Grid, Container, useTheme } from '@mui/material'
+import { Container, useTheme, Button, Box, Stack } from '@mui/material'
+import { ArrowBackIosNewOutlined } from '@mui/icons-material'
 import { Header, Footer, HorizontalLinearStepper } from '@/src/components'
 import * as React from 'react'
-import { useFetchQuestions } from '@/src/hooks'
+import Link from 'next/link'
+import { useParams } from 'next/navigation'
+import { ClientSideQuestion } from '@/src/types'
 
 type QuestionAndAnswerProps = {
-  subsidyId: number
+  questions: ClientSideQuestion[]
 }
 
-export function QuestionAndAnswer({ subsidyId }: QuestionAndAnswerProps) {
+export function QuestionAndAnswer({ questions }: QuestionAndAnswerProps) {
+  const params = useParams()
   const theme = useTheme()
-  const {
-    data: fetchedQuestions,
-    isLoading,
-    isError,
-  } = useFetchQuestions(subsidyId)
-  if (isLoading) {
-    return <div>Loading...</div>
-  }
-
-  if (isError || !fetchedQuestions) {
-    return <div>Error fetching question</div>
-  }
 
   return (
-    <Grid container direction="column">
+    <Stack>
       {/* ヘッダー */}
-      <Grid item xs={12}>
-        <Header />
-      </Grid>
+      <Header />
       {/* コンテンツ */}
       <Container
-        maxWidth="lg"
+        maxWidth="sm"
         disableGutters
         sx={{
-          pt: theme.spacing(5),
-          px: theme.spacing(4),
-          pb: theme.spacing(8),
+          pt: {
+            xs: theme.spacing(3),
+            md: theme.spacing(5),
+          },
+          px: {
+            xs: theme.spacing(2),
+            md: theme.spacing(4),
+          },
+          pb: {
+            xs: theme.spacing(5),
+            md: theme.spacing(8),
+          },
         }}
       >
-        <Grid
-          container
-          direction="row"
+        <Stack
+          direction={'column'}
           justifyContent="flex-start"
-          alignItems="flex-start"
+          alignItems="stretch"
           minHeight={`calc(100vh - ${theme.spacing(8)})`}
-          spacing={2}
+          spacing={{ xs: 4, md: 8 }}
         >
-          <Grid item xs={12}>
-            {/* ステッパー */}
-            <HorizontalLinearStepper fetchedQuestions={fetchedQuestions} />
-          </Grid>
-        </Grid>
+          {/* 戻るボタン */}
+          <Box>
+            <Link
+              href={`/subsidies/${params?.subsidyId}`}
+              passHref
+              legacyBehavior
+            >
+              <Button startIcon={<ArrowBackIosNewOutlined />}>Back</Button>
+            </Link>
+          </Box>
+
+          {/* ステッパー */}
+          <HorizontalLinearStepper questions={questions} />
+        </Stack>
       </Container>
       {/* フッター */}
-      <Grid item xs={12}>
-        <Footer />
-      </Grid>
-    </Grid>
+      <Footer />
+    </Stack>
   )
 }

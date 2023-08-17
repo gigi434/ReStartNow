@@ -36,15 +36,15 @@
     "typescript": "5.0.4"
   },
   "devDependencies": {
-    "@storybook/addon-controls": "^7.0.12",
-    "@storybook/addon-essentials": "^7.0.12",
-    "@storybook/addon-interactions": "^7.0.12",
-    "@storybook/addon-links": "^7.0.12",
-    "@storybook/addon-styling": "^1.0.8",
-    "@storybook/blocks": "^7.0.12",
-    "@storybook/nextjs": "^7.0.12",
-    "@storybook/react": "^7.0.12",
-    "@storybook/testing-library": "^0.0.14-next.2",
+    "@storybook/addon-essentials": "^7.1.1",
+    "@storybook/addon-interactions": "^7.1.1",
+    "@storybook/addon-links": "^7.1.1",
+    "@storybook/addon-onboarding": "^1.0.8",
+    "@storybook/addon-styling": "^1.3.5",
+    "@storybook/blocks": "^7.1.1",
+    "@storybook/nextjs": "^7.1.1",
+    "@storybook/react": "^7.1.1",
+    "@storybook/testing-library": "^0.2.0",
     "@types/styled-jsx": "^3.4.4",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-storybook": "^0.6.12",
@@ -53,8 +53,7 @@
     "prettier": "^2.8.8",
     "prisma": "^4.16.1",
     "sass": "^1.62.1",
-    "storybook": "^7.0.12",
-    "storybook-css-modules": "^1.0.8"
+    "storybook": "^7.1.1"
   },
   "msw": {
     "workerDirectory": "public"

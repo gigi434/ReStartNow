@@ -26,12 +26,8 @@ export function SubsidySearch({
 }: SubsidySearchProps) {
   const theme = useTheme()
   return (
-    <Grid container direction="column">
-      {/* ヘッダー */}
-      <Grid item xs={12}>
-        <Header />
-      </Grid>
-      {/* コンテンツ */}
+    <Stack>
+      <Header />
       <Container
         maxWidth="lg"
         disableGutters
@@ -65,10 +61,7 @@ export function SubsidySearch({
           </Grid>
         </Grid>
       </Container>
-      {/* フッター */}
-      <Grid item xs={12}>
-        <Footer />
-      </Grid>
-    </Grid>
+      <Footer />
+    </Stack>
   )
 }

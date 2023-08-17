@@ -6,7 +6,7 @@ export let mockMunicipalities: Municipality[] = [
     createdAt: new Date('2020/06/28 15:32:21'),
     updatedAt: new Date('2020/06/28 15:32:21'),
     name: '市川市',
-    municipalSymbolPath: '/municipality/chiba/ichikawa.jpg',
+    municipalSymbolPath: '/municipality/chiba/ichikawa.png',
     prefectureId: 1,
     isSupported: true,
   },

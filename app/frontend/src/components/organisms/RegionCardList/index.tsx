@@ -71,6 +71,7 @@ export function RegionCardList() {
               image={card.municipalSymbolPath}
               title={card.name}
               href={`/municipalities/${getFileName(card.municipalSymbolPath)}`}
+              clickable={true}
             />
           </Grid>
         ))}

@@ -1,6 +1,14 @@
-import { Box, Button, Stack, Typography, useTheme } from '@mui/material'
+import {
+  Box,
+  Button,
+  Stack,
+  Typography,
+  useTheme,
+  Link as MuiLink,
+} from '@mui/material'
 import DoubleArrowIcon from '@mui/icons-material/DoubleArrow'
 import * as React from 'react'
+import Link from 'next/link'
 
 export function Hero() {
   const theme = useTheme()
@@ -12,24 +20,49 @@ export function Hero() {
         direction="column"
         spacing={2}
       >
-        <Stack spacing={1} alignItems="center" py={theme.spacing(8)}>
+        <Stack spacing={2} alignItems="center" py={theme.spacing(8)}>
           {/* 見出し */}
-          <Typography variant="h3">失業保険だけじゃない！</Typography>
+          <Typography
+            variant="h3"
+            fontWeight={700}
+            sx={{
+              fontSize: {
+                xs: '1.25rem',
+                sm: '1.5rem',
+                md: '2rem',
+              },
+            }}
+          >
+            失業保険だけじゃない！
+          </Typography>
           {/* 副見出し */}
-          <Typography variant="h4">
+          <Typography
+            variant="h4"
+            sx={{
+              fontSize: {
+                xs: '1.125rem',
+                sm: '1.25rem',
+                md: '1.5rem',
+              },
+            }}
+          >
             退職した人がもらえる助成金が一問一答で分かるサイト
           </Typography>
         </Stack>
         {/* CTA */}
-        <Button href="/questionAndAnswer" variant="contained">
-          <Typography
-            variant="body1"
-            mx={theme.spacing(2)}
-            my={theme.spacing(1)}
-          >
-            診断する
-          </Typography>
-        </Button>
+        <Link href={'/questionAndAnswer'} passHref legacyBehavior>
+          <MuiLink underline="none">
+            <Button variant="contained">
+              <Typography
+                variant="body1"
+                mx={theme.spacing(2)}
+                my={theme.spacing(1)}
+              >
+                診断する
+              </Typography>
+            </Button>
+          </MuiLink>
+        </Link>
         {/* 下矢印 */}
         <Box pt={theme.spacing(5)}>
           <DoubleArrowIcon sx={{ rotate: '90deg', fontSize: '40px' }} />

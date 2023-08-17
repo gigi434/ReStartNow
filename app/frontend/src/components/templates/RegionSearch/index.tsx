@@ -13,40 +13,38 @@ import {
   Typography,
   useTheme,
 } from '@mui/material'
-import { Municipality } from '@prisma/client'
 
-type RegionSearchProps = {
-  municipalities: {
-    image: Municipality['municipalSymbolPath']
-    title: Municipality['name']
-  }[]
-}
-
-export function RegionSearch({ municipalities }: RegionSearchProps) {
+export function RegionSearch() {
   const theme = useTheme()
   return (
-    <Grid container direction="column">
-      {/* ヘッダー */}
-      <Grid item xs={12}>
-        <Header />
-      </Grid>
-      {/* コンテンツ */}
+    <Stack>
+      <Header />
       <Container
         maxWidth="lg"
         disableGutters
         sx={{
-          pt: theme.spacing(5),
-          px: theme.spacing(4),
-          pb: theme.spacing(8),
+          pt: {
+            xs: theme.spacing(3),
+            md: theme.spacing(5),
+          },
+          px: {
+            xs: theme.spacing(2),
+            md: theme.spacing(4),
+          },
+          pb: {
+            xs: theme.spacing(5),
+            md: theme.spacing(8),
+          },
         }}
       >
+        {/* コンテンツ */}
         <Grid
           container
           direction="row"
           justifyContent="flex-start"
           alignItems="flex-start"
           minHeight={`calc(100vh - ${theme.spacing(8)})`}
-          spacing={2}
+          spacing={5}
         >
           <Grid item xs={12} md={3}>
             <Box maxWidth={{ xs: '100%', md: 248 }}>
@@ -64,10 +62,7 @@ export function RegionSearch({ municipalities }: RegionSearchProps) {
           </Grid>
         </Grid>
       </Container>
-      {/* フッター */}
-      <Grid item xs={12}>
-        <Footer />
-      </Grid>
-    </Grid>
+      <Footer />
+    </Stack>
   )
 }

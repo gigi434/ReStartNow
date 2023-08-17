@@ -4,40 +4,46 @@ import {
   Copyright,
   Logo,
   Divider,
-  LinkText,
+  SocialButton,
 } from '@/src/components'
-import { Box, Container, Button } from '@mui/material'
-
+import { Stack, useTheme } from '@mui/material'
+import { SocialButtonProps } from '@/src/components'
 /**
  * フッター
  */
 export function Footer() {
+  const theme = useTheme()
+  const socialApplication: SocialButtonProps[] = [
+    { socialApplicationName: 'twitter', href: 'https://twitter.com' },
+  ]
   return (
     <section>
       {/* 分割線 */}
       <Divider />
-      <Box
+      <Stack
+        justifyContent={'flex-start'}
+        alignItems={'center'}
+        spacing={3}
         sx={{
-          bgcolor: 'background.paper',
-          py: 6,
-          display: 'flex',
-          flexDirection: 'column',
-          textAlign: 'center',
-          alignItems: 'center',
+          pt: {
+            xs: theme.spacing(3),
+          },
+          px: {
+            xs: theme.spacing(2),
+          },
+          pb: {
+            xs: theme.spacing(3),
+          },
         }}
       >
         {/* ロゴ */}
-        <Button sx={{ textAlign: 'center', mb: 2 }}>
-          <Logo />
-        </Button>
+        <Logo />
         {/* ナビゲーション */}
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            mb: 2,
-          }}
+        <Stack
+          direction={'row'}
+          justifyContent={'center'}
+          alignItems={'center'}
+          spacing={2}
         >
           <NavigationMenu
             navItems={[
@@ -45,12 +51,27 @@ export function Footer() {
               { href: '/sitemap', content: 'サイトマップ' },
             ]}
           />
-        </Box>
+        </Stack>
+        <Stack
+          direction={'row'}
+          justifyContent={'center'}
+          alignItems={'center'}
+          spacing={2}
+        >
+          {/* SNSボタンリンク */}
+          {socialApplication.map(
+            ({ socialApplicationName, href }: SocialButtonProps) => (
+              <SocialButton
+                socialApplicationName={socialApplicationName}
+                href={href}
+                key={socialApplicationName}
+              />
+            )
+          )}
+        </Stack>
         {/* コピーライト */}
-        <Box sx={{ textAlign: 'center', mb: 2 }}>
-          <Copyright />
-        </Box>
-      </Box>
+        <Copyright />
+      </Stack>
     </section>
   )
 }

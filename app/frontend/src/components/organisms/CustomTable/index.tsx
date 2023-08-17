@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { alpha } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -14,6 +13,10 @@ import { visuallyHidden } from '@mui/utils'
 import { useTheme } from '@mui/material'
 import { ClientSideSubsidy } from '@/src/types'
 import { Prisma } from '@prisma/client'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/src/store'
+import Link from 'next/link'
+import { Link as MuiLink } from '@mui/material'
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -112,6 +115,19 @@ interface EnhancedTableProps {
   orderBy: string
 }
 
+/** 助成金検索フォームにより検索する値を含んだ助成金レコードを表示するためのコールバック関数 */
+function filterSubsidies(
+  subsidies: ClientSideSubsidy[],
+  filters: RootState['subsidySearch']
+) {
+  return subsidies.filter((subsidy) =>
+    Object.entries(filters).every(
+      ([key, value]) =>
+        !value || String(subsidy[key as keyof ClientSideSubsidy]) === value
+    )
+  )
+}
+
 function EnhancedTableHead(props: EnhancedTableProps) {
   const theme = useTheme()
   const { onRequestSort, order, orderBy } = props
@@ -149,6 +165,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 }
 
 export function CustomTable({ Subsidies }: { Subsidies: ClientSideSubsidy[] }) {
+  const subsidySearch = useSelector((state: RootState) => state.subsidySearch)
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] = React.useState<keyof ClientSideSubsidy>('name')
   const [page, setPage] = React.useState(0)
@@ -171,13 +188,15 @@ export function CustomTable({ Subsidies }: { Subsidies: ClientSideSubsidy[] }) {
     setPage(0)
   }
 
+  const filteredSubsidies = filterSubsidies(Subsidies, subsidySearch)
+
   const visibleRows = React.useMemo(
     () =>
       stableSort<ClientSideSubsidy>(
-        Subsidies,
+        filteredSubsidies,
         getComparator(order, orderBy)
       ).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
-    [order, orderBy, page, rowsPerPage, Subsidies]
+    [order, orderBy, page, rowsPerPage, filteredSubsidies]
   )
 
   const emptyRows =
@@ -198,31 +217,58 @@ export function CustomTable({ Subsidies }: { Subsidies: ClientSideSubsidy[] }) {
                 const labelId = `enhanced-table-checkbox-${index}`
 
                 return (
-                  <TableRow
-                    hover
-                    role="checkbox"
-                    tabIndex={-1}
-                    key={row.name}
-                    sx={{
-                      cursor: 'pointer',
-                    }}
+                  <Link
+                    href={`/subsidies/${row.id}/question`}
+                    passHref
+                    key={row.id}
+                    legacyBehavior
                   >
-                    <TableCell component="th" id={labelId} scope="row">
-                      {row.name}
-                    </TableCell>
-                    <TableCell align="right">{row.ageLimit}</TableCell>
-                    <TableCell align="right">
-                      {row.applicationAddress}
-                    </TableCell>
-                    <TableCell align="right">{row.applicationMethod}</TableCell>
-                    <TableCell align="right">
-                      {row.applicationRequirements}
-                    </TableCell>
-                    <TableCell align="right">{row.amountReceived}</TableCell>
-                    <TableCell align="right">
-                      {row.deadlineForReceipt}
-                    </TableCell>
-                  </TableRow>
+                    <TableRow
+                      hover
+                      role="checkbox"
+                      tabIndex={-1}
+                      key={row.name}
+                      sx={{
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <TableCell component="th" id={labelId} scope="row">
+                        <MuiLink underline="none" color="inherit">
+                          {row.name}
+                        </MuiLink>
+                      </TableCell>
+                      <TableCell align="right">
+                        <MuiLink underline="none" color="inherit">
+                          {row.ageLimit}
+                        </MuiLink>
+                      </TableCell>
+                      <TableCell align="right">
+                        <MuiLink underline="none" color="inherit">
+                          {row.applicationAddress}
+                        </MuiLink>
+                      </TableCell>
+                      <TableCell align="right">
+                        <MuiLink underline="none" color="inherit">
+                          {row.applicationMethod}
+                        </MuiLink>
+                      </TableCell>
+                      <TableCell align="right">
+                        <MuiLink underline="none" color="inherit">
+                          {row.applicationRequirements}
+                        </MuiLink>
+                      </TableCell>
+                      <TableCell align="right">
+                        <MuiLink underline="none" color="inherit">
+                          {row.amountReceived}
+                        </MuiLink>
+                      </TableCell>
+                      <TableCell align="right">
+                        <MuiLink underline="none" color="inherit">
+                          {row.deadlineForReceipt}
+                        </MuiLink>
+                      </TableCell>
+                    </TableRow>
+                  </Link>
                 )
               })}
               {rowsPerPage > 0 && emptyRows > 0 && (

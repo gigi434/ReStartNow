@@ -65,3 +65,9 @@ export const decorators = [
     GlobalStyles: CssBaseline,
   }),
 ]
+
+export const parameters = {
+  nextjs: {
+    appDirectory: true,
+  },
+}

@@ -13,7 +13,13 @@ export function NavigationMenu({
 }) {
   return (
     <nav aria-label="navigation menu">
-      <List sx={{ display: 'flex', flexDirection: 'row', gap: '16px' }}>
+      <List
+        sx={{
+          display: 'flex',
+          flexDirection: { xs: 'column', md: 'row' },
+          gap: '16px',
+        }}
+      >
         {navItems.map((item) => (
           <ListItem key={item.content} disablePadding>
             <ListItemButton

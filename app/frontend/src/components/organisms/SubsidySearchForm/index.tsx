@@ -42,10 +42,6 @@ export function SubsidySearchForm({ municipalityId }: SubsidySearchFormProps) {
   } = useForm<Inputs>({
     defaultValues: {
       name: '',
-      applicationAddress: '',
-      ageLimit: '',
-      amountReceived: '',
-      deadlineForReceipt: null,
     },
   })
 
@@ -63,6 +59,7 @@ export function SubsidySearchForm({ municipalityId }: SubsidySearchFormProps) {
       control={control}
       render={({ field }) => (
         <Autocomplete
+          // 助成金レコードから一意な値を見つける
           options={Array.from(
             new Set(
               subsidies.map((subsidy) => subsidy[name as keyof typeof subsidy])
@@ -79,7 +76,7 @@ export function SubsidySearchForm({ municipalityId }: SubsidySearchFormProps) {
             <TextField
               {...params}
               label={label}
-              variant="outlined"
+              variant="standard"
               error={errors[name] !== undefined}
             />
           )}
@@ -94,16 +91,12 @@ export function SubsidySearchForm({ municipalityId }: SubsidySearchFormProps) {
         component="form"
         noValidate
         onSubmit={handleSubmit(onSubmit)}
-        spacing={2}
+        spacing={3}
       >
         <Typography variant="h6" component="h2">
           助成金検索
         </Typography>
         {renderAutocomplete('name', '助成金名')}
-        {renderAutocomplete('applicationAddress', '申請先')}
-        {renderAutocomplete('ageLimit', '年齢制限')}
-        {renderAutocomplete('amountReceived', '受給額')}
-        {renderAutocomplete('deadlineForReceipt', '受給期限')}
         <Button variant="contained" type="submit" color="primary">
           検索
         </Button>

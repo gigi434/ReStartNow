@@ -11,8 +11,16 @@ export default meta
 type Story = StoryObj<typeof HorizontalLinearStepper>
 
 export const Default: Story = {
+  parameters: {
+    nextjs: {
+      appDirectory: true,
+      navigation: {
+        segments: [['subsidyId', '3']],
+      },
+    },
+  },
   args: {
-    fetchedQuestions: [
+    questions: [
       {
         id: 1,
         answerType: 'boolean',
