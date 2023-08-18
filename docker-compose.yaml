@@ -19,6 +19,7 @@ services:
       - "6006:6006"
     volumes:
       - "./app/frontend:/home/node/nextjs"
+      - "frontend_node_modules:/home/node/nextjs/node_modules"
     tty: true
     stdin_open: true
     
@@ -45,6 +46,7 @@ services:
       - REDIS_SECRET=${REDIS_SECRET}
     volumes:
       - "./app/backend:/home/node/nestjs"
+      - "backend_node_modules:/home/node/nestjs/node_modules"
     tty: true
     stdin_open: true
 
@@ -70,3 +72,7 @@ services:
     container_name: redis_container
     ports:
       - "6379:6379"
+
+volumes:
+  frontend_node_modules:
+  backend_node_modules:

@@ -5,43 +5,47 @@ import MuiCardMedia from '@mui/material/CardMedia'
 import Typography from '@mui/material/Typography'
 import { CardActionArea as MuiCardActionArea } from '@mui/material'
 
-interface CardProps {
-  /**
-   * カードの画像のURL
-   */
+export interface CardProps {
+  /** カードの画像のURL */
   image: string
 
-  /**
-   * カードのタイトル
-   */
+  /** カードのタイトル */
   title: string
 
-  /**
-   * カードの説明
-   */
-  description: string
+  /** カードの説明*/
+  description?: string
+
+  /** カードがクリック可能かどうか */
+  clickable?: boolean
+
+  /** カードのドロップシャドウを無くすかどうか */
+  variant?: 'outlined' | undefined
 }
 
-export function Card({ image, title, description }: CardProps) {
+export function Card({
+  image,
+  title,
+  description,
+  clickable = false,
+  variant = undefined,
+}: CardProps) {
+  const content = (
+    <>
+      <MuiCardMedia component="img" height="140" image={image} alt={title} />
+      <MuiCardContent>
+        <Typography gutterBottom variant="body1">
+          {title}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          {description}
+        </Typography>
+      </MuiCardContent>
+    </>
+  )
+
   return (
-    <MuiCard sx={{ maxWidth: 345 }}>
-      <MuiCardActionArea>
-        <MuiCardMedia
-          component="img"
-          height="140"
-          image={image}
-          alt={title}
-          style={{ objectFit: 'contain' }}
-        />
-        <MuiCardContent>
-          <Typography gutterBottom variant="h5" component="div">
-            {title}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            {description}
-          </Typography>
-        </MuiCardContent>
-      </MuiCardActionArea>
+    <MuiCard sx={{ maxWidth: 345 }} variant={variant}>
+      {clickable ? <MuiCardActionArea>{content}</MuiCardActionArea> : content}
     </MuiCard>
   )
 }

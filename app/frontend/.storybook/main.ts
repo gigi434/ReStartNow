@@ -1,5 +1,4 @@
 import type { StorybookConfig } from '@storybook/nextjs'
-const path = require('path')
 
 const config: StorybookConfig = {
   stories: [
@@ -9,19 +8,11 @@ const config: StorybookConfig = {
   addons: [
     '@storybook/addon-links',
     '@storybook/addon-essentials',
-    // Sassファイルへの対応　https://storybook.js.org/recipes/sass#sass
-    {
-      name: '@storybook/addon-styling',
-      options: {
-        sass: {
-          // Require your Sass preprocessor here
-          implementation: require('sass'),
-        },
-      },
-    },
     '@storybook/addon-interactions',
     'storybook-css-modules',
     '@storybook/addon-controls',
+    '@storybook/addon-actions',
+    '@storybook/addon-styling',
   ],
   framework: {
     name: '@storybook/nextjs',

@@ -1,2 +1,7 @@
 export * from './auth'
 export * from './information'
+export * from './subsidy'
+export * from './result'
+export * from './questions'
+export * from './prefectures'
+export * from './municipalities'

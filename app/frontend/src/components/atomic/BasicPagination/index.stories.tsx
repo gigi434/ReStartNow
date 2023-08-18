@@ -2,7 +2,7 @@ import { BasicPagination } from '@/src/components'
 import type { Meta, StoryObj } from '@storybook/react'
 
 const meta: Meta<typeof BasicPagination> = {
-  title: 'Atomic/BasicPagination',
+  title: 'Atoms/BasicPagination',
   component: BasicPagination,
   tags: ['autodocs'],
   argTypes: {

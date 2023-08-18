@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { alpha } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -9,53 +8,15 @@ import TableHead from '@mui/material/TableHead'
 import TablePagination from '@mui/material/TablePagination'
 import TableRow from '@mui/material/TableRow'
 import TableSortLabel from '@mui/material/TableSortLabel'
-import Toolbar from '@mui/material/Toolbar'
-import Typography from '@mui/material/Typography'
 import Paper from '@mui/material/Paper'
-import IconButton from '@mui/material/IconButton'
-import Tooltip from '@mui/material/Tooltip'
-import FilterListIcon from '@mui/icons-material/FilterList'
 import { visuallyHidden } from '@mui/utils'
-
-interface Data {
-  calories: number
-  carbs: number
-  fat: number
-  name: string
-  protein: number
-}
-
-function createData(
-  name: string,
-  calories: number,
-  fat: number,
-  carbs: number,
-  protein: number
-): Data {
-  return {
-    name,
-    calories,
-    fat,
-    carbs,
-    protein,
-  }
-}
-
-const rows = [
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Donut', 452, 25.0, 51, 4.9),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
-  createData('Honeycomb', 408, 3.2, 87, 6.5),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Jelly Bean', 375, 0.0, 94, 0.0),
-  createData('KitKat', 518, 26.0, 65, 7.0),
-  createData('Lollipop', 392, 0.2, 98, 0.0),
-  createData('Marshmallow', 318, 0, 81, 2.0),
-  createData('Nougat', 360, 19.0, 9, 37.0),
-  createData('Oreo', 437, 18.0, 63, 4.0),
-]
+import { useTheme } from '@mui/material'
+import { ClientSideSubsidy } from '@/src/types'
+import { Prisma } from '@prisma/client'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/src/store'
+import Link from 'next/link'
+import { Link as MuiLink } from '@mui/material'
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -73,8 +34,8 @@ function getComparator<Key extends keyof any>(
   order: Order,
   orderBy: Key
 ): (
-  a: { [key in Key]: number | string },
-  b: { [key in Key]: number | string }
+  a: { [key in Key]: number | string | Prisma.JsonValue },
+  b: { [key in Key]: number | string | Prisma.JsonValue }
 ) => number {
   return order === 'desc'
     ? (a, b) => descendingComparator(a, b, orderBy)
@@ -98,7 +59,7 @@ function stableSort<T>(
 
 interface HeadCell {
   disablePadding: boolean
-  id: keyof Data
+  id: keyof ClientSideSubsidy
   label: string
   numeric: boolean
 }
@@ -108,48 +69,74 @@ const headCells: readonly HeadCell[] = [
     id: 'name',
     numeric: false,
     disablePadding: false,
-    label: 'Dessert (100g serving)',
+    label: '助成金',
   },
   {
-    id: 'calories',
+    id: 'ageLimit',
     numeric: true,
     disablePadding: false,
-    label: 'Calories',
+    label: '最大受給年齢',
   },
   {
-    id: 'fat',
-    numeric: true,
+    id: 'applicationAddress',
+    numeric: false,
     disablePadding: false,
-    label: 'Fat (g)',
+    label: '申請先',
   },
   {
-    id: 'carbs',
-    numeric: true,
+    id: 'applicationMethod',
+    numeric: false,
     disablePadding: false,
-    label: 'Carbs (g)',
+    label: '申請方法',
   },
   {
-    id: 'protein',
-    numeric: true,
+    id: 'applicationRequirements',
+    numeric: false,
     disablePadding: false,
-    label: 'Protein (g)',
+    label: '申請資格',
+  },
+  {
+    id: 'amountReceived',
+    numeric: false,
+    disablePadding: false,
+    label: '受給額',
+  },
+  {
+    id: 'deadlineForReceipt',
+    numeric: false,
+    disablePadding: false,
+    label: '受付締切日',
   },
 ]
 
 interface EnhancedTableProps {
-  onRequestSort: (property: keyof Data) => void
+  onRequestSort: (property: keyof ClientSideSubsidy) => void
   order: Order
   orderBy: string
 }
 
+/** 助成金検索フォームにより検索する値を含んだ助成金レコードを表示するためのコールバック関数 */
+function filterSubsidies(
+  subsidies: ClientSideSubsidy[],
+  filters: RootState['subsidySearch']
+) {
+  return subsidies.filter((subsidy) =>
+    Object.entries(filters).every(
+      ([key, value]) =>
+        !value || String(subsidy[key as keyof ClientSideSubsidy]) === value
+    )
+  )
+}
+
 function EnhancedTableHead(props: EnhancedTableProps) {
+  const theme = useTheme()
   const { onRequestSort, order, orderBy } = props
-  const createSortHandler = (property: keyof Data) => () => {
+  const createSortHandler = (property: keyof ClientSideSubsidy) => () => {
     onRequestSort(property)
   }
 
   return (
-    <TableHead>
+    <TableHead sx={{ bgcolor: theme.palette.grey[100] }}>
       <TableRow>
         {headCells.map((headCell) => (
           <TableCell
@@ -177,13 +164,14 @@ function EnhancedTableHead(props: EnhancedTableProps) {
   )
 }
 
-export function EnhancedTable() {
+export function CustomTable({ Subsidies }: { Subsidies: ClientSideSubsidy[] }) {
+  const subsidySearch = useSelector((state: RootState) => state.subsidySearch)
   const [order, setOrder] = React.useState<Order>('asc')
-  const [orderBy, setOrderBy] = React.useState<keyof Data>('calories')
+  const [orderBy, setOrderBy] = React.useState<keyof ClientSideSubsidy>('name')
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
 
-  const handleRequestSort = (property: keyof Data) => {
+  const handleRequestSort = (property: keyof ClientSideSubsidy) => {
     const isAsc = orderBy === property && order === 'asc'
     setOrder(isAsc ? 'desc' : 'asc')
     setOrderBy(property)
@@ -200,26 +188,23 @@ export function EnhancedTable() {
     setPage(0)
   }
 
+  const filteredSubsidies = filterSubsidies(Subsidies, subsidySearch)
+
   const visibleRows = React.useMemo(
     () =>
-      stableSort(rows, getComparator(order, orderBy)).slice(
-        page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage
-      ),
-    [order, orderBy, page, rowsPerPage]
+      stableSort<ClientSideSubsidy>(
+        filteredSubsidies,
+        getComparator(order, orderBy)
+      ).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
+    [order, orderBy, page, rowsPerPage, filteredSubsidies]
   )
 
   const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage)
+    rowsPerPage - Math.min(rowsPerPage, Subsidies.length - page * rowsPerPage)
 
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
-        <Toolbar>
-          <Typography variant="h6" id="tableTitle" component="div">
-            Nutrition
-          </Typography>
-        </Toolbar>
         <TableContainer>
           <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
             <EnhancedTableHead
@@ -232,21 +217,58 @@ export function EnhancedTable() {
                 const labelId = `enhanced-table-checkbox-${index}`
 
                 return (
-                  <TableRow
-                    hover
-                    role="checkbox"
-                    tabIndex={-1}
-                    key={row.name}
-                    sx={{ cursor: 'pointer' }}
+                  <Link
+                    href={`/subsidies/${row.id}/question`}
+                    passHref
+                    key={row.id}
+                    legacyBehavior
                   >
-                    <TableCell component="th" id={labelId} scope="row">
-                      {row.name}
-                    </TableCell>
-                    <TableCell align="right">{row.calories}</TableCell>
-                    <TableCell align="right">{row.fat}</TableCell>
-                    <TableCell align="right">{row.carbs}</TableCell>
-                    <TableCell align="right">{row.protein}</TableCell>
-                  </TableRow>
+                    <TableRow
+                      hover
+                      role="checkbox"
+                      tabIndex={-1}
+                      key={row.name}
+                      sx={{
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <TableCell component="th" id={labelId} scope="row">
+                        <MuiLink underline="none" color="inherit">
+                          {row.name}
+                        </MuiLink>
+                      </TableCell>
+                      <TableCell align="right">
+                        <MuiLink underline="none" color="inherit">
+                          {row.ageLimit}
+                        </MuiLink>
+                      </TableCell>
+                      <TableCell align="right">
+                        <MuiLink underline="none" color="inherit">
+                          {row.applicationAddress}
+                        </MuiLink>
+                      </TableCell>
+                      <TableCell align="right">
+                        <MuiLink underline="none" color="inherit">
+                          {row.applicationMethod}
+                        </MuiLink>
+                      </TableCell>
+                      <TableCell align="right">
+                        <MuiLink underline="none" color="inherit">
+                          {row.applicationRequirements}
+                        </MuiLink>
+                      </TableCell>
+                      <TableCell align="right">
+                        <MuiLink underline="none" color="inherit">
+                          {row.amountReceived}
+                        </MuiLink>
+                      </TableCell>
+                      <TableCell align="right">
+                        <MuiLink underline="none" color="inherit">
+                          {row.deadlineForReceipt}
+                        </MuiLink>
+                      </TableCell>
+                    </TableRow>
+                  </Link>
                 )
               })}
               {rowsPerPage > 0 && emptyRows > 0 && (
@@ -260,7 +282,7 @@ export function EnhancedTable() {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={rows.length}
+          count={Subsidies.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

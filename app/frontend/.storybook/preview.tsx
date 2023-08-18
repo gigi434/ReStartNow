@@ -12,7 +12,7 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import { store } from '../src/store'
 import { Provider } from 'react-redux'
 import * as React from 'react'
-import { handlers } from '../mocks/handler'
+import { handlers } from '../mocks/handlers'
 // Initialize
 initialize()
 const queryClient = new QueryClient()
@@ -65,3 +65,9 @@ export const decorators = [
     GlobalStyles: CssBaseline,
   }),
 ]
+
+export const parameters = {
+  nextjs: {
+    appDirectory: true,
+  },
+}

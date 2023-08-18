@@ -49,13 +49,14 @@ model Prefecture {
 }
 
 model Question {
-  id         Int      @id @default(autoincrement())
-  answerType String
-  text       String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime
-  subsidyId  Int
-  Subsidy    Subsidy  @relation(fields: [subsidyId], references: [id])
+  id           Int      @id @default(autoincrement())
+  answerType   String
+  text         String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime
+  subsidyId    Int
+  propertyName String
+  Subsidy      Subsidy  @relation(fields: [subsidyId], references: [id])
 }
 
 model Subsidy {
@@ -69,10 +70,9 @@ model Subsidy {
   municipalityId          Int
   createdAt               DateTime      @default(now())
   updatedAt               DateTime
-  amountReceived          Int[]
+  amountReceived          String
   status                  subsidyStatus @default(Continuation)
   deadlineForReceipt      Int
-  eligibilityRequirements Json
   Answer                  Answer[]
   Question                Question[]
   Municipality            Municipality  @relation(fields: [municipalityId], references: [id])

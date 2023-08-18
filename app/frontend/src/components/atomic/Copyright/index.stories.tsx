@@ -1,7 +1,7 @@
 import { Copyright } from '@/src/components'
 import type { Meta, StoryObj } from '@storybook/react'
 const meta: Meta<typeof Copyright> = {
-  title: 'Atomic/Copyright',
+  title: 'Atoms/Copyright',
   component: Copyright,
   tags: ['autodocs'],
 }

@@ -5,7 +5,7 @@ export function ProfileSideBar() {
   return (
     <section>
       <Container>
-        <Stack spacing={2} sx={{ m: 2, width: '320px' }}>
+        <Stack spacing={2} sx={{ m: 2 }}>
           <Typography variant="h6">プロフィール</Typography>
 
           <Link

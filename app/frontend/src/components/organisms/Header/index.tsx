@@ -19,7 +19,7 @@ export function Header() {
             <NavigationMenu
               navItems={[
                 { href: '/results', content: '結果閲覧' },
-                { href: '/information', content: 'お知らせ' },
+                { href: '/informations', content: 'お知らせ' },
                 { href: '/profile', content: 'プロフィール' },
               ]}
             />

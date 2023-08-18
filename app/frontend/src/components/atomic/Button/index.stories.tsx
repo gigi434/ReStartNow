@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography'
 
 // More on default export: https://storybook.js.org/docs/preact/writing-stories/introduction#default-export
 const meta: Meta<typeof Button> = {
-  title: 'Atomic/Button',
+  title: 'Atoms/Button',
   component: Button,
   tags: ['autodocs'],
   // More on argTypes: https://storybook.js.org/docs/preact/api/argtypes

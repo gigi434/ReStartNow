@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { CustomAccordion } from '@/src/components'
-
+import { Stack, Typography, Box } from '@mui/material'
 export function FAQ() {
   const faqList = [
     {
@@ -33,15 +33,31 @@ export function FAQ() {
     },
   ]
   return (
-    <>
-      {faqList.map((faqItem, index) => (
-        <CustomAccordion
-          key={`faqItem-${index}`}
-          summaryContent={faqItem.summaryContent}
-          detailsContent={faqItem.detailsContent}
-          id={index}
-        />
-      ))}
-    </>
+    <Stack spacing={2}>
+      <Typography
+        variant="h5"
+        fontWeight={'bold'}
+        sx={{
+          fontSize: {
+            xs: '1.125rem',
+            sm: '1.25rem',
+            md: '1.5rem',
+          },
+        }}
+      >
+        よくある質問
+      </Typography>
+      {/* Accordion同士の間隔をなくす */}
+      <Box p={2}>
+        {faqList.map((faqItem, index) => (
+          <CustomAccordion
+            key={`faqItem-${index}`}
+            summaryContent={faqItem.summaryContent}
+            detailsContent={faqItem.detailsContent}
+            id={index}
+          />
+        ))}
+      </Box>
+    </Stack>
   )
 }

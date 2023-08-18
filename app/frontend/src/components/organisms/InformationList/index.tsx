@@ -1,18 +1,16 @@
-import { Stack } from '@mui/material'
 import { InformationCard } from '@/src/components'
 import * as React from 'react'
-import { Information } from '@prisma/client'
-
+import type { ClientSideInformation } from '@/src/types'
 type InformationListProps = {
-  informations: Information[]
+  informations: ClientSideInformation[]
 }
 
 export function InformationList({ informations }: InformationListProps) {
   return (
-    <Stack spacing={2} sx={{ m: 2, width: '680px' }}>
-      {informations.map((information, index) => (
-        <InformationCard key={index} information={information} />
+    <>
+      {informations.map((information) => (
+        <InformationCard key={information.title} information={information} />
       ))}
-    </Stack>
+    </>
   )
 }

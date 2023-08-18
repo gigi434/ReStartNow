@@ -2,7 +2,7 @@ import { TablePagination } from '@/src/components'
 import type { Meta, StoryObj } from '@storybook/react'
 
 const meta: Meta<typeof TablePagination> = {
-  title: 'Atomic/TablePagination',
+  title: 'Atoms/TablePagination',
   component: TablePagination,
   tags: ['autodocs'],
   argTypes: {

@@ -1,33 +1,89 @@
-import { Stack, TextField, Button, Typography } from '@mui/material'
+import {
+  Stack,
+  TextField,
+  Button,
+  Typography,
+  Autocomplete,
+} from '@mui/material'
 import { useForm, SubmitHandler, Controller } from 'react-hook-form'
 import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { updateSubsidySearch } from '@/src/slice'
+import { RootState } from '@/src/store'
+import { useFetchSubsidies } from '@/src/hooks'
 
 // フォームで扱うデータ型を定義します。
 type Inputs = {
   /** 助成金の名前 */
-  name: string | null
+  name: string | ''
   /** 申請先 */
-  applicationAddress: string | null
+  applicationAddress: string | ''
   /** 年齢制限 */
-  ageLimit: string
+  ageLimit: string | ''
   /** 受給額 */
-  amountReceived: number
+  amountReceived: string | ''
   /** 受給期限 */
-  deadlineForReceipt: number
+  deadlineForReceipt: number | null
+}
+
+type SubsidySearchFormProps = {
+  municipalityId: number
 }
 
 /** 助成金の検索フォーム */
-export function SubsidySearchForm() {
+export function SubsidySearchForm({ municipalityId }: SubsidySearchFormProps) {
+  const { data: subsidies, isError: fetchSubsidiesError } =
+    useFetchSubsidies(municipalityId)
+  const dispatch = useDispatch()
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<Inputs>()
+  } = useForm<Inputs>({
+    defaultValues: {
+      name: '',
+    },
+  })
 
-  // フォームが送信されたときの処理を定義します。
-  const onSubmit: SubmitHandler<Inputs> = (data: Inputs) => {
-    console.log(`submit: `, data)
+  if (fetchSubsidiesError || !subsidies) {
+    return <div>Error fetched subsidies</div>
   }
+
+  const onSubmit: SubmitHandler<Inputs> = (data: Inputs) => {
+    dispatch(updateSubsidySearch(data))
+  }
+
+  const renderAutocomplete = (name: keyof Inputs, label: string) => (
+    <Controller
+      name={name}
+      control={control}
+      render={({ field }) => (
+        <Autocomplete
+          // 助成金レコードから一意な値を見つける
+          options={Array.from(
+            new Set(
+              subsidies.map((subsidy) => subsidy[name as keyof typeof subsidy])
+            )
+          )}
+          value={field.value || null}
+          onChange={(event, newValue) => {
+            field.onChange(newValue)
+          }}
+          getOptionLabel={(option) =>
+            typeof option === 'number' ? option.toString() : option
+          }
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label={label}
+              variant="standard"
+              error={errors[name] !== undefined}
+            />
+          )}
+        />
+      )}
+    />
+  )
 
   return (
     <section>
@@ -35,78 +91,12 @@ export function SubsidySearchForm() {
         component="form"
         noValidate
         onSubmit={handleSubmit(onSubmit)}
-        spacing={2}
-        sx={{ m: 2, width: '25ch' }}
+        spacing={3}
       >
-        {/* フォームの見出し */}
         <Typography variant="h6" component="h2">
           助成金検索
         </Typography>
-        <Controller
-          name="name"
-          control={control}
-          render={({ field }) => (
-            <TextField
-              {...field}
-              label="名前"
-              variant="standard"
-              error={errors.name !== undefined}
-              helperText={errors.name?.message}
-            />
-          )}
-        />
-        <Controller
-          name="applicationAddress"
-          control={control}
-          render={({ field }) => (
-            <TextField
-              {...field}
-              label="申請先"
-              variant="standard"
-              error={errors.applicationAddress !== undefined}
-              helperText={errors.applicationAddress?.message}
-            />
-          )}
-        />
-        <Controller
-          name="ageLimit"
-          control={control}
-          render={({ field }) => (
-            <TextField
-              {...field}
-              label="年齢制限"
-              variant="standard"
-              error={errors.ageLimit !== undefined}
-              helperText={errors.ageLimit?.message}
-            />
-          )}
-        />
-        <Controller
-          name="amountReceived"
-          control={control}
-          render={({ field }) => (
-            <TextField
-              {...field}
-              label="受給額"
-              variant="standard"
-              error={errors.amountReceived !== undefined}
-              helperText={errors.amountReceived?.message}
-            />
-          )}
-        />
-        <Controller
-          name="deadlineForReceipt"
-          control={control}
-          render={({ field }) => (
-            <TextField
-              {...field}
-              label="受給期限"
-              variant="standard"
-              error={errors.deadlineForReceipt !== undefined}
-              helperText={errors.deadlineForReceipt?.message}
-            />
-          )}
-        />
+        {renderAutocomplete('name', '助成金名')}
         <Button variant="contained" type="submit" color="primary">
           検索
         </Button>
