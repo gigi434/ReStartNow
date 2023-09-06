@@ -115,17 +115,23 @@ interface EnhancedTableProps {
   orderBy: string
 }
 
-/** 助成金検索フォームにより検索する値を含んだ助成金レコードを表示するためのコールバック関数 */
+/**
+ * 助成金検索フォームにより検索する値を含んだ助成金レコードを表示するためのコールバック関数
+ */
 function filterSubsidies(
   subsidies: ClientSideSubsidy[],
   filters: RootState['subsidySearch']
 ) {
-  return subsidies.filter((subsidy) =>
-    Object.entries(filters).every(
-      ([key, value]) =>
-        !value || String(subsidy[key as keyof ClientSideSubsidy]) === value
-    )
+  const actualFilters = filters.subsidy || {}
+
+  const matchedSubsidiesRecord = subsidies.filter((subsidy) =>
+    Object.keys(actualFilters).every((key) => {
+      const filterValue = actualFilters[key as keyof typeof actualFilters]
+      const subsidyValue = subsidy[key as keyof typeof subsidy]
+      return !filterValue || subsidyValue === filterValue
+    })
   )
+  return matchedSubsidiesRecord
 }
 
 function EnhancedTableHead(props: EnhancedTableProps) {

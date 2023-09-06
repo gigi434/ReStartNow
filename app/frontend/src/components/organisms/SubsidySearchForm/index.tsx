@@ -32,19 +32,19 @@ type SubsidySearchFormProps = {
 
 /** 助成金の検索フォーム */
 export function SubsidySearchForm({ subsidies }: SubsidySearchFormProps) {
+  const subsiydSearch = useSelector((state: RootState) => state.subsidySearch)
   const dispatch = useDispatch()
   const {
     control,
-    handleSubmit,
     formState: { errors },
-  } = useForm<Inputs>({
-    defaultValues: {
-      name: '',
-    },
-  })
+  } = useForm<Inputs>()
 
-  const onSubmit: SubmitHandler<Inputs> = (data: Inputs) => {
-    dispatch(updateSubsidySearch(data))
+  const onSubsidyChange = (
+    _prevValue: any,
+    newValue: ClientSideSubsidy | null
+  ) => {
+    dispatch(updateSubsidySearch(newValue))
+    console.log(subsiydSearch.subsidy)
   }
 
   const renderAutocomplete = (name: keyof Inputs, label: string) => (
@@ -54,14 +54,21 @@ export function SubsidySearchForm({ subsidies }: SubsidySearchFormProps) {
       control={control}
       render={({ field }) => (
         <Autocomplete
-          // 助成金レコードから一意な値を見つける
           options={Array.from(
             new Set(
               subsidies.map((subsidy) => subsidy[name as keyof typeof subsidy])
             )
           )}
-          value={field.value || null}
+          value={
+            subsiydSearch.subsidy?.[
+              name as keyof typeof subsiydSearch.subsidy
+            ] || null
+          }
           onChange={(event, newValue) => {
+            const selectedSubsidy = subsidies.find(
+              (subsidy) => subsidy[name as keyof typeof subsidy] === newValue
+            )
+            onSubsidyChange(event, selectedSubsidy || null)
             field.onChange(newValue)
           }}
           getOptionLabel={(option) =>
@@ -88,21 +95,11 @@ export function SubsidySearchForm({ subsidies }: SubsidySearchFormProps) {
   )
 
   return (
-    <section>
-      <Stack
-        component="form"
-        noValidate
-        onSubmit={handleSubmit(onSubmit)}
-        spacing={3}
-      >
-        <Typography variant="h6" component="h2">
-          助成金検索
-        </Typography>
-        {renderAutocomplete('name', '助成金名')}
-        <Button variant="contained" type="submit" color="primary">
-          検索
-        </Button>
-      </Stack>
-    </section>
+    <Stack component="form" noValidate spacing={3}>
+      <Typography variant="h6" component="h2">
+        助成金検索
+      </Typography>
+      {renderAutocomplete('name', '助成金名')}
+    </Stack>
   )
 }
