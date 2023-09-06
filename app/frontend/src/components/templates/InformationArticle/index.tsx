@@ -1,5 +1,5 @@
 import { Stack, Button, Typography, Container, Box } from '@mui/material'
-import * as React from 'react'
+import React from 'react'
 import { Divider, Header, Footer } from '@/src/components'
 import { format, parseISO } from 'date-fns'
 import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutlined'

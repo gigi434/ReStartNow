@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import {
   Header,
   Footer,
@@ -13,8 +13,17 @@ import {
   Typography,
   useTheme,
 } from '@mui/material'
+import { ClientSideMunicipality, ClientSidePrefecture } from '@/src/types'
 
-export function RegionSearch() {
+type RegionSearchProps = {
+  prefectures: ClientSidePrefecture[]
+  municipalities: ClientSideMunicipality[]
+}
+
+export function RegionSearch({
+  prefectures,
+  municipalities,
+}: RegionSearchProps) {
   const theme = useTheme()
   return (
     <Stack>
@@ -49,7 +58,10 @@ export function RegionSearch() {
           <Grid item xs={12} md={3}>
             <Box maxWidth={{ xs: '100%', md: 248 }}>
               {/* 地域検索フォーム */}
-              <RegionSearchForm />
+              <RegionSearchForm
+                prefectures={prefectures}
+                municipalities={municipalities}
+              />
             </Box>
           </Grid>
           <Grid item xs={12} md={9} flexGrow={1}>
@@ -57,7 +69,7 @@ export function RegionSearch() {
               {/* 見出し */}
               <Typography variant="h6">地域一覧</Typography>
               {/* 地域一覧 */}
-              <RegionCardList />
+              <RegionCardList municipalities={municipalities} />
             </Stack>
           </Grid>
         </Grid>

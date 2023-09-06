@@ -11,7 +11,7 @@ export const mockPostAnswers = rest.post<BodyType>(
   async (req, res, ctx) => {
     const subsidyId = req.params.subsidyId as string
 
-    if (subsidyId === '3') {
+    if (subsidyId === '1') {
       const { isResidency, haveChildcareInterview, havePregnancyInterview } =
         (await req.json()) as BodyType
 

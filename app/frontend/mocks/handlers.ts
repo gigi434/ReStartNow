@@ -8,8 +8,9 @@ import {
   mockGetPrefectures,
   mockGetMunicipalities,
   mockGetSubsidies,
+  mockGetAllQuestions,
+  mockGetAllSubsidies,
 } from './api'
-
 export const handlers = [
   mockLogin,
   mockChangePassword,
@@ -20,4 +21,6 @@ export const handlers = [
   mockGetPrefectures,
   mockGetMunicipalities,
   mockGetSubsidies,
+  mockGetAllQuestions,
+  mockGetAllSubsidies,
 ]

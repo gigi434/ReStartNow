@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import MuiTablePagination, {
   TablePaginationProps as MuiTablePaginationProps,
 } from '@mui/material/TablePagination'

@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import MuiAlert, { AlertProps as MuiAlertProps } from '@mui/material/Alert'
 
 export function Alert({ onClose, severity, variant, children }: MuiAlertProps) {

@@ -1,7 +1,6 @@
 import { Stack, TextField, Autocomplete, Typography } from '@mui/material'
 import { useForm, Controller } from 'react-hook-form'
 import React, { useState } from 'react'
-import { useFetchPrefectures, useFetchMunicipalities } from '@/src/hooks'
 import { ClientSideMunicipality, ClientSidePrefecture } from '@/src/types'
 import { useDispatch, useSelector } from 'react-redux'
 import { setPrefecture, setMunicipality } from '@/src/slice'
@@ -12,17 +11,21 @@ type Inputs = {
   municipalities: ClientSideMunicipality | null
 }
 
+type RegionSearchFormProps = {
+  prefectures: ClientSidePrefecture[]
+  municipalities: ClientSideMunicipality[]
+}
+
 /**
  * 助成金一覧の表示に対応している助成金が存在する市町区村を検索して表示するテンプレート
  */
-export function RegionSearchForm() {
+export function RegionSearchForm({
+  prefectures,
+  municipalities,
+}: RegionSearchFormProps) {
   const dispatch = useDispatch()
   const region = useSelector((state: RootState) => state.region)
 
-  const { data: prefectures, isError: fetchPrefecturesError } =
-    useFetchPrefectures()
-  const { data: municipalities, isError: fetchMunicipalitiesError } =
-    useFetchMunicipalities()
   const {
     control,
     setValue,
@@ -42,13 +45,6 @@ export function RegionSearchForm() {
   const [municipalitiesOptions, setMunicipalityOptions] = useState<
     ClientSideMunicipality[]
   >([])
-
-  if (fetchPrefecturesError || !prefectures) {
-    return <div>Error fetched prefectures</div>
-  }
-  if (fetchMunicipalitiesError || !municipalities) {
-    return <div>Error fetched municipalities</div>
-  }
 
   const onPrefectureChange = (
     _: any,
@@ -95,11 +91,18 @@ export function RegionSearchForm() {
               <TextField
                 {...params}
                 label="都道府県"
-                variant="outlined"
+                variant="standard"
                 error={errors.prefectures !== undefined}
                 helperText={errors.prefectures?.message}
               />
             )}
+            renderOption={(props, option) => {
+              return (
+                <li {...props} key={option.name}>
+                  {option.name}
+                </li>
+              )
+            }}
           />
         )}
       />
@@ -121,11 +124,18 @@ export function RegionSearchForm() {
               <TextField
                 {...params}
                 label="市区町村"
-                variant="outlined"
+                variant="standard"
                 error={errors.municipalities !== undefined}
                 helperText={errors.municipalities?.message}
               />
             )}
+            renderOption={(props, option) => {
+              return (
+                <li {...props} key={option.name}>
+                  {option.name}
+                </li>
+              )
+            }}
           />
         )}
       />

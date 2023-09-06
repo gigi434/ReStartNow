@@ -1,6 +1,6 @@
 import { ValidationResultText } from '@/src/components'
 import type { Meta, StoryObj } from '@storybook/react'
-import * as React from 'react'
+import React from 'react'
 
 const meta: Meta<typeof ValidationResultText> = {
   title: 'Molecules/ValidationResultText',

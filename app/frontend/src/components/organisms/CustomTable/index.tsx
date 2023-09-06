@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import Box from '@mui/material/Box'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -164,7 +164,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
   )
 }
 
-export function CustomTable({ Subsidies }: { Subsidies: ClientSideSubsidy[] }) {
+export function CustomTable({ subsidies }: { subsidies: ClientSideSubsidy[] }) {
   const subsidySearch = useSelector((state: RootState) => state.subsidySearch)
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] = React.useState<keyof ClientSideSubsidy>('name')
@@ -188,7 +188,7 @@ export function CustomTable({ Subsidies }: { Subsidies: ClientSideSubsidy[] }) {
     setPage(0)
   }
 
-  const filteredSubsidies = filterSubsidies(Subsidies, subsidySearch)
+  const filteredSubsidies = filterSubsidies(subsidies, subsidySearch)
 
   const visibleRows = React.useMemo(
     () =>
@@ -200,7 +200,7 @@ export function CustomTable({ Subsidies }: { Subsidies: ClientSideSubsidy[] }) {
   )
 
   const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, Subsidies.length - page * rowsPerPage)
+    rowsPerPage - Math.min(rowsPerPage, subsidies.length - page * rowsPerPage)
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -218,7 +218,7 @@ export function CustomTable({ Subsidies }: { Subsidies: ClientSideSubsidy[] }) {
 
                 return (
                   <Link
-                    href={`/subsidies/${row.id}/question`}
+                    href={`/questions/${row.id}`}
                     passHref
                     key={row.id}
                     legacyBehavior
@@ -282,7 +282,7 @@ export function CustomTable({ Subsidies }: { Subsidies: ClientSideSubsidy[] }) {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={Subsidies.length}
+          count={subsidies.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

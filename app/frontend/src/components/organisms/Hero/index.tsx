@@ -7,7 +7,7 @@ import {
   Link as MuiLink,
 } from '@mui/material'
 import DoubleArrowIcon from '@mui/icons-material/DoubleArrow'
-import * as React from 'react'
+import React from 'react'
 import Link from 'next/link'
 
 export function Hero() {
@@ -50,7 +50,7 @@ export function Hero() {
           </Typography>
         </Stack>
         {/* CTA */}
-        <Link href={'/questionAndAnswer'} passHref legacyBehavior>
+        <Link href={'/municipalities'} passHref legacyBehavior>
           <MuiLink underline="none">
             <Button variant="contained">
               <Typography

@@ -12,4 +12,10 @@ export class QuestionService {
     })
     return questions
   }
+
+  async GetAllQuestions() {
+    const questions = await this.prismaService.question.findMany()
+
+    return questions
+  }
 }

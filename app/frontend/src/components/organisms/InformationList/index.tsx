@@ -1,5 +1,5 @@
 import { InformationCard } from '@/src/components'
-import * as React from 'react'
+import React from 'react'
 import type { ClientSideInformation } from '@/src/types'
 type InformationListProps = {
   informations: ClientSideInformation[]

@@ -8,5 +8,4 @@ export interface ChildbirthSupportGrant {
   isResidency?: boolean
   isChildcareInterview?: boolean
   isPregnancyInterview?: boolean
-  maximumBenefitPayments?: number[]
 }

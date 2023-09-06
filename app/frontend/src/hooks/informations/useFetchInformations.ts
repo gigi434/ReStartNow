@@ -1,4 +1,4 @@
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 import { ClientSideInformation } from '@/src/types'
 import axios from 'axios'
 
@@ -13,9 +13,9 @@ async function fetchInformations() {
 
 export function useFetchInformations() {
   return useQuery<ClientSideInformation[], Error>({
-    queryKey: 'informations',
+    queryKey: ['informations'],
     queryFn: fetchInformations,
-    staleTime: 0,
+    staleTime: 1000 * 60, // 1minute
     refetchOnWindowFocus: false,
   })
 }

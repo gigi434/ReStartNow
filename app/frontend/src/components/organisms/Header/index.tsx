@@ -1,6 +1,5 @@
-import * as React from 'react'
-import { Logo, NavigationMenu, Divider } from '@/src/components'
-import { AppBar, Toolbar, Box, Button } from '@mui/material'
+import { LogoButton, NavigationMenu, Divider } from '@/src/components'
+import { AppBar, Toolbar, Box } from '@mui/material'
 
 /**
  * ヘッダー
@@ -8,12 +7,10 @@ import { AppBar, Toolbar, Box, Button } from '@mui/material'
 export function Header() {
   return (
     <section>
-      <AppBar position="static" color="inherit" sx={{ boxShadow: 'none' }}>
+      <AppBar position="static" color="transparent" sx={{ boxShadow: 'none' }}>
         <Toolbar disableGutters sx={{ justifyContent: 'space-between' }}>
           {/* ロゴ画像 */}
-          <Button>
-            <Logo />
-          </Button>
+          <LogoButton />
           {/* ナビゲーション */}
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <NavigationMenu

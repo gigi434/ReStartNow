@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import MuiSkeleton, {
   SkeletonProps as MuiSkeletonProps,
 } from '@mui/material/Skeleton'

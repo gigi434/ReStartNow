@@ -1,17 +1,22 @@
 import { Container, useTheme, Button, Box, Stack } from '@mui/material'
 import { ArrowBackIosNewOutlined } from '@mui/icons-material'
-import { Header, Footer, HorizontalLinearStepper } from '@/src/components'
-import * as React from 'react'
+import {
+  Header,
+  Footer,
+  HorizontalLinearStepper,
+  Skeleton,
+} from '@/src/components'
+import React, { Suspense } from 'react'
 import Link from 'next/link'
-import { useParams } from 'next/navigation'
 import { ClientSideQuestion } from '@/src/types'
+import { useRouter } from 'next/router'
 
 type QuestionAndAnswerProps = {
   questions: ClientSideQuestion[]
 }
 
 export function QuestionAndAnswer({ questions }: QuestionAndAnswerProps) {
-  const params = useParams()
+  const router = useRouter()
   const theme = useTheme()
 
   return (
@@ -46,17 +51,18 @@ export function QuestionAndAnswer({ questions }: QuestionAndAnswerProps) {
         >
           {/* 戻るボタン */}
           <Box>
-            <Link
-              href={`/subsidies/${params?.subsidyId}`}
-              passHref
-              legacyBehavior
+            <Button
+              startIcon={<ArrowBackIosNewOutlined />}
+              onClick={() => router.back()}
             >
-              <Button startIcon={<ArrowBackIosNewOutlined />}>Back</Button>
-            </Link>
+              Back
+            </Button>
           </Box>
 
           {/* ステッパー */}
-          <HorizontalLinearStepper questions={questions} />
+          <Suspense fallback={<Skeleton />}>
+            <HorizontalLinearStepper questions={questions} />
+          </Suspense>
         </Stack>
       </Container>
       {/* フッター */}

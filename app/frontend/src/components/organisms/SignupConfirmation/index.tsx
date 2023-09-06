@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import * as React from 'react'
+import React from 'react'
 import { Button, Container, Stack, Typography } from '@mui/material'
 
 export function SignupConfirmation() {

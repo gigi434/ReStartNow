@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import MuiPagination, {
   PaginationProps as MuiPaginationProps,
 } from '@mui/material/Pagination'

@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import {
   Header,
   Footer,
@@ -16,14 +16,10 @@ import {
 import { ClientSideSubsidy } from '@/src/types'
 
 type SubsidySearchProps = {
-  Subsidies: ClientSideSubsidy[]
-  municipalityId: number
+  subsidies: ClientSideSubsidy[]
 }
 
-export function SubsidySearch({
-  Subsidies,
-  municipalityId,
-}: SubsidySearchProps) {
+export function SubsidySearch({ subsidies }: SubsidySearchProps) {
   const theme = useTheme()
   return (
     <Stack>
@@ -48,7 +44,7 @@ export function SubsidySearch({
           <Grid item xs={12} md={3}>
             <Box maxWidth={{ xs: '100%', md: 248 }}>
               {/* 助成金検索フォーム */}
-              <SubsidySearchForm municipalityId={municipalityId} />
+              <SubsidySearchForm subsidies={subsidies} />
             </Box>
           </Grid>
           <Grid item xs={12} md={9} flexGrow={1}>
@@ -56,7 +52,7 @@ export function SubsidySearch({
               {/* 見出し */}
               <Typography variant="h6">助成金一覧</Typography>
               {/* 助成金一覧 */}
-              <CustomTable Subsidies={Subsidies} />
+              <CustomTable subsidies={subsidies} />
             </Stack>
           </Grid>
         </Grid>

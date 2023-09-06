@@ -17,6 +17,11 @@ import { RegionModule } from './region/region.module'
 import { AnswerModule } from './answer/answer.module'
 import { PassportModule } from '@nestjs/passport'
 import { UserController } from './user/user.controller'
+import { SubsidiesController } from './subsidies/subsidies.controller'
+import { SubsidiesModule } from './subsidies/subsidies.module'
+import { PrefecturesService } from './prefectures/prefectures.service'
+import { PrefecturesController } from './prefectures/prefectures.controller'
+import { PrefecturesModule } from './prefectures/prefectures.module'
 
 @Module({
   imports: [
@@ -31,6 +36,8 @@ import { UserController } from './user/user.controller'
     PassportModule.register({ session: true }),
     RegionModule,
     AnswerModule,
+    SubsidiesModule,
+    PrefecturesModule,
   ],
   controllers: [
     AppController,
@@ -38,7 +45,9 @@ import { UserController } from './user/user.controller'
     ResultController,
     AuthController,
     UserController,
+    SubsidiesController,
+    PrefecturesController,
   ],
-  providers: [AppService, AuthService, RegionService],
+  providers: [AppService, AuthService, RegionService, PrefecturesService],
 })
 export class AppModule {}

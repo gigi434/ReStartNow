@@ -10,7 +10,6 @@ export class RegionService {
     const supportedMunicipality =
       await this.prismaService.municipality.findMany({
         orderBy: { id: 'asc' },
-        where: { isSupported: true },
       })
 
     return supportedMunicipality

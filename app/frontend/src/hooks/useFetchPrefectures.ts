@@ -1,19 +1,30 @@
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 import { ClientSidePrefecture } from '@/src/types'
-import axios from 'axios'
 
-async function fetchPrefectures() {
-  const { data } = await axios.get<ClientSidePrefecture[]>(
-    process.env.NODE_ENV === 'development' ? `/prefectures` : `/api/prefectures`
-  )
-  return data
+export async function fetchPrefectures() {
+  try {
+    const response = await fetch(
+      process.env.NODE_ENV === 'development'
+        ? `http://localhost:3000/prefectures`
+        : `${process.env.API_SERVER_URL}/prefectures`
+    )
+
+    const prefectures = await response.json()
+
+    return prefectures ?? []
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(`${error}`)
+    }
+    return []
+  }
 }
 
 export function useFetchPrefectures() {
   return useQuery<ClientSidePrefecture[], Error>({
-    queryKey: 'prefectures',
+    queryKey: ['prefectures'],
     queryFn: fetchPrefectures,
-    staleTime: 0,
+    staleTime: 1000 * 60, // 1minute
     refetchOnWindowFocus: false,
   })
 }

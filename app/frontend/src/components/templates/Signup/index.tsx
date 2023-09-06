@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import { Grid, Container } from '@mui/material'
 import { Header, Footer, SignupForm } from '@/src/components'
 import { useTheme } from '@mui/system'

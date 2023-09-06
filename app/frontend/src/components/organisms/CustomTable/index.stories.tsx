@@ -14,7 +14,7 @@ const Template: Story = {}
 export const Default: Story = {
   ...Template,
   args: {
-    Subsidies: [
+    subsidies: [
       {
         id: 1,
         name: 'example text',

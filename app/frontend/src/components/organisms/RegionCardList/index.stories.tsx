@@ -12,90 +12,105 @@ type Story = StoryObj<typeof RegionCardList>
 
 export const Default: Story = {
   args: {
-    cards: [
+    municipalities: [
       {
-        image: '/municipality/chiba/ichikawa.jpg',
-        title: 'example text',
-        description:
-          'Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica',
+        id: 1,
+        createdAt: '2023-06-28T06:06:12.028Z',
+        updatedAt: '2023-06-28T06:06:12.028Z',
+        name: '市川市',
+        municipalSymbolPath: '/municipality/chiba/ichikawa.png',
+        prefectureId: 1,
+        isSupported: true,
       },
       {
-        image: '/municipality/chiba/ichikawa.jpg',
-        title: 'example text',
-        description:
-          'Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica',
+        id: 2,
+        createdAt: '2023-06-28T06:06:12.028Z',
+        updatedAt: '2023-06-28T06:06:12.028Z',
+        name: '鎌ヶ谷市',
+        municipalSymbolPath: '/municipality/chiba/kamagaya.jpg',
+        prefectureId: 1,
+        isSupported: true,
       },
       {
-        image: '/municipality/chiba/ichikawa.jpg',
-        title: 'example text',
-        description:
-          'Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica',
+        id: 3,
+        createdAt: '2023-06-28T06:06:12.028Z',
+        updatedAt: '2023-06-28T06:06:12.028Z',
+        name: '松戸市',
+        municipalSymbolPath: '/municipality/chiba/matsudoshi.jpg',
+        prefectureId: 1,
+        isSupported: true,
       },
       {
-        image: '/municipality/chiba/ichikawa.jpg',
-        title: 'example text',
-        description:
-          'Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica',
+        id: 4,
+        createdAt: '2023-06-28T06:06:12.028Z',
+        updatedAt: '2023-06-28T06:06:12.028Z',
+        name: '千葉市',
+        municipalSymbolPath: '/municipality/chiba/matsudoshi.jpg',
+        prefectureId: 1,
+        isSupported: true,
       },
       {
-        image: '/municipality/chiba/ichikawa.jpg',
-        title: 'example text',
-        description:
-          'Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica',
+        id: 5,
+        createdAt: '2023-06-28T06:06:12.028Z',
+        updatedAt: '2023-06-28T06:06:12.028Z',
+        name: '銚子市',
+        municipalSymbolPath: '/municipality/chiba/matsudoshi.jpg',
+        prefectureId: 1,
+        isSupported: true,
       },
       {
-        image: '/municipality/chiba/ichikawa.jpg',
-        title: 'example text',
-        description:
-          'Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica',
+        id: 5,
+        createdAt: '2023-06-28T06:06:12.028Z',
+        updatedAt: '2023-06-28T06:06:12.028Z',
+        name: '船橋市',
+        municipalSymbolPath: '/municipality/chiba/matsudoshi.jpg',
+        prefectureId: 1,
+        isSupported: true,
       },
       {
-        image: '/municipality/chiba/ichikawa.jpg',
-        title: 'example text',
-        description:
-          'Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica',
+        id: 6,
+        createdAt: '2023-06-28T06:06:12.028Z',
+        updatedAt: '2023-06-28T06:06:12.028Z',
+        name: '館山市',
+        municipalSymbolPath: '/municipality/chiba/matsudoshi.jpg',
+        prefectureId: 1,
+        isSupported: true,
       },
       {
-        image: '/municipality/chiba/ichikawa.jpg',
-        title: 'example text',
-        description:
-          'Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica',
+        id: 7,
+        createdAt: '2023-06-28T06:06:12.028Z',
+        updatedAt: '2023-06-28T06:06:12.028Z',
+        name: '佐倉市',
+        municipalSymbolPath: '/municipality/chiba/matsudoshi.jpg',
+        prefectureId: 1,
+        isSupported: true,
       },
       {
-        image: '/municipality/chiba/ichikawa.jpg',
-        title: 'example text',
-        description:
-          'Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica',
+        id: 8,
+        createdAt: '2023-06-28T06:06:12.028Z',
+        updatedAt: '2023-06-28T06:06:12.028Z',
+        name: '野田市',
+        municipalSymbolPath: '/municipality/chiba/matsudoshi.jpg',
+        prefectureId: 1,
+        isSupported: true,
       },
       {
-        image: '/municipality/chiba/ichikawa.jpg',
-        title: 'example text',
-        description:
-          'Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica',
+        id: 9,
+        createdAt: '2023-06-28T06:06:12.028Z',
+        updatedAt: '2023-06-28T06:06:12.028Z',
+        name: '茂原市',
+        municipalSymbolPath: '/municipality/chiba/matsudoshi.jpg',
+        prefectureId: 1,
+        isSupported: true,
       },
       {
-        image: '/municipality/chiba/ichikawa.jpg',
-        title: 'example text',
-        description:
-          'Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica',
-      },
-      {
-        image: '/municipality/chiba/ichikawa.jpg',
-        title: 'example text',
-        description:
-          'Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica',
-      },
-      {
-        image: '/municipality/chiba/ichikawa.jpg',
-        title: 'example text',
-        description:
-          'Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica',
-      },
-      {
-        image: '/municipality/chiba/ichikawa.jpg',
-        title: 'example text',
-        description:
-          'Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica',
+        id: 10,
+        createdAt: '2023-06-28T06:06:12.028Z',
+        updatedAt: '2023-06-28T06:06:12.028Z',
+        name: '成田市',
+        municipalSymbolPath: '/municipality/chiba/matsudoshi.jpg',
+        prefectureId: 1,
+        isSupported: true,
       },
     ],
   },

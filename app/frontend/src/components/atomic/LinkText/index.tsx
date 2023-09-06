@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import MuiLink, { LinkProps as MuiLinkProps } from '@mui/material/Link'
 
 export function LinkText({

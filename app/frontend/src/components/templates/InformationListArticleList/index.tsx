@@ -1,5 +1,5 @@
 import { Container, Stack, Box, Button } from '@mui/material'
-import * as React from 'react'
+import React from 'react'
 import { Header, Footer, InformationList } from '@/src/components'
 import { useTheme } from '@mui/system'
 import { ClientSideInformation } from '@/src/types'

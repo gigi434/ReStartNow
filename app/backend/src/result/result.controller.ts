@@ -16,13 +16,13 @@ export class ResultController {
   @HttpCode(HttpStatus.OK)
   @Post(':subsidyId')
   /** 質問の回答から助成金の受給要件に合致しているのか判定する */
-  async getSubsidiesThroughTheQuestion(
+  async GetSubsidiesThroughTheQuestion(
     @Body() dto: AvailableSubsidiesDto,
     @Param('subsidyId', ParseIntPipe) subsidyId: number,
   ): Promise<number | boolean> {
     try {
       const amountOfBenefit =
-        await this.resultService.getBenefitThroughTheQuestion(dto, subsidyId)
+        await this.resultService.GetBenefitThroughTheQuestion(dto, subsidyId)
 
       if (amountOfBenefit) {
         return amountOfBenefit

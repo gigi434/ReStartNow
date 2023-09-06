@@ -16,7 +16,7 @@ const Template: Story = {}
 export const Default: Story = {
   ...Template,
   args: {
-    Subsidies: [
+    subsidies: [
       {
         id: 1,
         name: 'example text',
@@ -48,6 +48,5 @@ export const Default: Story = {
         updatedAt: '2023-06-28T06:06:12.028Z',
       },
     ],
-    municipalityId: 2,
   },
 }

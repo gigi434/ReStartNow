@@ -2,7 +2,7 @@ import { rest } from 'msw'
 import { mockSubsidies } from './mockData'
 
 export const mockGetSubsidies = rest.get(
-  '/municipalities/:municipalityId/subsidies',
+  `http://www.dummy.com/api/municipalities/:municipalityId/subsidies`,
   async (req, res, ctx) => {
     // 注意　パラメータが配列オブジェクトなのか不明のためstring | read only string[]として型推論するため型アサーションを使用する
     const municipalityId = req.params.municipalityId as string
@@ -10,6 +10,8 @@ export const mockGetSubsidies = rest.get(
     const subsidies = mockSubsidies.filter(
       (subsidy) => subsidy.municipalityId === parseInt(municipalityId)
     )
-    return res(ctx.status(200), ctx.json(subsidies))
+
+    const response = await res(ctx.status(200), ctx.json(subsidies))
+    return response
   }
 )

@@ -8,7 +8,7 @@ export class RegionController {
    * 質問作成や助成金と市町区村の紐づけが完了している市町区村のデータすべてを返す関数オブジェクト
    */
   @Get()
-  async getSupportedMunicipalitiesData() {
+  async getSupportedMunicipalities() {
     try {
       return await this.regionService.getSupportedMunicipality()
     } catch (err) {

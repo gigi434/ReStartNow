@@ -1,5 +1,5 @@
 import { Grid, Stack, Typography, Link as MuiLink } from '@mui/material'
-import * as React from 'react'
+import React from 'react'
 import type { ClientSideInformation } from '@/src/types'
 import { format, parseISO } from 'date-fns'
 import Link from 'next/link'

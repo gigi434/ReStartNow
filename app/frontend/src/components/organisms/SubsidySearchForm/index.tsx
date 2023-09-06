@@ -10,7 +10,7 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateSubsidySearch } from '@/src/slice'
 import { RootState } from '@/src/store'
-import { useFetchSubsidies } from '@/src/hooks'
+import { ClientSideSubsidy } from '@/src/types'
 
 // フォームで扱うデータ型を定義します。
 type Inputs = {
@@ -27,13 +27,11 @@ type Inputs = {
 }
 
 type SubsidySearchFormProps = {
-  municipalityId: number
+  subsidies: ClientSideSubsidy[]
 }
 
 /** 助成金の検索フォーム */
-export function SubsidySearchForm({ municipalityId }: SubsidySearchFormProps) {
-  const { data: subsidies, isError: fetchSubsidiesError } =
-    useFetchSubsidies(municipalityId)
+export function SubsidySearchForm({ subsidies }: SubsidySearchFormProps) {
   const dispatch = useDispatch()
   const {
     control,
@@ -45,16 +43,13 @@ export function SubsidySearchForm({ municipalityId }: SubsidySearchFormProps) {
     },
   })
 
-  if (fetchSubsidiesError || !subsidies) {
-    return <div>Error fetched subsidies</div>
-  }
-
   const onSubmit: SubmitHandler<Inputs> = (data: Inputs) => {
     dispatch(updateSubsidySearch(data))
   }
 
   const renderAutocomplete = (name: keyof Inputs, label: string) => (
     <Controller
+      key={label}
       name={name}
       control={control}
       render={({ field }) => (
@@ -80,6 +75,13 @@ export function SubsidySearchForm({ municipalityId }: SubsidySearchFormProps) {
               error={errors[name] !== undefined}
             />
           )}
+          renderOption={(props, option) => {
+            return (
+              <li {...props} key={option}>
+                {typeof option === 'number' ? option.toString() : option}
+              </li>
+            )
+          }}
         />
       )}
     />
