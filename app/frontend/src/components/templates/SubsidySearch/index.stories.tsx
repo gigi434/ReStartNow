@@ -11,10 +11,7 @@ export default meta
 
 type Story = StoryObj<typeof SubsidySearch>
 
-const Template: Story = {}
-
-export const Default: Story = {
-  ...Template,
+const Template: Story = {
   args: {
     subsidies: [
       {
@@ -48,5 +45,16 @@ export const Default: Story = {
         updatedAt: '2023-06-28T06:06:12.028Z',
       },
     ],
+  },
+}
+
+export const Default: Story = {
+  ...Template,
+}
+
+export const FetchedError: Story = {
+  ...Template,
+  args: {
+    subsidies: [],
   },
 }

@@ -170,12 +170,20 @@ function EnhancedTableHead(props: EnhancedTableProps) {
   )
 }
 
-export function CustomTable({ subsidies }: { subsidies: ClientSideSubsidy[] }) {
+export function CustomTable({
+  subsidies = [],
+}: {
+  subsidies: ClientSideSubsidy[]
+}) {
   const subsidySearch = useSelector((state: RootState) => state.subsidySearch)
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] = React.useState<keyof ClientSideSubsidy>('name')
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
+
+  if (subsidies.length === 0) {
+    throw new Error('subsidies is undefined')
+  }
 
   const handleRequestSort = (property: keyof ClientSideSubsidy) => {
     const isAsc = orderBy === property && order === 'asc'

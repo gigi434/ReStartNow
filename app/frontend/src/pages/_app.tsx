@@ -5,6 +5,8 @@ import { Provider } from 'react-redux'
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
 import { initMocks } from '@/mocks'
 import { AxiosErrorHandleProvider } from '@/src/utils'
+import { ErrorBoundaryClass } from '@/src/utils'
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -22,7 +24,9 @@ export default function App({ Component, pageProps }: AppProps) {
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
         <AxiosErrorHandleProvider>
-          <Component {...pageProps} />
+          <ErrorBoundaryClass>
+            <Component {...pageProps} />
+          </ErrorBoundaryClass>
         </AxiosErrorHandleProvider>
       </QueryClientProvider>
     </Provider>

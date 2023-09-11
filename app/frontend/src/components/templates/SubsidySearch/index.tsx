@@ -14,6 +14,7 @@ import {
   useTheme,
 } from '@mui/material'
 import { ClientSideSubsidy } from '@/src/types'
+import { ErrorBoundaryClass } from '@/src/utils/error'
 
 type SubsidySearchProps = {
   subsidies: ClientSideSubsidy[]
@@ -21,6 +22,7 @@ type SubsidySearchProps = {
 
 export function SubsidySearch({ subsidies }: SubsidySearchProps) {
   const theme = useTheme()
+
   return (
     <Stack>
       <Header />
@@ -52,7 +54,9 @@ export function SubsidySearch({ subsidies }: SubsidySearchProps) {
               {/* 見出し */}
               <Typography variant="h6">助成金一覧</Typography>
               {/* 助成金一覧 */}
-              <CustomTable subsidies={subsidies} />
+              <ErrorBoundaryClass>
+                <CustomTable subsidies={subsidies} />
+              </ErrorBoundaryClass>
             </Stack>
           </Grid>
         </Grid>

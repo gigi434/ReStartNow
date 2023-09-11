@@ -7,7 +7,7 @@ const nextConfig = {
         // 送信元を送信先へ変換する
         source: `${process.env.NEXT_PUBLIC_API_BASE_PATH}/:path*`,
         // ex. http://localhost:3000/api/proxy~をhttp://nextjs_cotainer:3005~へ変換する
-        destination: `${process.env.API_SERBER_URL}/:path*`,
+        destination: `${process.env.API_SERVER_URL}/:path*`,
       },
     ]
   },
