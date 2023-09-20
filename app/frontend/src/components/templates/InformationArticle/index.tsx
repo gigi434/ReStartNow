@@ -4,15 +4,17 @@ import { Divider, Header, Footer } from '@/src/components'
 import { format, parseISO } from 'date-fns'
 import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutlined'
 import { useTheme } from '@mui/system'
-import { ClientSideInformation } from '@/src/types'
-import Link from 'next/link'
-
+import type { Information } from '@prisma/client'
+import { useRouter } from 'next/router'
+import { formatDateWithTimeZone } from '@/src/utils'
 type InformationArticleProps = {
-  information: ClientSideInformation
+  information: Information
 }
 
 export function InformationArticle({ information }: InformationArticleProps) {
   const theme = useTheme()
+  const router = useRouter()
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone // ブラウザのタイムゾーンを取得する
 
   return (
     <Stack>
@@ -46,9 +48,12 @@ export function InformationArticle({ information }: InformationArticleProps) {
         >
           {/* 戻るボタン */}
           <Box>
-            <Link href={`/informations`} passHref legacyBehavior>
-              <Button startIcon={<ArrowBackIosNewOutlinedIcon />}>Back</Button>
-            </Link>
+            <Button
+              startIcon={<ArrowBackIosNewOutlinedIcon />}
+              onClick={() => router.back()}
+            >
+              Back
+            </Button>
           </Box>
 
           <Stack
@@ -61,19 +66,23 @@ export function InformationArticle({ information }: InformationArticleProps) {
               <Typography variant="h6">{information.title}</Typography>
             </Box>
 
+            {/* 注意： クライアントとサーバー側でタイムスタンプの日時がずれるためエラーが発生する
+            suppressHydrationWarningをtrueに設定することで対応する
+            @see https://nextjs.org/docs/messages/react-hydration-error
+            */}
             <Stack alignItems={'flex-end'} spacing={1}>
               {/* 公開日 */}
-              <Typography variant="caption">
-                {`公開日：${format(
-                  parseISO(information.createdAt),
-                  'yyyy-MM-dd HH:mm:ss'
+              <Typography variant="caption" suppressHydrationWarning={true}>
+                {`公開日: ${formatDateWithTimeZone(
+                  information.createdAt,
+                  timeZone
                 )}`}
               </Typography>
               {/* 更新日 */}
-              <Typography variant="caption">
-                {`更新日：${format(
-                  parseISO(information.updatedAt),
-                  'yyyy-MM-dd HH:mm:ss'
+              <Typography variant="caption" suppressHydrationWarning={true}>
+                {`更新日: ${formatDateWithTimeZone(
+                  information.createdAt,
+                  timeZone
                 )}`}
               </Typography>
             </Stack>

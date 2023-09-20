@@ -3,17 +3,17 @@ import { Grid } from '@mui/material'
 import { BasicPagination, LinkCard } from '@/src/components'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/src/store'
-import { ClientSideMunicipality } from '@/src/types'
+import type { Municipality } from '@prisma/client'
 
 type RegionCardListProps = {
-  municipalities: ClientSideMunicipality[]
+  municipalities: Municipality[]
 }
 
 export function RegionCardList({ municipalities }: RegionCardListProps) {
   const region = useSelector((state: RootState) => state.region)
   const [page, setPage] = useState(1)
   const [relatedMunicipalities, setRelatedMunicipalities] =
-    useState<ClientSideMunicipality[]>(municipalities)
+    useState<Municipality[]>(municipalities)
   // 一度に表示するカード一覧表示数
   const cardsPerPage = 8
   // 検索条件を加味したカード表示数

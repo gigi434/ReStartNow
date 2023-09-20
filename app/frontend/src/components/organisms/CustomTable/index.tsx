@@ -11,7 +11,7 @@ import TableSortLabel from '@mui/material/TableSortLabel'
 import Paper from '@mui/material/Paper'
 import { visuallyHidden } from '@mui/utils'
 import { useTheme } from '@mui/material'
-import { ClientSideSubsidy } from '@/src/types'
+import type { Subsidy } from '@prisma/client'
 import { Prisma } from '@prisma/client'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/src/store'
@@ -34,8 +34,8 @@ function getComparator<Key extends keyof any>(
   order: Order,
   orderBy: Key
 ): (
-  a: { [key in Key]: number | string | Prisma.JsonValue },
-  b: { [key in Key]: number | string | Prisma.JsonValue }
+  a: { [key in Key]: number | string | Prisma.JsonValue | Date },
+  b: { [key in Key]: number | string | Prisma.JsonValue | Date }
 ) => number {
   return order === 'desc'
     ? (a, b) => descendingComparator(a, b, orderBy)
@@ -59,7 +59,7 @@ function stableSort<T>(
 
 interface HeadCell {
   disablePadding: boolean
-  id: keyof ClientSideSubsidy
+  id: keyof Subsidy
   label: string
   numeric: boolean
 }
@@ -110,7 +110,7 @@ const headCells: readonly HeadCell[] = [
 ]
 
 interface EnhancedTableProps {
-  onRequestSort: (property: keyof ClientSideSubsidy) => void
+  onRequestSort: (property: keyof Subsidy) => void
   order: Order
   orderBy: string
 }
@@ -119,7 +119,7 @@ interface EnhancedTableProps {
  * 助成金検索フォームにより検索する値を含んだ助成金レコードを表示するためのコールバック関数
  */
 function filterSubsidies(
-  subsidies: ClientSideSubsidy[],
+  subsidies: Subsidy[],
   filters: RootState['subsidySearch']
 ) {
   const actualFilters = filters.subsidy || {}
@@ -137,7 +137,7 @@ function filterSubsidies(
 function EnhancedTableHead(props: EnhancedTableProps) {
   const theme = useTheme()
   const { onRequestSort, order, orderBy } = props
-  const createSortHandler = (property: keyof ClientSideSubsidy) => () => {
+  const createSortHandler = (property: keyof Subsidy) => () => {
     onRequestSort(property)
   }
 
@@ -147,7 +147,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.numeric ? 'right' : 'left'}
+            align="left"
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
           >
@@ -170,14 +170,10 @@ function EnhancedTableHead(props: EnhancedTableProps) {
   )
 }
 
-export function CustomTable({
-  subsidies = [],
-}: {
-  subsidies: ClientSideSubsidy[]
-}) {
+export function CustomTable({ subsidies = [] }: { subsidies: Subsidy[] }) {
   const subsidySearch = useSelector((state: RootState) => state.subsidySearch)
   const [order, setOrder] = React.useState<Order>('asc')
-  const [orderBy, setOrderBy] = React.useState<keyof ClientSideSubsidy>('name')
+  const [orderBy, setOrderBy] = React.useState<keyof Subsidy>('name')
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
 
@@ -185,7 +181,7 @@ export function CustomTable({
     throw new Error('subsidies is undefined')
   }
 
-  const handleRequestSort = (property: keyof ClientSideSubsidy) => {
+  const handleRequestSort = (property: keyof Subsidy) => {
     const isAsc = orderBy === property && order === 'asc'
     setOrder(isAsc ? 'desc' : 'asc')
     setOrderBy(property)
@@ -206,7 +202,7 @@ export function CustomTable({
 
   const visibleRows = React.useMemo(
     () =>
-      stableSort<ClientSideSubsidy>(
+      stableSort<Subsidy>(
         filteredSubsidies,
         getComparator(order, orderBy)
       ).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
@@ -246,37 +242,42 @@ export function CustomTable({
                         cursor: 'pointer',
                       }}
                     >
-                      <TableCell component="th" id={labelId} scope="row">
+                      <TableCell
+                        align="left"
+                        component="th"
+                        id={labelId}
+                        scope="row"
+                      >
                         <MuiLink underline="none" color="inherit">
                           {row.name}
                         </MuiLink>
                       </TableCell>
-                      <TableCell align="right">
+                      <TableCell align="left">
                         <MuiLink underline="none" color="inherit">
                           {row.ageLimit}
                         </MuiLink>
                       </TableCell>
-                      <TableCell align="right">
+                      <TableCell align="left">
                         <MuiLink underline="none" color="inherit">
                           {row.applicationAddress}
                         </MuiLink>
                       </TableCell>
-                      <TableCell align="right">
+                      <TableCell align="left">
                         <MuiLink underline="none" color="inherit">
                           {row.applicationMethod}
                         </MuiLink>
                       </TableCell>
-                      <TableCell align="right">
+                      <TableCell align="left">
                         <MuiLink underline="none" color="inherit">
                           {row.applicationRequirements}
                         </MuiLink>
                       </TableCell>
-                      <TableCell align="right">
+                      <TableCell align="left">
                         <MuiLink underline="none" color="inherit">
                           {row.amountReceived}
                         </MuiLink>
                       </TableCell>
-                      <TableCell align="right">
+                      <TableCell align="left">
                         <MuiLink underline="none" color="inherit">
                           {row.deadlineForReceipt}
                         </MuiLink>

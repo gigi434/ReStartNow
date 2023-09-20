@@ -10,7 +10,7 @@ type SnackbarProps = {
   /** スナックバーに表示するメッセージ */
   message: string
 
-  /** スナックバーの色 (error | warning | info | success) */
+  /** イベントの重大度 (error | warning | info | success) */
   severity?: AlertColor
 
   /** スナックバーを閉じる際に呼ばれるコールバック関数 */

@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { ClientSideSubsidy } from '../types'
+import { Subsidy } from '@prisma/client'
 
 interface SubsidyState {
-  subsidy: ClientSideSubsidy | null
+  subsidy: Subsidy | null
 }
 
 const initialState: SubsidyState = {
@@ -16,7 +16,7 @@ const subsidySearchSlice = createSlice({
     // 選択した助成金を更新するアクション
     updateSubsidySearch: (
       state: SubsidyState,
-      action: PayloadAction<ClientSideSubsidy | null>
+      action: PayloadAction<Subsidy | null>
     ) => {
       state.subsidy = action.payload
     },

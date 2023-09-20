@@ -10,7 +10,7 @@ export default meta
 
 type Story = StoryObj<typeof HorizontalLinearStepper>
 
-export const Default: Story = {
+const Template: Story = {
   parameters: {
     nextjs: {
       router: {
@@ -25,8 +25,8 @@ export const Default: Story = {
         answerType: 'boolean',
         text: '現在住んでいる市町区村の住民票がある',
         subsidyId: 1,
-        createdAt: '2023-06-28T06:06:12.028Z',
-        updatedAt: '2023-06-28T06:06:12.028Z',
+        createdAt: new Date('2020/06/28 15:32:21'),
+        updatedAt: new Date('2020/06/28 15:32:21'),
         propertyName: 'isResidency',
       },
       {
@@ -34,8 +34,8 @@ export const Default: Story = {
         answerType: 'boolean',
         text: '出生届出後に面談を行った',
         subsidyId: 1,
-        createdAt: '2023-06-28T06:06:12.028Z',
-        updatedAt: '2023-06-28T06:06:12.028Z',
+        createdAt: new Date('2020/06/28 15:32:21'),
+        updatedAt: new Date('2020/06/28 15:32:21'),
         propertyName: 'haveChildcareInterview',
       },
       {
@@ -43,10 +43,14 @@ export const Default: Story = {
         answerType: 'boolean',
         text: '妊娠届出時に面談を行った',
         subsidyId: 1,
-        createdAt: '2023-06-28T06:06:12.028Z',
-        updatedAt: '2023-06-28T06:06:12.028Z',
+        createdAt: new Date('2020/06/28 15:32:21'),
+        updatedAt: new Date('2020/06/28 15:32:21'),
         propertyName: 'havePregnancyInterview',
       },
     ],
   },
+}
+
+export const Default: Story = {
+  ...Template,
 }

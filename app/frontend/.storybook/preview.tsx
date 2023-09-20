@@ -13,6 +13,7 @@ import { store } from '../src/store'
 import { Provider } from 'react-redux'
 import React from 'react'
 import { handlers } from '../mocks/handlers'
+import { ErrorBoundaryClass } from '../src/utils/error'
 
 initialize()
 

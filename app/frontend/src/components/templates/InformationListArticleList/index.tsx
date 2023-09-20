@@ -2,18 +2,19 @@ import { Container, Stack, Box, Button } from '@mui/material'
 import React from 'react'
 import { Header, Footer, InformationList } from '@/src/components'
 import { useTheme } from '@mui/system'
-import { ClientSideInformation } from '@/src/types'
-import Link from 'next/link'
+import type { Information } from '@prisma/client'
 import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutlined'
+import { useRouter } from 'next/router'
 
 type InformationListArticleListProps = {
-  informations: ClientSideInformation[]
+  informations: Information[]
 }
 
 export function InformationListArticleList({
   informations,
 }: InformationListArticleListProps) {
   const theme = useTheme()
+  const router = useRouter()
 
   return (
     <Stack>
@@ -45,11 +46,14 @@ export function InformationListArticleList({
           minHeight={`calc(100vh - ${theme.spacing(8)})`}
           spacing={{ xs: 4, md: 8 }}
         >
+          {/* 戻るボタン */}
           <Box>
-            {/* 戻るボタン */}
-            <Link href={`/informations`} passHref legacyBehavior>
-              <Button startIcon={<ArrowBackIosNewOutlinedIcon />}>Back</Button>
-            </Link>
+            <Button
+              startIcon={<ArrowBackIosNewOutlinedIcon />}
+              onClick={() => router.back()}
+            >
+              Back
+            </Button>
           </Box>
           <Stack
             spacing={{ xs: 2, md: 4 }}

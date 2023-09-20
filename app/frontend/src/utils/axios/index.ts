@@ -1,1 +1,2 @@
-export * from './AxiosErrorHandleProvider'
+export * from './axiosErrorHandleProvider'
+export * from './axiosInstance'

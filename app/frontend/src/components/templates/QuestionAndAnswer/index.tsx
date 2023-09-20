@@ -7,12 +7,12 @@ import {
   Skeleton,
 } from '@/src/components'
 import React, { Suspense } from 'react'
-import Link from 'next/link'
-import { ClientSideQuestion } from '@/src/types'
 import { useRouter } from 'next/router'
+import { ErrorBoundaryClass } from '@/src/utils'
+import { Question } from '@prisma/client'
 
 type QuestionAndAnswerProps = {
-  questions: ClientSideQuestion[]
+  questions: Question[]
 }
 
 export function QuestionAndAnswer({ questions }: QuestionAndAnswerProps) {
@@ -61,7 +61,9 @@ export function QuestionAndAnswer({ questions }: QuestionAndAnswerProps) {
 
           {/* ステッパー */}
           <Suspense fallback={<Skeleton />}>
-            <HorizontalLinearStepper questions={questions} />
+            <ErrorBoundaryClass>
+              <HorizontalLinearStepper questions={questions} />
+            </ErrorBoundaryClass>
           </Suspense>
         </Stack>
       </Container>

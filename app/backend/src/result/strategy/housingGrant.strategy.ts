@@ -11,7 +11,7 @@ interface ISubsidyStrategy {
 abstract class BaseChildbirthSupportGrantStrategy implements ISubsidyStrategy {
   /** 住民票を保有しているか */
   protected checkResidency(dto: ChildbirthSupportGrantDto): boolean {
-    return dto.isResidency === true
+    return dto.isResidency !== true
   }
 
   /** 給付金を */
@@ -21,7 +21,7 @@ abstract class BaseChildbirthSupportGrantStrategy implements ISubsidyStrategy {
 export class IchikawashiChildbirthSupportGrantStrategy extends BaseChildbirthSupportGrantStrategy {
   async isEligible(dto: ChildbirthSupportGrantDto): Promise<number | boolean> {
     // 住民票がなければ受給要件に合致しない
-    if (!this.checkResidency(dto)) {
+    if (this.checkResidency(dto)) {
       return false
     }
 

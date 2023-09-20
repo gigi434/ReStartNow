@@ -16,7 +16,7 @@ export class ResultService {
     })
     if (!subsidy) {
       throw new NotFoundException({
-        status: HttpStatus.NOT_FOUND,
+        statusCode: HttpStatus.NOT_FOUND,
         message: `No strategy found for subsidy ID: ${subsidyId}`,
       })
     }

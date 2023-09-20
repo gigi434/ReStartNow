@@ -1,19 +1,19 @@
 import { Stack, TextField, Autocomplete, Typography } from '@mui/material'
 import { useForm, Controller } from 'react-hook-form'
 import React, { useState } from 'react'
-import { ClientSideMunicipality, ClientSidePrefecture } from '@/src/types'
 import { useDispatch, useSelector } from 'react-redux'
 import { setPrefecture, setMunicipality } from '@/src/slice'
 import { RootState } from '@/src/store'
+import { Municipality, Prefecture } from '@prisma/client'
 
 type Inputs = {
-  prefectures: ClientSidePrefecture | null
-  municipalities: ClientSideMunicipality | null
+  prefectures: Prefecture | null
+  municipalities: Municipality | null
 }
 
 type RegionSearchFormProps = {
-  prefectures: ClientSidePrefecture[]
-  municipalities: ClientSideMunicipality[]
+  prefectures: Prefecture[]
+  municipalities: Municipality[]
 }
 
 /**
@@ -43,13 +43,10 @@ export function RegionSearchForm({
 
   // 都道府県を選択したときの市区町村の選択肢
   const [municipalitiesOptions, setMunicipalityOptions] = useState<
-    ClientSideMunicipality[]
+    Municipality[]
   >([])
 
-  const onPrefectureChange = (
-    _: any,
-    newValue: ClientSidePrefecture | null
-  ) => {
+  const onPrefectureChange = (_: any, newValue: Prefecture | null) => {
     const relatedMunicipalities = municipalities.filter(
       (municipalities) => municipalities.prefectureId === newValue?.id
     )
@@ -60,10 +57,7 @@ export function RegionSearchForm({
   }
 
   // 市区町村が変更されたときに選択状態を更新する
-  const onMunicipalitiesChange = (
-    _: any,
-    newValue: ClientSideMunicipality | null
-  ) => {
+  const onMunicipalitiesChange = (_: any, newValue: Municipality | null) => {
     dispatch(setMunicipality(newValue)) // 市区町村の選択状態を更新
   }
 

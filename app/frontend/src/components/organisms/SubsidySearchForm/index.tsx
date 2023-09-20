@@ -1,18 +1,12 @@
-import {
-  Stack,
-  TextField,
-  Button,
-  Typography,
-  Autocomplete,
-} from '@mui/material'
-import { useForm, SubmitHandler, Controller } from 'react-hook-form'
+import { Stack, TextField, Typography, Autocomplete } from '@mui/material'
+import { useForm, Controller } from 'react-hook-form'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateSubsidySearch } from '@/src/slice'
 import { RootState } from '@/src/store'
-import { ClientSideSubsidy } from '@/src/types'
+import { Subsidy } from '@prisma/client'
 
-// フォームで扱うデータ型を定義します。
+// フォームで扱うデータ型を定義する
 type Inputs = {
   /** 助成金の名前 */
   name: string | ''
@@ -27,7 +21,7 @@ type Inputs = {
 }
 
 type SubsidySearchFormProps = {
-  subsidies: ClientSideSubsidy[]
+  subsidies: Subsidy[]
 }
 
 /** 助成金の検索フォーム */
@@ -39,12 +33,20 @@ export function SubsidySearchForm({ subsidies }: SubsidySearchFormProps) {
     formState: { errors },
   } = useForm<Inputs>()
 
-  const onSubsidyChange = (
-    _prevValue: any,
-    newValue: ClientSideSubsidy | null
-  ) => {
+  const onSubsidyChange = (_prevValue: any, newValue: Subsidy | null) => {
     dispatch(updateSubsidySearch(newValue))
     console.log(subsiydSearch.subsidy)
+  }
+  const formatOption = (option: string | number | Date): string => {
+    if (typeof option === 'number') {
+      return option.toString()
+    }
+
+    if (option instanceof Date) {
+      return option.toLocaleDateString()
+    }
+
+    return option
   }
 
   const renderAutocomplete = (name: keyof Inputs, label: string) => (
@@ -71,9 +73,7 @@ export function SubsidySearchForm({ subsidies }: SubsidySearchFormProps) {
             onSubsidyChange(event, selectedSubsidy || null)
             field.onChange(newValue)
           }}
-          getOptionLabel={(option) =>
-            typeof option === 'number' ? option.toString() : option
-          }
+          getOptionLabel={(option) => formatOption(option)}
           renderInput={(params) => (
             <TextField
               {...params}
@@ -84,8 +84,8 @@ export function SubsidySearchForm({ subsidies }: SubsidySearchFormProps) {
           )}
           renderOption={(props, option) => {
             return (
-              <li {...props} key={option}>
-                {typeof option === 'number' ? option.toString() : option}
+              <li {...props} key={formatOption(option)}>
+                {formatOption(option)}
               </li>
             )
           }}

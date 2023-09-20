@@ -10,12 +10,12 @@ import {
   Box,
   useTheme,
 } from '@mui/material'
-import { ClientSideQuestion } from '@/src/types'
 import { ProgressBar } from '@/src/components'
-import { postResultByQuestions } from '@/src/hooks'
+import { postResultByQuestions } from '@/src/utils/queries'
+import { Question } from '@prisma/client'
 
 type HorizontalLinearStepperProps = {
-  questions: ClientSideQuestion[]
+  questions: Question[]
 }
 
 export function HorizontalLinearStepper({
@@ -26,8 +26,13 @@ export function HorizontalLinearStepper({
   const [answers, setAnswers] = React.useState<{
     [key: string]: string | boolean
   }>({}) // 利用者の回答を格納する
-  const [grantAmount, setGrantAmount] = React.useState<number | boolean>()
+  const [grantAmount, setGrantAmount] = React.useState<
+    number | boolean | null
+  >()
 
+  if (questions.length === 0) {
+    throw new Error('questions fetching error is occured')
+  }
   // アクティブなステップに基づいてプログレスを計算
   const progress = (activeStep / questions.length) * 100
 
@@ -78,7 +83,7 @@ export function HorizontalLinearStepper({
         answers: convertedAnswers,
         subsidyId: questions[0].subsidyId,
       })
-      setGrantAmount(data)
+      setGrantAmount(data?.amount)
       handleNext() // ステップを進める
     } catch (error) {
       console.error(error)

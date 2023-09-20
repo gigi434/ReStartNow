@@ -1,27 +1,24 @@
 import { Grid, Stack, Typography, Link as MuiLink } from '@mui/material'
 import React from 'react'
-import type { ClientSideInformation } from '@/src/types'
-import { format, parseISO } from 'date-fns'
+import type { Information } from '@prisma/client'
 import Link from 'next/link'
+import { formatDateWithTimeZone } from '@/src/utils'
 
 type InformationCardProps = {
-  information: ClientSideInformation
+  information: Information
 }
 
 export function InformationCard({ information }: InformationCardProps) {
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone // ブラウザのタイムゾーンを取得する
+
   return (
     <Stack key={information.id} spacing={2} width={'100%'}>
       {/* 見出し */}
       <Typography variant="h6">{information.title}</Typography>
       <Grid container justifyContent="space-between">
         {/* 公開日 */}
-        <Typography variant="caption">
-          {information?.createdAt
-            ? `公開日：${format(
-                parseISO(information.createdAt),
-                'yyyy-MM-dd HH:mm:ss'
-              )}`
-            : undefined}
+        <Typography variant="caption" suppressHydrationWarning={true}>
+          {`公開日：${formatDateWithTimeZone(information.createdAt, timeZone)}`}
         </Typography>
         {/* ReadMore */}
         <Link legacyBehavior passHref href={`/informations/${information.id}`}>

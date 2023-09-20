@@ -3,11 +3,14 @@ import { CircularProgress } from '@mui/material'
 import { useRouter } from 'next/router'
 import React from 'react'
 import type { GetStaticProps, GetStaticPaths } from 'next'
-import { fetchAllQuestions, fetchQuestions } from '@/src/hooks'
-import { ClientSideQuestion } from '@/src/types'
+import {
+  fetchAllQuestions,
+  fetchQuestionsBySubsidyId,
+} from '@/src/utils/queries'
+import { Question } from '@prisma/client'
 
 type PageProps = {
-  questions: ClientSideQuestion[]
+  questions: Question[]
 }
 
 export default function Page({ questions }: PageProps) {
@@ -35,15 +38,14 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
     return { paths, fallback: false }
   } catch (err) {
-    console.log(err)
-    return { paths: [], fallback: false }
+    throw new Error('Questions fetching is occurred')
   }
 }
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const subsidyId = context?.params?.subsidyId as string
 
-  const questions = await fetchQuestions(Number(subsidyId))
+  const questions = await fetchQuestionsBySubsidyId(Number(subsidyId))
 
   return {
     props: {

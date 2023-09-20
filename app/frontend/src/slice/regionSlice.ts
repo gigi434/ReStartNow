@@ -1,10 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { ClientSideMunicipality, ClientSidePrefecture } from '@/src/types'
-
+import { Municipality, Prefecture } from '@prisma/client'
 interface RegionState {
-  prefecture: ClientSidePrefecture | null
-  municipality: ClientSideMunicipality | null
-  selectedMunicipality: ClientSideMunicipality | null
+  prefecture: Prefecture | null
+  municipality: Municipality | null
+  selectedMunicipality: Municipality | null
 }
 
 const initialState: RegionState = {
@@ -18,17 +17,11 @@ export const regionSlice = createSlice({
   initialState,
   reducers: {
     // 選択された都道府県を格納する
-    setPrefecture: (
-      state,
-      action: PayloadAction<ClientSidePrefecture | null>
-    ) => {
+    setPrefecture: (state, action: PayloadAction<Prefecture | null>) => {
       state.prefecture = action.payload
     },
     // 選択された市町区村を格納する
-    setMunicipality: (
-      state,
-      action: PayloadAction<ClientSideMunicipality | null>
-    ) => {
+    setMunicipality: (state, action: PayloadAction<Municipality | null>) => {
       state.municipality = action.payload
     },
   },
