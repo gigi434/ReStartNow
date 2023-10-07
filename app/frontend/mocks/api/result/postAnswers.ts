@@ -1,9 +1,9 @@
 import { rest } from 'msw'
 
 type BodyType = {
-  isResidency: true | false
-  haveChildcareInterview: true | false
-  havePregnancyInterview: true | false
+  isResidency: boolean
+  haveChildcareInterview: boolean
+  havePregnancyInterview: boolean
 }
 
 export const mockPostAnswers = rest.post<BodyType>(
@@ -20,22 +20,21 @@ export const mockPostAnswers = rest.post<BodyType>(
         (await req.json()) as BodyType
 
       // 住民票がなければ受給要件に合致しない
-      if (!(isResidency === true)) {
-        return res(ctx.json({ amount: false }))
+      if (isResidency !== true) {
+        return await res(ctx.json({ amount: false }))
       }
 
       // 妊娠届出時と出生届出時ともに面談を行っているのであればすでに全額受け取り済みと判断する
       if (haveChildcareInterview && havePregnancyInterview) {
-        return res(ctx.json({ amount: 0 }))
+        return await res(ctx.json({ amount: 0 }))
       }
 
       // 妊娠届出時と出生届出時どちらか面談を行っているのであれば
       if (haveChildcareInterview || havePregnancyInterview) {
-        return res(ctx.json({ amount: 50000 }))
+        return await res(ctx.json({ amount: 50000 }))
       }
       // 妊娠届出時と出生届出時ともに面談を行っていないなら全額受給金額を返す
-      return res(ctx.json({ amount: 100000 }))
+      return await res(ctx.json({ amount: 100000 }))
     }
-    return res(ctx.status(404), ctx.json({ error: 'Not Found such resources' }))
   }
 )

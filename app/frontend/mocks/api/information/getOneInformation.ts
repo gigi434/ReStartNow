@@ -10,6 +10,6 @@ export const mockGetOneInformation = rest.get(
     const information = mockInformations.find(
       (information) => information.id === Number(informationId)
     )
-    return res(ctx.status(200), ctx.json(information))
+    return await res(ctx.status(200), ctx.json(information))
   }
 )
