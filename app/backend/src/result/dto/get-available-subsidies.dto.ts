@@ -22,14 +22,14 @@ export class HousingGrantDto {
   @IsNumber()
   totalAssets?: number // 世帯の総資産
   @IsNumber()
-  rent?: number // 家賃の金額
+  rent: number // 家賃の金額
 }
 
 export class ChildbirthSupportGrantDto {
   @IsBoolean()
-  isResidency?: boolean // 現在住んでいる市町区村に住民票があるか
+  isResidency: boolean // 現在住んでいる市町区村に住民票があるか
   @IsBoolean()
-  haveChildcareInterview?: boolean // 妊娠届出時に面談を実施したか
+  haveChildcareInterview: boolean // 妊娠届出時に面談を実施したか
   @IsBoolean()
-  havePregnancyInterview?: boolean // 出生届出時に面談を実施したか
+  havePregnancyInterview: boolean // 出生届出時に面談を実施したか
 }

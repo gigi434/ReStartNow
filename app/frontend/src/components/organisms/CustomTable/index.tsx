@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import Box from '@mui/material/Box'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -11,7 +11,7 @@ import TableSortLabel from '@mui/material/TableSortLabel'
 import Paper from '@mui/material/Paper'
 import { visuallyHidden } from '@mui/utils'
 import { useTheme } from '@mui/material'
-import { ClientSideSubsidy } from '@/src/types'
+import type { Subsidy } from '@prisma/client'
 import { Prisma } from '@prisma/client'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/src/store'
@@ -34,8 +34,8 @@ function getComparator<Key extends keyof any>(
   order: Order,
   orderBy: Key
 ): (
-  a: { [key in Key]: number | string | Prisma.JsonValue },
-  b: { [key in Key]: number | string | Prisma.JsonValue }
+  a: { [key in Key]: number | string | Prisma.JsonValue | Date },
+  b: { [key in Key]: number | string | Prisma.JsonValue | Date }
 ) => number {
   return order === 'desc'
     ? (a, b) => descendingComparator(a, b, orderBy)
@@ -59,7 +59,7 @@ function stableSort<T>(
 
 interface HeadCell {
   disablePadding: boolean
-  id: keyof ClientSideSubsidy
+  id: keyof Subsidy
   label: string
   numeric: boolean
 }
@@ -110,28 +110,34 @@ const headCells: readonly HeadCell[] = [
 ]
 
 interface EnhancedTableProps {
-  onRequestSort: (property: keyof ClientSideSubsidy) => void
+  onRequestSort: (property: keyof Subsidy) => void
   order: Order
   orderBy: string
 }
 
-/** 助成金検索フォームにより検索する値を含んだ助成金レコードを表示するためのコールバック関数 */
+/**
+ * 助成金検索フォームにより検索する値を含んだ助成金レコードを表示するためのコールバック関数
+ */
 function filterSubsidies(
-  subsidies: ClientSideSubsidy[],
+  subsidies: Subsidy[],
   filters: RootState['subsidySearch']
 ) {
-  return subsidies.filter((subsidy) =>
-    Object.entries(filters).every(
-      ([key, value]) =>
-        !value || String(subsidy[key as keyof ClientSideSubsidy]) === value
-    )
+  const actualFilters = filters.subsidy || {}
+
+  const matchedSubsidiesRecord = subsidies.filter((subsidy) =>
+    Object.keys(actualFilters).every((key) => {
+      const filterValue = actualFilters[key as keyof typeof actualFilters]
+      const subsidyValue = subsidy[key as keyof typeof subsidy]
+      return !filterValue || subsidyValue === filterValue
+    })
   )
+  return matchedSubsidiesRecord
 }
 
 function EnhancedTableHead(props: EnhancedTableProps) {
   const theme = useTheme()
   const { onRequestSort, order, orderBy } = props
-  const createSortHandler = (property: keyof ClientSideSubsidy) => () => {
+  const createSortHandler = (property: keyof Subsidy) => () => {
     onRequestSort(property)
   }
 
@@ -141,7 +147,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.numeric ? 'right' : 'left'}
+            align="left"
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
           >
@@ -164,14 +170,18 @@ function EnhancedTableHead(props: EnhancedTableProps) {
   )
 }
 
-export function CustomTable({ Subsidies }: { Subsidies: ClientSideSubsidy[] }) {
+export function CustomTable({ subsidies = [] }: { subsidies: Subsidy[] }) {
   const subsidySearch = useSelector((state: RootState) => state.subsidySearch)
   const [order, setOrder] = React.useState<Order>('asc')
-  const [orderBy, setOrderBy] = React.useState<keyof ClientSideSubsidy>('name')
+  const [orderBy, setOrderBy] = React.useState<keyof Subsidy>('name')
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
 
-  const handleRequestSort = (property: keyof ClientSideSubsidy) => {
+  if (subsidies.length === 0) {
+    throw new Error('subsidies is undefined')
+  }
+
+  const handleRequestSort = (property: keyof Subsidy) => {
     const isAsc = orderBy === property && order === 'asc'
     setOrder(isAsc ? 'desc' : 'asc')
     setOrderBy(property)
@@ -188,11 +198,11 @@ export function CustomTable({ Subsidies }: { Subsidies: ClientSideSubsidy[] }) {
     setPage(0)
   }
 
-  const filteredSubsidies = filterSubsidies(Subsidies, subsidySearch)
+  const filteredSubsidies = filterSubsidies(subsidies, subsidySearch)
 
   const visibleRows = React.useMemo(
     () =>
-      stableSort<ClientSideSubsidy>(
+      stableSort<Subsidy>(
         filteredSubsidies,
         getComparator(order, orderBy)
       ).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
@@ -200,7 +210,7 @@ export function CustomTable({ Subsidies }: { Subsidies: ClientSideSubsidy[] }) {
   )
 
   const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, Subsidies.length - page * rowsPerPage)
+    rowsPerPage - Math.min(rowsPerPage, subsidies.length - page * rowsPerPage)
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -218,7 +228,7 @@ export function CustomTable({ Subsidies }: { Subsidies: ClientSideSubsidy[] }) {
 
                 return (
                   <Link
-                    href={`/subsidies/${row.id}/question`}
+                    href={`/questions/${row.id}`}
                     passHref
                     key={row.id}
                     legacyBehavior
@@ -232,37 +242,42 @@ export function CustomTable({ Subsidies }: { Subsidies: ClientSideSubsidy[] }) {
                         cursor: 'pointer',
                       }}
                     >
-                      <TableCell component="th" id={labelId} scope="row">
+                      <TableCell
+                        align="left"
+                        component="th"
+                        id={labelId}
+                        scope="row"
+                      >
                         <MuiLink underline="none" color="inherit">
                           {row.name}
                         </MuiLink>
                       </TableCell>
-                      <TableCell align="right">
+                      <TableCell align="left">
                         <MuiLink underline="none" color="inherit">
                           {row.ageLimit}
                         </MuiLink>
                       </TableCell>
-                      <TableCell align="right">
+                      <TableCell align="left">
                         <MuiLink underline="none" color="inherit">
                           {row.applicationAddress}
                         </MuiLink>
                       </TableCell>
-                      <TableCell align="right">
+                      <TableCell align="left">
                         <MuiLink underline="none" color="inherit">
                           {row.applicationMethod}
                         </MuiLink>
                       </TableCell>
-                      <TableCell align="right">
+                      <TableCell align="left">
                         <MuiLink underline="none" color="inherit">
                           {row.applicationRequirements}
                         </MuiLink>
                       </TableCell>
-                      <TableCell align="right">
+                      <TableCell align="left">
                         <MuiLink underline="none" color="inherit">
                           {row.amountReceived}
                         </MuiLink>
                       </TableCell>
-                      <TableCell align="right">
+                      <TableCell align="left">
                         <MuiLink underline="none" color="inherit">
                           {row.deadlineForReceipt}
                         </MuiLink>
@@ -282,7 +297,7 @@ export function CustomTable({ Subsidies }: { Subsidies: ClientSideSubsidy[] }) {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={Subsidies.length}
+          count={subsidies.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

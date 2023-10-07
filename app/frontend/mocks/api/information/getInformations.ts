@@ -2,8 +2,9 @@ import { rest } from 'msw'
 import { mockInformations } from './mockData'
 
 export const mockGetInformations = rest.get(
-  '/informations',
-  async (_, res, ctx) => {
-    return res(ctx.status(200), ctx.json(mockInformations))
+  `${process.env.NEXT_PUBLIC_BASE_URL}/api/informations`,
+  async (req, res, ctx) => {
+    const response = await res(ctx.status(200), ctx.json(mockInformations))
+    return response
   }
 )

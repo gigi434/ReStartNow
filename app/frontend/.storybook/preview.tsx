@@ -6,16 +6,24 @@ import '@fontsource/roboto/700.css'
 import '@fontsource/material-icons'
 import { CssBaseline, ThemeProvider } from '@mui/material'
 import { withThemeFromJSXProvider } from '@storybook/addon-styling'
-import { lightTheme, darkTheme } from '../src/app/themes'
+import { lightTheme, darkTheme } from './themes'
 import { initialize, mswLoader } from 'msw-storybook-addon'
-import { QueryClient, QueryClientProvider } from 'react-query'
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
 import { store } from '../src/store'
 import { Provider } from 'react-redux'
-import * as React from 'react'
+import React from 'react'
 import { handlers } from '../mocks/handlers'
-// Initialize
+import { ErrorBoundaryClass } from '../src/utils/error'
+
 initialize()
-const queryClient = new QueryClient()
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      suspense: true,
+    },
+  },
+})
 
 const preview: Preview = {
   parameters: {

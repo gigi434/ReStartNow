@@ -13,9 +13,8 @@ type Story = StoryObj<typeof QuestionAndAnswer>
 const Template: Story = {
   parameters: {
     nextjs: {
-      appDirectory: true,
-      navigation: {
-        segments: [['subsidyId', '3']],
+      router: {
+        basePath: '/profile',
       },
     },
   },
@@ -25,31 +24,37 @@ const Template: Story = {
         id: 1,
         answerType: 'boolean',
         text: '現在住んでいる市町区村の住民票がある',
-        subsidyId: 3,
-        createdAt: '2023-06-28T06:06:12.028Z',
-        updatedAt: '2023-06-28T06:06:12.028Z',
+        subsidyId: 1,
+        createdAt: new Date('2020/06/28 15:32:21'),
+        updatedAt: new Date('2020/06/28 15:32:21'),
         propertyName: 'isResidency',
       },
       {
         id: 2,
         answerType: 'boolean',
         text: '出生届出後に面談を行った',
-        subsidyId: 3,
-        createdAt: '2023-06-28T06:06:12.028Z',
-        updatedAt: '2023-06-28T06:06:12.028Z',
+        subsidyId: 1,
+        createdAt: new Date('2020/06/28 15:32:21'),
+        updatedAt: new Date('2020/06/28 15:32:21'),
         propertyName: 'haveChildcareInterview',
       },
       {
         id: 3,
         answerType: 'boolean',
         text: '妊娠届出時に面談を行った',
-        subsidyId: 3,
-        createdAt: '2023-06-28T06:06:12.028Z',
-        updatedAt: '2023-06-28T06:06:12.028Z',
+        subsidyId: 1,
+        createdAt: new Date('2020/06/28 15:32:21'),
+        updatedAt: new Date('2020/06/28 15:32:21'),
         propertyName: 'havePregnancyInterview',
       },
     ],
   },
 }
 
-export const Default: Story = { ...Template }
+export const Success: Story = { ...Template }
+export const FetchingError: Story = {
+  ...Template,
+  args: {
+    questions: [],
+  },
+}

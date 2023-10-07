@@ -1,17 +1,12 @@
-import { Injectable } from '@nestjs/common'
-import {
-  AvailableSubsidiesDto,
-  HousingGrantDto,
-} from './dto/get-available-subsidies.dto'
+import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common'
+import { AvailableSubsidiesDto } from './dto/get-available-subsidies.dto'
 import { PrismaService } from 'src/prisma/prisma.service'
-import { Subsidy } from '@prisma/client'
-import { HousingGrant } from './interfaces/get-eligibilityRequirements.interface'
-import { calculateSubsidyStrategies } from './strategy/calculateSubsidyAmount.strategy'
+import { SubsidyStrategyFactory } from './factory/subsidy-strategy-factory'
 @Injectable()
 export class ResultService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async getBenefitThroughTheQuestion(
+  async GetBenefitThroughTheQuestion(
     dto: AvailableSubsidiesDto,
     subsidyId: number,
   ): Promise<number | boolean> {
@@ -19,14 +14,17 @@ export class ResultService {
     const subsidy = await this.prismaService.subsidy.findUnique({
       where: { id: subsidyId },
     })
-    // 市町区村の助成金ごとに定めたアルゴリズムを見つける
-    const strategy = calculateSubsidyStrategies[subsidy.id]
-    if (!strategy) {
-      throw new Error(`No strategy found for subsidy ID: ${subsidyId}`)
+    if (!subsidy) {
+      throw new NotFoundException({
+        statusCode: HttpStatus.NOT_FOUND,
+        message: `No strategy found for subsidy ID: ${subsidyId}`,
+      })
     }
+    // 市町区村の助成金ごとに定めたアルゴリズムを見つける
+    const strategy = SubsidyStrategyFactory.createStrategy(subsidy.id)
 
     // 回答から受給要件を満たしているか判定する
-    const amountOfBenefit = await strategy(dto)
+    const amountOfBenefit = await strategy.isEligible(dto)
 
     return amountOfBenefit
   }

@@ -1,26 +1,28 @@
-import * as React from 'react'
+import React from 'react'
 import {
   Header,
   Footer,
   RegionSearchForm,
   RegionCardList,
 } from '@/src/components'
-import {
-  Box,
-  Container,
-  Grid,
-  Stack,
-  Typography,
-  useTheme,
-} from '@mui/material'
+import { Container, Grid, Stack, Typography, useTheme } from '@mui/material'
+import { Municipality, Prefecture } from '@prisma/client'
 
-export function RegionSearch() {
+type RegionSearchProps = {
+  prefectures: Prefecture[]
+  municipalities: Municipality[]
+}
+
+export function RegionSearch({
+  prefectures,
+  municipalities,
+}: RegionSearchProps) {
   const theme = useTheme()
   return (
     <Stack>
       <Header />
       <Container
-        maxWidth="lg"
+        maxWidth="xl"
         disableGutters
         sx={{
           pt: {
@@ -37,7 +39,6 @@ export function RegionSearch() {
           },
         }}
       >
-        {/* コンテンツ */}
         <Grid
           container
           direction="row"
@@ -46,18 +47,19 @@ export function RegionSearch() {
           minHeight={`calc(100vh - ${theme.spacing(8)})`}
           spacing={5}
         >
-          <Grid item xs={12} md={3}>
-            <Box maxWidth={{ xs: '100%', md: 248 }}>
-              {/* 地域検索フォーム */}
-              <RegionSearchForm />
-            </Box>
+          <Grid item xs={12} md={2}>
+            {/* 地域検索フォーム */}
+            <RegionSearchForm
+              prefectures={prefectures}
+              municipalities={municipalities}
+            />
           </Grid>
-          <Grid item xs={12} md={9} flexGrow={1}>
+          <Grid item xs={12} md={10} flexGrow={1}>
             <Stack spacing={2} sx={{ flexGrow: 1 }}>
               {/* 見出し */}
               <Typography variant="h6">地域一覧</Typography>
               {/* 地域一覧 */}
-              <RegionCardList />
+              <RegionCardList municipalities={municipalities} />
             </Stack>
           </Grid>
         </Grid>

@@ -1,8 +1,9 @@
 import { InformationCard } from '@/src/components'
-import * as React from 'react'
-import type { ClientSideInformation } from '@/src/types'
+import React from 'react'
+import type { Information } from '@prisma/client'
+
 type InformationListProps = {
-  informations: ClientSideInformation[]
+  informations: Information[]
 }
 
 export function InformationList({ informations }: InformationListProps) {

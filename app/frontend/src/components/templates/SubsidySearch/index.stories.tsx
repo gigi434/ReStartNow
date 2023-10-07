@@ -11,12 +11,9 @@ export default meta
 
 type Story = StoryObj<typeof SubsidySearch>
 
-const Template: Story = {}
-
-export const Default: Story = {
-  ...Template,
+const Template: Story = {
   args: {
-    Subsidies: [
+    subsidies: [
       {
         id: 1,
         name: 'example text',
@@ -29,8 +26,8 @@ export const Default: Story = {
         deadlineForReceipt: 50,
         description: 'example text',
         municipalityId: 2,
-        createdAt: '2023-06-28T06:06:12.028Z',
-        updatedAt: '2023-06-28T06:06:12.028Z',
+        createdAt: new Date('2020/06/28 15:32:21'),
+        updatedAt: new Date('2020/06/28 15:32:21'),
       },
       {
         id: 2,
@@ -44,10 +41,20 @@ export const Default: Story = {
         deadlineForReceipt: 50,
         description: 'example text',
         municipalityId: 2,
-        createdAt: '2023-06-28T06:06:12.028Z',
-        updatedAt: '2023-06-28T06:06:12.028Z',
+        createdAt: new Date('2020/06/28 15:32:21'),
+        updatedAt: new Date('2020/06/28 15:32:21'),
       },
     ],
-    municipalityId: 2,
+  },
+}
+
+export const Default: Story = {
+  ...Template,
+}
+
+export const FetchedError: Story = {
+  ...Template,
+  args: {
+    subsidies: [],
   },
 }

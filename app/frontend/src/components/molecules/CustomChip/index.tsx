@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import { BaseChipProps, BaseChip } from '@/src/components'
 
 export interface CustomChipProps extends BaseChipProps {}

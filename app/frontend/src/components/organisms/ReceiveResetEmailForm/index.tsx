@@ -1,5 +1,5 @@
 import { Container, Stack, Grid, Button, TextField } from '@mui/material'
-import * as React from 'react'
+import React from 'react'
 import { useForm, Controller, SubmitHandler } from 'react-hook-form'
 
 // フォームで扱うデータ型を定義します。

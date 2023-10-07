@@ -10,7 +10,7 @@ import {
   Alert,
 } from '@mui/material'
 import { Divider, PasswordChangeValidationTexts } from '@/src/components'
-import * as React from 'react'
+import React from 'react'
 import { useForm, Controller, SubmitHandler } from 'react-hook-form'
 import { useSnackbar, usePasswordValidation } from '@/src/hooks'
 import axios from 'axios'

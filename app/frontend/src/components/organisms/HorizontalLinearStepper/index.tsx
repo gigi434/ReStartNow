@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import {
   Button,
   Typography,
@@ -10,26 +10,29 @@ import {
   Box,
   useTheme,
 } from '@mui/material'
-import { ClientSideQuestion } from '@/src/types'
-import axios from 'axios'
-import { useParams } from 'next/navigation'
 import { ProgressBar } from '@/src/components'
+import { postResultByQuestions } from '@/src/utils/queries'
+import { Question } from '@prisma/client'
 
 type HorizontalLinearStepperProps = {
-  questions: ClientSideQuestion[]
+  questions: Question[]
 }
 
 export function HorizontalLinearStepper({
   questions,
 }: HorizontalLinearStepperProps) {
   const theme = useTheme()
-  const params = useParams()
   const [activeStep, setActiveStep] = React.useState(0) // アクティブなステップのインデックスを管理するstate
   const [answers, setAnswers] = React.useState<{
     [key: string]: string | boolean
   }>({}) // 利用者の回答を格納する
-  const [grantAmount, setGrantAmount] = React.useState<number | boolean>()
+  const [grantAmount, setGrantAmount] = React.useState<
+    number | boolean | null
+  >()
 
+  if (questions.length === 0) {
+    throw new Error('questions fetching error is occured')
+  }
   // アクティブなステップに基づいてプログレスを計算
   const progress = (activeStep / questions.length) * 100
 
@@ -50,6 +53,7 @@ export function HorizontalLinearStepper({
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAnswers((prevAnswers) => {
+      // 前の回答状況と入力された回答を定義する
       return {
         ...prevAnswers,
         [questions[activeStep].propertyName]: event.target.value,
@@ -59,16 +63,27 @@ export function HorizontalLinearStepper({
 
   /** 最後の質問が表示された後、結果を表示するためのコールバック関数 */
   const handleSubmit = async () => {
-    try {
-      const response = await axios.post(
-        process.env.NODE_ENV === 'development'
-          ? `/result/${params.subsidyId}`
-          : `/api/result/${params.subsidyId}`,
-        {
-          ...answers,
+    // 文字列型の "true" と "false" を論理値に変換
+    const convertedAnswers = Object.entries(answers).reduce(
+      (acc, [key, value]) => {
+        if (value === 'true') {
+          acc[key] = true
+        } else if (value === 'false') {
+          acc[key] = false
+        } else {
+          acc[key] = value
         }
-      )
-      await setGrantAmount(response.data.amount as number | boolean)
+        return acc
+      },
+      {} as { [key: string]: string | boolean }
+    )
+
+    try {
+      const data = await postResultByQuestions({
+        answers: convertedAnswers,
+        subsidyId: questions[0].subsidyId,
+      })
+      setGrantAmount(data?.amount)
       handleNext() // ステップを進める
     } catch (error) {
       console.error(error)
@@ -95,6 +110,7 @@ export function HorizontalLinearStepper({
             <Typography variant="h6">{questions[activeStep].text}</Typography>
           </Box>
           {/* 回答種類が論理型であるならはいかいいえの二択を表示し、数値型ならインプット要素を表示する */}
+          {/* 注意：論理型のvalue属性を文字列型ではなく論理型にして格納するといいえボタンをクリックしても反応しなくなるため、 送信する際に値を文字列から論理型にする*/}
           {questions[activeStep].answerType === 'boolean' ? (
             <RadioGroup
               aria-label={`question-${questions[activeStep].propertyName}`}
@@ -102,9 +118,13 @@ export function HorizontalLinearStepper({
               value={answers[questions[activeStep].propertyName] || ''}
               onChange={handleChange}
             >
-              <FormControlLabel value="true" control={<Radio />} label="はい" />
               <FormControlLabel
-                value="false"
+                value={'true'}
+                control={<Radio />}
+                label="はい"
+              />
+              <FormControlLabel
+                value={'false'}
                 control={<Radio />}
                 label="いいえ"
               />

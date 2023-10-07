@@ -1,12 +1,13 @@
 import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common'
 import { InformationService } from './information.service'
-@Controller('information')
+
+@Controller('informations')
 export class InformationController {
   constructor(private readonly informationService: InformationService) {}
   /** お知らせをすべて取得する */
   @Get()
   async getAllInformations() {
-    return await this.informationService.getAllInformaitons()
+    return await this.informationService.getAllInformations()
   }
 
   /** お知らせを一つ取得する  */

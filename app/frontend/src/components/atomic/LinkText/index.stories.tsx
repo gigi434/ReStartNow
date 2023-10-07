@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import { Typography, LinkText } from '@/src/components'
 import type { Meta, StoryObj } from '@storybook/react'
 

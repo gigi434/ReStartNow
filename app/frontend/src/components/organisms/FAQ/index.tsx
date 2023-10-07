@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import { CustomAccordion } from '@/src/components'
 import { Stack, Typography, Box } from '@mui/material'
 export function FAQ() {

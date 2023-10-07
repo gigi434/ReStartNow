@@ -1,5 +1,5 @@
 import { Chip as MuiChip, ChipProps as MuiChipProps } from '@mui/material'
-import * as React from 'react'
+import React from 'react'
 
 export interface BaseChipProps extends MuiChipProps {}
 

@@ -1,6 +1,6 @@
-import { Stack, Typography, Link, Container, Grid, Button } from '@mui/material'
+import { Stack, Typography, Grid, Button } from '@mui/material'
 import { Divider } from '@/src/components'
-import * as React from 'react'
+import React from 'react'
 import { useState } from 'react'
 
 export function ProfileDetails() {

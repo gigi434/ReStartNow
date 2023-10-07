@@ -12,13 +12,20 @@ export default meta
 type Story = StoryObj<typeof InformationArticle>
 
 const Template: Story = {
+  parameters: {
+    nextjs: {
+      router: {
+        basePath: '/informations/1',
+      },
+    },
+  },
   args: {
     information: {
       id: 1,
       title: 'example text',
       body: 'example text',
-      createdAt: '2023-06-28T06:06:12.028Z',
-      updatedAt: '2023-06-28T06:06:12.028Z',
+      createdAt: new Date('2020/06/28 15:32:21'),
+      updatedAt: new Date('2020/06/28 15:32:21'),
       importance: 'Low',
       authorId: 1,
     },

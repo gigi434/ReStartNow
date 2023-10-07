@@ -1,8 +1,8 @@
-import * as React from 'react'
+import React from 'react'
 import {
   NavigationMenu,
   Copyright,
-  Logo,
+  LogoButton,
   Divider,
   SocialButton,
 } from '@/src/components'
@@ -37,7 +37,7 @@ export function Footer() {
         }}
       >
         {/* ロゴ */}
-        <Logo />
+        <LogoButton />
         {/* ナビゲーション */}
         <Stack
           direction={'row'}

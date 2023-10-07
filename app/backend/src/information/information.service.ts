@@ -5,12 +5,12 @@ import { PrismaService } from 'src/prisma/prisma.service'
 export class InformationService {
   constructor(private readonly prismaService: PrismaService) {}
   /** お知らせをすべて取得する */
-  async getAllInformaitons() {
-    const informaitons = await this.prismaService.information.findMany({
+  async getAllInformations() {
+    const informations = await this.prismaService.information.findMany({
       orderBy: { id: 'desc' },
     })
 
-    return informaitons
+    return informations
   }
 
   /** お知らせを一つ取得する */

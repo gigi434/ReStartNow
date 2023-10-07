@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import { ValidationResultText } from '@/src/components'
 import { passwordValidationRulesProps } from '@/src/hooks'
 
