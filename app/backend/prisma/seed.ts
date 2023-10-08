@@ -5,6 +5,8 @@ import {
   Question,
   Information,
   Answer,
+  SubsidyAmountCondition,
+  SubsidyEligibilityCondition,
 } from '@prisma/client'
 import * as fs from 'fs'
 import * as path from 'path'
@@ -88,7 +90,7 @@ const doManicipalitySeed = async () => {
     await prisma.municipality.create({
       data: {
         name: municipality.cityName,
-        municipalSymbolPath: `/src/public/munisipality-symbol/${municipality.cityCode}`,
+        municipalSymbolPath: `/municipality/${municipality.cityCode}`,
         prefectureId: municipality.prefCode,
       },
     })
@@ -136,6 +138,32 @@ const doAnswersSeed = async () => {
     })
   }
 }
+const doSubsidyAmountConditionSeed = async () => {
+  const subsidyAmountConditions = await getUsersFromJsonDirectory<
+    Omit<SubsidyAmountCondition, 'id'>
+  >('prisma/master/subsidy-amount-condition')
+
+  for (const subsidyAmountCondition of subsidyAmountConditions) {
+    await prisma.subsidyAmountCondition.create({
+      data: {
+        ...subsidyAmountCondition,
+      },
+    })
+  }
+}
+const doSubsidyEligibilityConditionSeed = async () => {
+  const subsidyEligibilityConditions = await getUsersFromJsonDirectory<
+    Omit<SubsidyEligibilityCondition, 'id'>
+  >('prisma/master/subsidy-eligibility-condition')
+
+  for (const subsidyEligibilityCondition of subsidyEligibilityConditions) {
+    await prisma.subsidyEligibilityCondition.create({
+      data: {
+        ...subsidyEligibilityCondition,
+      },
+    })
+  }
+}
 
 const main = async () => {
   console.log(`Start seeding ...`)
@@ -147,6 +175,8 @@ const main = async () => {
   await doQuestionsSeed()
   await doInforamtionsSeed()
   await doAnswersSeed()
+  await doSubsidyEligibilityConditionSeed()
+  await doSubsidyAmountConditionSeed()
 
   console.log(`Seeding finished.`)
 }

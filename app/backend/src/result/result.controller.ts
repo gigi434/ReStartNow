@@ -22,7 +22,7 @@ export class ResultController {
     @Param('subsidyId', ParseIntPipe) subsidyId: number,
   ) {
     try {
-      const amount = await this.resultService.GetBenefitThroughTheQuestion(
+      const amount = await this.resultService.calculateSubsidyAmount(
         dto,
         subsidyId,
       )

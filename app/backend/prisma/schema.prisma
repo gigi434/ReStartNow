@@ -90,6 +90,8 @@ model Subsidy {
   municipality            Municipality  @relation(fields: [municipalityId], references: [id])
   questions               Question[]
   answers                 Answer[]
+  subsidyeligibilityConditions SubsidyEligibilityCondition[]
+  subsidyamountConditions      SubsidyAmountCondition[]
 }
 
 // 一問一答の質問
@@ -113,4 +115,20 @@ model Answer {
   userId     Int
   createdAt  DateTime @default(now())
   answers    Json
+}
+
+// 助成金の受給要件テーブル
+model SubsidyEligibilityCondition {
+  id            Int      @id @default(autoincrement())
+  subsidyId     Int      @unique
+  subsidy       Subsidy  @relation(fields: [subsidyId], references: [id])
+  conditionData Json
+}
+
+// 助成金の受給金額テーブル
+model SubsidyAmountCondition {
+  id           Int      @id @default(autoincrement())
+  subsidyId    Int      @unique
+  subsidy      Subsidy  @relation(fields: [subsidyId], references: [id])
+  amountData   Json
 }
