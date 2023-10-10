@@ -1,6 +1,6 @@
-import { IBaseGrant } from '../../../interface/subsidy-strategy-factory'
-import { AvailableSubsidiesDto } from '../../../dto/get-available-subsidies.dto'
-import { ResultRepository } from '../../../result.repository'
+import { IBaseGrant } from '@/src/result/interface/subsidy-strategy-factory'
+import { AvailableSubsidiesDto } from '@/src/result/dto/get-available-subsidies.dto'
+import { ResultRepository } from '@/src/result/result.repository'
 import { Prisma } from '@prisma/client'
 
 export abstract class BaseGrantCalculator implements IBaseGrant {

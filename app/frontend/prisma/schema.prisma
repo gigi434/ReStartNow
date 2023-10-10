@@ -9,10 +9,10 @@ datasource db {
 
 model Answer {
   id        Int      @id @default(autoincrement())
+  subsidyId Int
   userId    Int
   createdAt DateTime @default(now())
   answers   Json
-  subsidyId Int
   Subsidy   Subsidy  @relation(fields: [subsidyId], references: [id])
   User      User     @relation(fields: [userId], references: [id])
 }
@@ -23,8 +23,8 @@ model Information {
   body       String
   createdAt  DateTime              @default(now())
   updatedAt  DateTime
-  authorId   Int
   importance informationImportance @default(Low)
+  authorId   Int
   User       User                  @relation(fields: [authorId], references: [id])
 }
 
@@ -34,8 +34,8 @@ model Municipality {
   updatedAt           DateTime
   name                String     @unique
   municipalSymbolPath String
-  prefectureId        Int
   isSupported         Boolean    @default(false)
+  prefectureId        Int
   Prefecture          Prefecture @relation(fields: [prefectureId], references: [id])
   Subsidy             Subsidy[]
 }
@@ -50,32 +50,33 @@ model Prefecture {
 
 model Question {
   id           Int      @id @default(autoincrement())
-  answerType   String
   text         String
   createdAt    DateTime @default(now())
   updatedAt    DateTime
-  subsidyId    Int
   propertyName String
+  subsidyId    Int
+  answerType   String
   Subsidy      Subsidy  @relation(fields: [subsidyId], references: [id])
 }
 
 model Subsidy {
-  id                      Int           @id @default(autoincrement())
-  name                    String        @unique
-  ageLimit                String
-  applicationAddress      String
-  applicationMethod       String
-  applicationRequirements String
-  description             String
-  municipalityId          Int
-  createdAt               DateTime      @default(now())
-  updatedAt               DateTime
-  amountReceived          String
-  status                  subsidyStatus @default(Continuation)
-  deadlineForReceipt      Int
-  Answer                  Answer[]
-  Question                Question[]
-  Municipality            Municipality  @relation(fields: [municipalityId], references: [id])
+  id                          Int                          @id @default(autoincrement())
+  name                        String                       @unique
+  amountReceived              String
+  applicationAddress          String
+  applicationMethod           String
+  description                 String
+  status                      subsidyStatus                @default(Continuation)
+  createdAt                   DateTime                     @default(now())
+  updatedAt                   DateTime
+  municipalityId              Int
+  relatedLink                 String
+  deadlineForReceipt          DateTime?
+  Answer                      Answer[]
+  Question                    Question[]
+  Municipality                Municipality                 @relation(fields: [municipalityId], references: [id])
+  SubsidyAmountCondition      SubsidyAmountCondition?
+  SubsidyEligibilityCondition SubsidyEligibilityCondition?
 }
 
 model User {
@@ -87,6 +88,20 @@ model User {
   role           Role          @default(User)
   Answer         Answer[]
   Information    Information[]
+}
+
+model SubsidyAmountCondition {
+  id         Int     @id @default(autoincrement())
+  subsidyId  Int     @unique
+  amountData Json
+  Subsidy    Subsidy @relation(fields: [subsidyId], references: [id])
+}
+
+model SubsidyEligibilityCondition {
+  id            Int     @id @default(autoincrement())
+  subsidyId     Int     @unique
+  conditionData Json
+  Subsidy       Subsidy @relation(fields: [subsidyId], references: [id])
 }
 
 enum Role {

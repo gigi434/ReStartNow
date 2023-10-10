@@ -1,5 +1,6 @@
 import axios, { AxiosError } from 'axios'
 import type { Answer } from '@prisma/client'
+import { axiosInstance } from '../../axios'
 
 type PostResultByQuestionsResult = Pick<Answer, 'answers'> & {
   subsidyId: number

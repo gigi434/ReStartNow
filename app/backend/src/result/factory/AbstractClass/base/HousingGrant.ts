@@ -43,13 +43,8 @@ export abstract class BaseHousingGrant extends BaseGrantCalculator {
     // イ）申請日において、離職・自営業の廃業の日から原則2年以内である。
     // 疾病・負傷・育児・介護などやむを得ない事情があり2年を経過した場合は、別途ご相談ください。
     // ロ）給与等を得る機会が本人の責に帰すべき理由、本人の都合によらないで減少し、離職や廃業と同程度の状況にある。
-    const twoYearsAgo = new Date()
-    twoYearsAgo.setFullYear(twoYearsAgo.getFullYear() - 2)
 
-    if (
-      dto.employmentDate <= twoYearsAgo ||
-      dto.isIncomeStatusCritical !== true
-    ) {
+    if (dto.isEligibleForApplicationBasedOnEmploymentStatus !== true) {
       return false
     }
 
@@ -64,12 +59,7 @@ export abstract class BaseHousingGrant extends BaseGrantCalculator {
     //   イ）公共職業安定所等での求職活動を行う
     // ロ）経営相談など自立に向けた活動を行う（自営業のかたのみ選択できます。）
     // 離職・自営業の廃業をした方は、ハローワークへの求職登録を行い、求職受付票（ハローワークカード）の写しをご提出いただきます。
-    if (
-      !(
-        dto.activityStatus === 'job_searching' ||
-        dto.activityStatus === 'self_employed'
-      )
-    ) {
+    if (dto.activityStatus !== true) {
       return false
     }
 
@@ -102,17 +92,17 @@ export abstract class BaseHousingGrant extends BaseGrantCalculator {
     }
 
     // （7）住居確保給付金に類似する雇用対策給付等を、申請者及び申請者と同一の世帯に属する方が受けていないこと。
-    if (dto.isReceivingSimilarSubsidy) {
+    if (dto.isReceivingSimilarSubsidy !== true) {
       return false
     }
 
     // （8）申請者及び申請者と生計を一とする同居の親族のいずれもが暴力団員ではないこと。
-    if (dto.isGangMember) {
+    if (dto.isGangMember !== true) {
       return false
     }
 
     // （9）申請者及び申請者と同一の世帯に属する方が生活保護を受けていないこと。
-    if (dto.isReceivingWelfare) {
+    if (dto.isReceivingWelfare !== true) {
       return false
     }
 

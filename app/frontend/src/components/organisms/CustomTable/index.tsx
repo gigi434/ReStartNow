@@ -17,6 +17,7 @@ import { useSelector } from 'react-redux'
 import { RootState } from '@/src/store'
 import Link from 'next/link'
 import { Link as MuiLink } from '@mui/material'
+import { formatDateWithTimeZone } from '@/src/utils'
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -72,12 +73,6 @@ const headCells: readonly HeadCell[] = [
     label: '助成金',
   },
   {
-    id: 'ageLimit',
-    numeric: true,
-    disablePadding: false,
-    label: '最大受給年齢',
-  },
-  {
     id: 'applicationAddress',
     numeric: false,
     disablePadding: false,
@@ -88,12 +83,6 @@ const headCells: readonly HeadCell[] = [
     numeric: false,
     disablePadding: false,
     label: '申請方法',
-  },
-  {
-    id: 'applicationRequirements',
-    numeric: false,
-    disablePadding: false,
-    label: '申請資格',
   },
   {
     id: 'amountReceived',
@@ -171,6 +160,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 }
 
 export function CustomTable({ subsidies = [] }: { subsidies: Subsidy[] }) {
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
   const subsidySearch = useSelector((state: RootState) => state.subsidySearch)
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] = React.useState<keyof Subsidy>('name')
@@ -254,11 +244,6 @@ export function CustomTable({ subsidies = [] }: { subsidies: Subsidy[] }) {
                       </TableCell>
                       <TableCell align="left">
                         <MuiLink underline="none" color="inherit">
-                          {row.ageLimit}
-                        </MuiLink>
-                      </TableCell>
-                      <TableCell align="left">
-                        <MuiLink underline="none" color="inherit">
                           {row.applicationAddress}
                         </MuiLink>
                       </TableCell>
@@ -269,17 +254,21 @@ export function CustomTable({ subsidies = [] }: { subsidies: Subsidy[] }) {
                       </TableCell>
                       <TableCell align="left">
                         <MuiLink underline="none" color="inherit">
-                          {row.applicationRequirements}
-                        </MuiLink>
-                      </TableCell>
-                      <TableCell align="left">
-                        <MuiLink underline="none" color="inherit">
                           {row.amountReceived}
                         </MuiLink>
                       </TableCell>
                       <TableCell align="left">
-                        <MuiLink underline="none" color="inherit">
-                          {row.deadlineForReceipt}
+                        <MuiLink
+                          underline="none"
+                          color="inherit"
+                          suppressHydrationWarning
+                        >
+                          {row.deadlineForReceipt
+                            ? formatDateWithTimeZone(
+                                row.deadlineForReceipt,
+                                timeZone
+                              )
+                            : '特になし'}
                         </MuiLink>
                       </TableCell>
                     </TableRow>

@@ -12,12 +12,10 @@ type Inputs = {
   name: string | ''
   /** 申請先 */
   applicationAddress: string | ''
-  /** 年齢制限 */
-  ageLimit: string | ''
   /** 受給額 */
   amountReceived: string | ''
   /** 受給期限 */
-  deadlineForReceipt: number | null
+  deadlineForReceipt: number | ''
 }
 
 type SubsidySearchFormProps = {
@@ -35,9 +33,9 @@ export function SubsidySearchForm({ subsidies }: SubsidySearchFormProps) {
 
   const onSubsidyChange = (_prevValue: any, newValue: Subsidy | null) => {
     dispatch(updateSubsidySearch(newValue))
-    console.log(subsiydSearch.subsidy)
   }
-  const formatOption = (option: string | number | Date): string => {
+  // データ型に応じて文字列型に変換するコールバック関数
+  const formatOption = (option: string | number | Date | null) => {
     if (typeof option === 'number') {
       return option.toString()
     }
@@ -46,7 +44,7 @@ export function SubsidySearchForm({ subsidies }: SubsidySearchFormProps) {
       return option.toLocaleDateString()
     }
 
-    return option
+    return option || ''
   }
 
   const renderAutocomplete = (name: keyof Inputs, label: string) => (

@@ -43,14 +43,14 @@ export abstract class BasePrivateRentalHousing extends BaseGrantCalculator {
     if (dto.currentHousing !== 'privateRental') return false
 
     // 自治体に引き続き2年以上居住し、住民登録をされていること。
-    if (!dto.isResidency || dto.residencyDuration < 2) return false
+    if (dto.isRegisteredResidentForOverTwoYears) return false
 
     // 下記二つのどちらかに該当する世帯であること
     // 65歳以上の一人暮らし、または全員が65歳以上であることを確認
     // 心身障害者がいる、または一人親、または父母のない児童を養育している世帯であることを確認
     if (!dto.hasSpecialFamilyCondition) return false
 
-    // 収入が公営住宅法で定められた金額以下であることを確認
+    // 前年の収入が公営住宅法で定められた金額以下であることを確認
     // 世帯の人数や特性に基づいて収入の上限を決定する
     const incomeThreshold: number =
       this.eligibilityCondition.incomeThreshold[dto.earningsCategory][

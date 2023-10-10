@@ -34,7 +34,6 @@ export class IchikawashiFactory implements SubsidyCalculatorAbstractFactory {
   private createHousingSubsidyCaluculator(): IBaseGrant {
     return this.ichikawashiHousingSubsidy
   }
-
   // 市川市の出産・子育て応援給付金の具象プロダクトを生成
   private createChildBirthGrantCaluculator(): IBaseGrant {
     return this.ichikawashiChildBirthGrant

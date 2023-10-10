@@ -76,14 +76,13 @@ model Prefecture {
 model Subsidy {
   id                      Int           @id @default(autoincrement())
   name                    String        @unique
-  deadlineForReceipt      Int // 受給期限
-  ageLimit                String // 年齢制限
+  deadlineForReceipt      DateTime? // 受給期限
   amountReceived          String // 受給額
   applicationAddress      String // 申請先
   applicationMethod       String // 申請方法
-  applicationRequirements String // 申請条件
   description             String // 説明
   status                  subsidyStatus @default(Continuation) // 助成金の更新・廃止などの状態
+  relatedLink             String // 根拠となるリンク
   createdAt               DateTime      @default(now())
   updatedAt               DateTime      @updatedAt
   municipalityId          Int

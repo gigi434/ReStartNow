@@ -4,7 +4,7 @@ import type { Information } from '@prisma/client'
 
 export async function fetchInformationById(informationId: number) {
   try {
-    const { data: information } = await axiosInstance.get<Information>(
+    const { data: information } = await axios.get<Information>(
       process.env.NODE_ENV === 'development'
         ? `${process.env.NEXT_PUBLIC_BASE_URL}/api/informations/${informationId}`
         : `${process.env.API_SERVER_URL}/informations/${informationId}`
