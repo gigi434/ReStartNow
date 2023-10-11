@@ -7,7 +7,9 @@ export class QuestionService {
   async getQuestionsBySubsidyId(subsidyId: number) {
     const questions = await this.prismaService.question.findMany({
       where: {
-        subsidyId: subsidyId,
+        questionGroupQuestion: {
+          every: { questionGroup: { subsidy: { every: { id: subsidyId } } } },
+        },
       },
     })
     return questions

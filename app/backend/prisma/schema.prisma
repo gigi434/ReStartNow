@@ -5,6 +5,13 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator erd {
+  provider                  = "prisma-erd-generator"
+  theme                     = "forest"
+  output                    = "ERD.md"
+  includeRelationFromFields = true
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -28,25 +35,25 @@ enum informationImportance {
 
 // お知らせ
 model Information {
-  id         Int      @id @default(autoincrement())
+  id         Int                   @id @default(autoincrement())
   title      String
   body       String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  createdAt  DateTime              @default(now())
+  updatedAt  DateTime              @updatedAt
   importance informationImportance @default(Low)
   authorId   Int
-  author     User @relation(fields: [authorId], references: [id])
+  author     User                  @relation(fields: [authorId], references: [id])
 }
 
 // ユーザー
 model User {
-  id             Int      @id @default(autoincrement())
-  email          String   @unique
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id             Int           @id @default(autoincrement())
+  email          String        @unique
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
   hashedPassword String
   answers        Answer[]
-  role           Role     @default(User)
+  role           Role          @default(User)
   information    Information[]
 }
 
@@ -74,60 +81,82 @@ model Prefecture {
 
 // 助成金
 model Subsidy {
-  id                      Int           @id @default(autoincrement())
-  name                    String        @unique
-  deadlineForReceipt      DateTime? // 受給期限
-  amountReceived          String // 受給額
-  applicationAddress      String // 申請先
-  applicationMethod       String // 申請方法
-  description             String // 説明
-  status                  subsidyStatus @default(Continuation) // 助成金の更新・廃止などの状態
-  relatedLink             String // 根拠となるリンク
-  createdAt               DateTime      @default(now())
-  updatedAt               DateTime      @updatedAt
-  municipalityId          Int
-  municipality            Municipality  @relation(fields: [municipalityId], references: [id])
-  questions               Question[]
-  answers                 Answer[]
+  id                           Int                           @id @default(autoincrement())
+  name                         String                        @unique
+  deadlineForReceipt           DateTime? // 受給期限
+  amountReceived               String // 受給額
+  applicationAddress           String // 申請先
+  applicationMethod            String // 申請方法
+  description                  String // 説明
+  status                       subsidyStatus                 @default(Continuation) // 助成金の更新・廃止などの状態
+  relatedLink                  String // 根拠となるリンク
+  createdAt                    DateTime                      @default(now())
+  updatedAt                    DateTime                      @updatedAt
+  municipalityId               Int
+  municipality                 Municipality                  @relation(fields: [municipalityId], references: [id])
+  answers                      Answer[]
   subsidyeligibilityConditions SubsidyEligibilityCondition[]
   subsidyamountConditions      SubsidyAmountCondition[]
+  questionGroup   QuestionGroup? @relation(fields: [questionGroupId], references: [id])
+  questionGroupId Int?
 }
 
 // 一問一答の質問
 model Question {
-  id         Int      @id @default(autoincrement())
-  answerType String // YesとNoで答えられる質問か、数値など具体的な回答を要する質問なのか
-  text       String // 質問文
-  subsidyId  Int
-  subsidy    Subsidy  @relation(fields: [subsidyId], references: [id])
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  propertyName String // クライアントサイドでリクエストに格納される回答のプロパティ
+  id                    Int                     @id @default(autoincrement())
+  answerType            String // YesとNoで答えられる質問か、数値など具体的な回答を要する質問なのか
+  text                  String // 質問文
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  propertyName          String                  @unique // クライアントサイドでリクエストに格納される回答のプロパティ
+  questionGroupQuestion QuestionGroupQuestion[]
+}
+
+// 一問一答の質問を複数格納した質問グループ
+model QuestionGroup {
+  id        Int                     @id @default(autoincrement())
+  description String
+  createdAt DateTime                @default(now())
+  updatedAt DateTime                @updatedAt
+  subsidy   Subsidy[]
+  questions QuestionGroupQuestion[]
 }
 
 // ユーザーの答えを保存するテーブル
 model Answer {
-  id         Int      @id @default(autoincrement())
-  subsidyId  Int
-  subsidy    Subsidy  @relation(fields: [subsidyId], references: [id])
-  user       User     @relation(fields: [userId], references: [id])
-  userId     Int
-  createdAt  DateTime @default(now())
-  answers    Json
+  id        Int      @id @default(autoincrement())
+  subsidyId Int
+  subsidy   Subsidy  @relation(fields: [subsidyId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  createdAt DateTime @default(now())
+  answers   Json
 }
 
 // 助成金の受給要件テーブル
 model SubsidyEligibilityCondition {
-  id            Int      @id @default(autoincrement())
-  subsidyId     Int      @unique
-  subsidy       Subsidy  @relation(fields: [subsidyId], references: [id])
+  id            Int     @id @default(autoincrement())
+  subsidyId     Int     @unique
+  subsidy       Subsidy @relation(fields: [subsidyId], references: [id])
   conditionData Json
 }
 
 // 助成金の受給金額テーブル
 model SubsidyAmountCondition {
-  id           Int      @id @default(autoincrement())
-  subsidyId    Int      @unique
-  subsidy      Subsidy  @relation(fields: [subsidyId], references: [id])
-  amountData   Json
+  id         Int     @id @default(autoincrement())
+  subsidyId  Int     @unique
+  subsidy    Subsidy @relation(fields: [subsidyId], references: [id])
+  amountData Json
+}
+
+// 質問群と質問の中間テーブル
+model QuestionGroupQuestion {
+  questionId      Int
+  question        Question      @relation(fields: [questionId], references: [id])
+  questionGroupId Int
+  questionGroup   QuestionGroup @relation(fields: [questionGroupId], references: [id])
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@unique([questionId, questionGroupId])
 }

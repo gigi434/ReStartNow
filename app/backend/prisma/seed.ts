@@ -7,6 +7,8 @@ import {
   Answer,
   SubsidyAmountCondition,
   SubsidyEligibilityCondition,
+  QuestionGroupQuestion,
+  QuestionGroup,
 } from '@prisma/client'
 import * as fs from 'fs'
 import * as path from 'path'
@@ -16,16 +18,21 @@ const prisma = new PrismaClient()
 function getUsersFromJsonDirectory<T>(directoryPath: string): T[] {
   const objects: T[] = []
 
-  fs.readdirSync(directoryPath).forEach((filename) => {
-    const filePath = path.join(directoryPath, filename)
-    const stat = fs.statSync(filePath)
+  const recursiveReadDir = (dirPath: string) => {
+    fs.readdirSync(dirPath).forEach((filename) => {
+      const filePath = path.join(dirPath, filename)
+      const stat = fs.statSync(filePath)
 
-    if (stat.isFile() && path.extname(filename) === '.json') {
-      const data: T[] = JSON.parse(fs.readFileSync(filePath, 'utf-8'))
-      objects.push(...data)
-    }
-  })
+      if (stat.isDirectory()) {
+        recursiveReadDir(filePath)
+      } else if (stat.isFile() && path.extname(filename) === '.json') {
+        const data: T[] = JSON.parse(fs.readFileSync(filePath, 'utf-8'))
+        objects.push(...data)
+      }
+    })
+  }
 
+  recursiveReadDir(directoryPath)
   return objects as T[]
 }
 
@@ -164,6 +171,32 @@ const doSubsidyEligibilityConditionSeed = async () => {
     })
   }
 }
+const doQuestionGroupQuestionSeed = async () => {
+  const questionGroupQuestions = await getUsersFromJsonDirectory<
+    Omit<QuestionGroupQuestion, 'id'>
+  >('prisma/master/question-group-question')
+
+  for (const questionGroupQuestion of questionGroupQuestions) {
+    await prisma.questionGroupQuestion.create({
+      data: {
+        ...questionGroupQuestion,
+      },
+    })
+  }
+}
+const doQuestionGroupSeed = async () => {
+  const questionGroups = await getUsersFromJsonDirectory<
+    Omit<QuestionGroup, 'id'>
+  >('prisma/master/question-group')
+
+  for (const questionGroup of questionGroups) {
+    await prisma.questionGroup.create({
+      data: {
+        ...questionGroup,
+      },
+    })
+  }
+}
 
 const main = async () => {
   console.log(`Start seeding ...`)
@@ -171,12 +204,14 @@ const main = async () => {
   await doUserSeed()
   await doPrefectureSeed()
   await doManicipalitySeed()
-  await doSubsidySeed()
   await doQuestionsSeed()
+  await doQuestionGroupSeed()
+  await doSubsidySeed()
   await doInforamtionsSeed()
   await doAnswersSeed()
   await doSubsidyEligibilityConditionSeed()
   await doSubsidyAmountConditionSeed()
+  await doQuestionGroupQuestionSeed()
 
   console.log(`Seeding finished.`)
 }

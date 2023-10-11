@@ -7,7 +7,8 @@
     "description": "失業やコロナ禍等を原因とする収入の減少により、住居を喪失するおそれのある方を対象に、就労支援を実施し、住宅及び就労機会の確保に向けた支援を行うとともに、賃貸住宅の家賃を支給するものです",
     "status": "Continuation",
     "relatedLink": "https://www.city.ichikawa.lg.jp/wel07/0000376345.html",
-    "municipalityId": 9
+    "municipalityId": 9,
+    "questionGroupId": 1
   },
   {
     "name": "民間賃貸住宅家賃等助成制度",
@@ -17,7 +18,8 @@
     "description": " 住居確保及び生活の安定を図るため、市内に居住し取り壊し等による転居を求められた高齢者、心身障がい者、ひとり親世帯等の方が市内に転居する場合、住宅家賃の差額と転居費用を助成する制度です。",
     "status": "Continuation",
     "relatedLink": "https://www.city.ichikawa.lg.jp/wel08/1111000004.html",
-    "municipalityId": 9
+    "municipalityId": 9,
+    "questionGroupId": 2
   },
   {
     "name": "出産・子育て応援給付金",
@@ -27,6 +29,7 @@
     "description": "国において、妊娠期から出産・子育て期まで一貫して身近で相談に応じ、必要な支援につなぐ「伴走型相談支援」と、妊婦や子育て世帯への「経済的支援」を一体的に実施する事業が創設されました。本市においても、3月9日に事業を開始します。令和4年4月1日以降に妊娠届出、出産をされた方が対象になります。",
     "status": "Continuation",
     "relatedLink": "https://www.city.ichikawa.lg.jp/pub03/0000421131.html",
-    "municipalityId": 9
+    "municipalityId": 9,
+    "questionGroupId": 3
   }
 ]
