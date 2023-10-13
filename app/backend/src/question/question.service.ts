@@ -8,7 +8,7 @@ export class QuestionService {
     const questions = await this.prismaService.question.findMany({
       where: {
         questionGroupQuestion: {
-          every: { questionGroup: { subsidy: { every: { id: subsidyId } } } },
+          every: { questionGroup: { subsidies: { every: { id: subsidyId } } } },
         },
       },
     })
@@ -16,8 +16,7 @@ export class QuestionService {
   }
 
   async GetAllQuestions() {
-    const questions = await this.prismaService.question.findMany()
-
+    const questions = await this.prismaService.question.findMany({})
     return questions
   }
 }

@@ -1,96 +1,96 @@
 [
   {
-    "answerType": "boolean",
+    "answerType": "BOOLEAN",
     "text": "離職等により経済的に困窮し、家賃の支払いが困難で、住居を喪失した、または住居喪失のおそれがある",
     "propertyName": "economicHardship"
   },
   {
-    "answerType": "boolean",
+    "answerType": "BOOLEAN",
     "text": "申請日において、離職・自営業の廃業の日から原則4年以内である。または、給与等を得る機会が本人の責に帰すべき理由、本人の都合によらないで減少し、離職や廃業と同程度の状況にある。",
     "propertyName": "isEligibleForApplicationBasedOnEmploymentStatus"
   },
   {
-    "answerType": "boolean",
+    "answerType": "BOOLEAN",
     "text": "離職等の日において、その属する世帯の生計を主として維持していた。または、申請日の属する月において、その属する世帯の生計を主として維持している。",
     "propertyName": "isMaintainingLivelihood"
   },
   {
-    "answerType": "boolean",
+    "answerType": "BOOLEAN",
     "text": "公共職業安定所等での求職活動を行う、または、経営相談など自立に向けた活動を行う（自営業のかたのみ選択できます。）",
     "propertyName": "activityStatus"
   },
   {
-    "answerType": "number",
+    "answerType": "NUMBER",
     "text": "世帯の人数を入力してください",
     "propertyName": "numberOfHouseholdMembers"
   },
   {
-    "answerType": "number",
+    "answerType": "NUMBER",
     "text": "申請を行う月に、申請者および申請者と同一の世帯に属する方の収入額を入力してください",
     "propertyName": "monthlyHouseholdIncome"
   },
   {
-    "answerType": "number",
+    "answerType": "NUMBER",
     "text": "申請日において、申請者及び申請者と同一の世帯に属する方の所有する金融資産（現金、預貯金）の合計額を入力してください",
     "propertyName": "financialAssets"
   },
   {
-    "answerType": "boolean",
+    "answerType": "BOOLEAN",
     "text": "住居確保給付金に類似する雇用対策給付等を、申請者及び申請者と同一の世帯に属する方が受けていない",
     "propertyName": "isReceivingSimilarSubsidy"
   },
   {
-    "answerType": "boolean",
+    "answerType": "BOOLEAN",
     "text": "申請者及び申請者と生計を一とする同居の親族のいずれもが暴力団員ではない",
     "propertyName": "isGangMember"
   },
   {
-    "answerType": "boolean",
+    "answerType": "BOOLEAN",
     "text": "申請者及び申請者と同一の世帯に属する方が生活保護を受けていないこと。",
     "propertyName": "isReceivingWelfare"
   },
   {
-    "answerType": "boolean",
+    "answerType": "BOOLEAN",
     "text": "現在住んでいる市町区村の住民票がある",
     "propertyName": "isResidency"
   },
   {
-    "answerType": "boolean",
+    "answerType": "BOOLEAN",
     "text": "妊娠届出時に面談を行った",
     "propertyName": "haveChildcareInterview"
   },
   {
-    "answerType": "boolean",
+    "answerType": "BOOLEAN",
     "text": "出生届出後に面談を行った",
     "propertyName": "havePregnancyInterview"
   },
   {
-    "answerType": "boolean",
+    "answerType": "BOOLEAN",
     "text": "現在の住居が民間賃貸である",
     "propertyName": "currentHousing"
   },
   {
-    "answerType": "boolean",
+    "answerType": "BOOLEAN",
     "text": "自治体に引き続き2年以上居住し、住民登録をされていること。",
     "propertyName": "isRegisteredResidentForOverTwoYears"
   },
   {
-    "answerType": "boolean",
+    "answerType": "BOOLEAN",
     "text": "65歳以上の一人暮らし、または全員が65歳以上である、または、 心身障害者がいる、または一人親、または父母のない児童を養育している世帯である",
     "propertyName": "hasSpecialFamilyCondition"
   },
   {
-    "answerType": "number",
+    "answerType": "NUMBER",
     "text": "世帯の人数を入力してください",
     "propertyName": "familyType"
   },
   {
-    "answerType": "boolean",
+    "answerType": "BOOLEAN",
     "text": "前年の収入が公営住宅法で定められた金額以下であることを確認します。前年の収入を入力してください",
     "propertyName": "yearlyEarnings"
   },
   {
-    "answerType": "boolean",
+    "answerType": "BOOLEAN",
     "text": "立ち退き後の家賃を入力してください",
     "propertyName": "monthlyRentAfterEviction"
   }

@@ -21,6 +21,13 @@ Middle Middle
 Low Low
         }
     
+
+
+        answerType {
+            BOOLEAN BOOLEAN
+NUMBER NUMBER
+        }
+    
   "Information" {
     Int id "🗝️"
     String title 
@@ -80,7 +87,7 @@ Low Low
 
   "Question" {
     Int id "🗝️"
-    String answerType 
+    answerType answerType 
     String text 
     DateTime createdAt 
     DateTime updatedAt 
@@ -140,9 +147,10 @@ Low Low
     "Subsidy" o{--}o "SubsidyEligibilityCondition" : "subsidyeligibilityConditions"
     "Subsidy" o{--}o "SubsidyAmountCondition" : "subsidyamountConditions"
     "Subsidy" o|--|o "QuestionGroup" : "questionGroup"
+    "Question" o|--|| "answerType" : "enum:answerType"
     "Question" o{--}o "QuestionGroupQuestion" : "questionGroupQuestion"
-    "QuestionGroup" o{--}o "Subsidy" : "subsidy"
     "QuestionGroup" o{--}o "QuestionGroupQuestion" : "questions"
+    "QuestionGroup" o{--}o "Subsidy" : "subsidies"
     "Answer" o|--|| "Subsidy" : "subsidy"
     "Answer" o|--|| "User" : "user"
     "SubsidyEligibilityCondition" o|--|| "Subsidy" : "subsidy"

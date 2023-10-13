@@ -49,19 +49,18 @@ model Prefecture {
 }
 
 model Question {
-  id           Int      @id @default(autoincrement())
-  text         String
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime
-  propertyName String
-  subsidyId    Int
-  answerType   String
-  Subsidy      Subsidy  @relation(fields: [subsidyId], references: [id])
+  id                    Int                     @id @default(autoincrement())
+  text                  String
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime
+  propertyName          String                  @unique
+  answerType            answerType
+  QuestionGroupQuestion QuestionGroupQuestion[]
 }
 
 model Subsidy {
   id                          Int                          @id @default(autoincrement())
-  name                        String                       @unique
+  name                        String
   amountReceived              String
   applicationAddress          String
   applicationMethod           String
@@ -72,9 +71,10 @@ model Subsidy {
   municipalityId              Int
   relatedLink                 String
   deadlineForReceipt          DateTime?
+  questionGroupId             Int?
   Answer                      Answer[]
-  Question                    Question[]
   Municipality                Municipality                 @relation(fields: [municipalityId], references: [id])
+  QuestionGroup               QuestionGroup?               @relation(fields: [questionGroupId], references: [id])
   SubsidyAmountCondition      SubsidyAmountCondition?
   SubsidyEligibilityCondition SubsidyEligibilityCondition?
 }
@@ -104,6 +104,26 @@ model SubsidyEligibilityCondition {
   Subsidy       Subsidy @relation(fields: [subsidyId], references: [id])
 }
 
+model QuestionGroup {
+  id                    Int                     @id @default(autoincrement())
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime
+  description           String
+  QuestionGroupQuestion QuestionGroupQuestion[]
+  Subsidy               Subsidy[]
+}
+
+model QuestionGroupQuestion {
+  questionId      Int
+  questionGroupId Int
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime
+  QuestionGroup   QuestionGroup @relation(fields: [questionGroupId], references: [id])
+  Question        Question      @relation(fields: [questionId], references: [id])
+
+  @@unique([questionId, questionGroupId])
+}
+
 enum Role {
   User
   Admin
@@ -118,4 +138,9 @@ enum informationImportance {
 enum subsidyStatus {
   Abolition
   Continuation
+}
+
+enum answerType {
+  BOOLEAN
+  NUMBER
 }

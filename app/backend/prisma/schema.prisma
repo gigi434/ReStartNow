@@ -33,6 +33,11 @@ enum informationImportance {
   Low
 }
 
+enum answerType {
+  BOOLEAN
+  NUMBER
+}
+
 // お知らせ
 model Information {
   id         Int                   @id @default(autoincrement())
@@ -82,7 +87,7 @@ model Prefecture {
 // 助成金
 model Subsidy {
   id                           Int                           @id @default(autoincrement())
-  name                         String                        
+  name                         String
   deadlineForReceipt           DateTime? // 受給期限
   amountReceived               String // 受給額
   applicationAddress           String // 申請先
@@ -97,14 +102,14 @@ model Subsidy {
   answers                      Answer[]
   subsidyeligibilityConditions SubsidyEligibilityCondition[]
   subsidyamountConditions      SubsidyAmountCondition[]
-  questionGroup   QuestionGroup? @relation(fields: [questionGroupId], references: [id])
-  questionGroupId Int?
+  questionGroupId              Int?
+  questionGroup                QuestionGroup?                 @relation(fields: [questionGroupId], references: [id])
 }
 
 // 一問一答の質問
 model Question {
   id                    Int                     @id @default(autoincrement())
-  answerType            String // YesとNoで答えられる質問か、数値など具体的な回答を要する質問なのか
+  answerType            answerType // YesとNoで答えられる質問か、数値など具体的な回答を要する質問なのか
   text                  String // 質問文
   createdAt             DateTime                @default(now())
   updatedAt             DateTime                @updatedAt
@@ -114,12 +119,12 @@ model Question {
 
 // 一問一答の質問を複数格納した質問グループ
 model QuestionGroup {
-  id        Int                     @id @default(autoincrement())
-  description String
-  createdAt DateTime                @default(now())
-  updatedAt DateTime                @updatedAt
-  subsidy   Subsidy[]
-  questions QuestionGroupQuestion[]
+  id                   Int                     @id @default(autoincrement())
+  description          String
+  createdAt            DateTime                @default(now())
+  updatedAt            DateTime                @updatedAt
+  questions            QuestionGroupQuestion[]
+  subsidies            Subsidy[]
 }
 
 // ユーザーの答えを保存するテーブル
@@ -160,3 +165,4 @@ model QuestionGroupQuestion {
 
   @@unique([questionId, questionGroupId])
 }
+

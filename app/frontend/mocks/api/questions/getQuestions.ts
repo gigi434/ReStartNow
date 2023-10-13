@@ -8,7 +8,9 @@ export const mockGetQuestions = rest.get(
     const subsidyId = req.params.subsidyId as string
     // 配列オブジェクトからパラメータのsubsidyIdを持つquestionsを見つける
     const questions = mockQuestions.filter(
-      (question) => question.subsidyId === parseInt(subsidyId)
+      (question) =>
+        question.questionGroupQuestion.questionGroup.subsidies.id ===
+        parseInt(subsidyId)
     )
 
     if (questions.length === 0) {

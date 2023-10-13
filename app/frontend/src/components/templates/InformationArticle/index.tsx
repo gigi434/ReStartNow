@@ -1,7 +1,6 @@
 import { Stack, Button, Typography, Container, Box } from '@mui/material'
 import React from 'react'
 import { Divider, Header, Footer } from '@/src/components'
-import { format, parseISO } from 'date-fns'
 import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutlined'
 import { useTheme } from '@mui/system'
 import type { Information } from '@prisma/client'
@@ -75,14 +74,16 @@ export function InformationArticle({ information }: InformationArticleProps) {
               <Typography variant="caption" suppressHydrationWarning={true}>
                 {`公開日: ${formatDateWithTimeZone(
                   information.createdAt,
-                  timeZone
+                  timeZone,
+                  { includeTime: true }
                 )}`}
               </Typography>
               {/* 更新日 */}
               <Typography variant="caption" suppressHydrationWarning={true}>
                 {`更新日: ${formatDateWithTimeZone(
                   information.createdAt,
-                  timeZone
+                  timeZone,
+                  { includeTime: true }
                 )}`}
               </Typography>
             </Stack>

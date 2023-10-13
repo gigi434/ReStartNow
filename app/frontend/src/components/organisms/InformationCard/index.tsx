@@ -18,7 +18,9 @@ export function InformationCard({ information }: InformationCardProps) {
       <Grid container justifyContent="space-between">
         {/* 公開日 */}
         <Typography variant="caption" suppressHydrationWarning={true}>
-          {`公開日：${formatDateWithTimeZone(information.createdAt, timeZone)}`}
+          {`公開日：${formatDateWithTimeZone(information.createdAt, timeZone, {
+            includeTime: true,
+          })}`}
         </Typography>
         {/* ReadMore */}
         <Link legacyBehavior passHref href={`/informations/${information.id}`}>
