@@ -9,8 +9,6 @@ type InformationCardProps = {
 }
 
 export function InformationCard({ information }: InformationCardProps) {
-  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone // ブラウザのタイムゾーンを取得する
-
   return (
     <Stack key={information.id} spacing={2} width={'100%'}>
       {/* 見出し */}
@@ -18,7 +16,8 @@ export function InformationCard({ information }: InformationCardProps) {
       <Grid container justifyContent="space-between">
         {/* 公開日 */}
         <Typography variant="caption" suppressHydrationWarning={true}>
-          {`公開日：${formatDateWithTimeZone(information.createdAt, timeZone, {
+          {`公開日：${formatDateWithTimeZone({
+            date: information.createdAt,
             includeTime: true,
           })}`}
         </Typography>

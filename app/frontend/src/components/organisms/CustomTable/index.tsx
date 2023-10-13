@@ -160,7 +160,6 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 }
 
 export function CustomTable({ subsidies = [] }: { subsidies: Subsidy[] }) {
-  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
   const subsidySearch = useSelector((state: RootState) => state.subsidySearch)
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] = React.useState<keyof Subsidy>('name')
@@ -264,10 +263,9 @@ export function CustomTable({ subsidies = [] }: { subsidies: Subsidy[] }) {
                           suppressHydrationWarning
                         >
                           {row.deadlineForReceipt
-                            ? formatDateWithTimeZone(
-                                row.deadlineForReceipt,
-                                timeZone
-                              )
+                            ? formatDateWithTimeZone({
+                                date: row.deadlineForReceipt,
+                              })
                             : '特になし'}
                         </MuiLink>
                       </TableCell>

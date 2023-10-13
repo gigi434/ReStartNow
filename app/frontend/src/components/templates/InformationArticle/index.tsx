@@ -13,7 +13,6 @@ type InformationArticleProps = {
 export function InformationArticle({ information }: InformationArticleProps) {
   const theme = useTheme()
   const router = useRouter()
-  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone // ブラウザのタイムゾーンを取得する
 
   return (
     <Stack>
@@ -72,19 +71,17 @@ export function InformationArticle({ information }: InformationArticleProps) {
             <Stack alignItems={'flex-end'} spacing={1}>
               {/* 公開日 */}
               <Typography variant="caption" suppressHydrationWarning={true}>
-                {`公開日: ${formatDateWithTimeZone(
-                  information.createdAt,
-                  timeZone,
-                  { includeTime: true }
-                )}`}
+                {`公開日: ${formatDateWithTimeZone({
+                  date: information.createdAt,
+                  includeTime: true,
+                })}`}
               </Typography>
               {/* 更新日 */}
               <Typography variant="caption" suppressHydrationWarning={true}>
-                {`更新日: ${formatDateWithTimeZone(
-                  information.createdAt,
-                  timeZone,
-                  { includeTime: true }
-                )}`}
+                {`更新日: ${formatDateWithTimeZone({
+                  date: information.updatedAt,
+                  includeTime: true,
+                })}`}
               </Typography>
             </Stack>
             {/* 分割線 */}
