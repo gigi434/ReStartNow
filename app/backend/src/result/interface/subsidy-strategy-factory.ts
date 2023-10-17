@@ -1,4 +1,4 @@
-import { AvailableSubsidiesDto } from '@/src/result/dto/get-available-subsidies.dto'
+import { AvailableSubsidiesDto } from '@/src/result/dto'
 // 抽象ファクトリー
 export interface SubsidyCalculatorAbstractFactory {
   getSubsidyAmountCalculator(subsidyId: number): IBaseGrant

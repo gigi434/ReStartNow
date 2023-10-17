@@ -15,7 +15,7 @@ export const mockPostAnswers = rest.post<BodyType>(
       throw new Error(`Missing subsidyId: ${subsidyId}`)
     }
 
-    if (subsidyId === '1') {
+    if (subsidyId === '3') {
       const { isResidency, haveChildcareInterview, havePregnancyInterview } =
         (await req.json()) as BodyType
 

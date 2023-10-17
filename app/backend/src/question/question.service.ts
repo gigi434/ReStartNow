@@ -11,12 +11,40 @@ export class QuestionService {
           every: { questionGroup: { subsidies: { every: { id: subsidyId } } } },
         },
       },
+      include: {
+        questionChoice: {
+          include: {
+            choice: true,
+          },
+        },
+      },
     })
     return questions
   }
 
   async GetAllQuestions() {
-    const questions = await this.prismaService.question.findMany({})
+    const questions = await this.prismaService.question.findMany({
+      include: {
+        questionGroupQuestion: {
+          include: {
+            questionGroup: {
+              include: {
+                subsidies: {
+                  select: {
+                    id: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        questionChoice: {
+          include: {
+            choice: true,
+          },
+        },
+      },
+    })
     return questions
   }
 }

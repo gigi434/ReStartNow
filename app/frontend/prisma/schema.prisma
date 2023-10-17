@@ -55,6 +55,7 @@ model Question {
   updatedAt             DateTime
   propertyName          String                  @unique
   answerType            answerType
+  QuestionChoice        QuestionChoice[]
   QuestionGroupQuestion QuestionGroupQuestion[]
 }
 
@@ -124,6 +125,24 @@ model QuestionGroupQuestion {
   @@unique([questionId, questionGroupId])
 }
 
+model Choice {
+  id             Int              @id @default(autoincrement())
+  text           String
+  value          String
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime
+  QuestionChoice QuestionChoice[]
+}
+
+model QuestionChoice {
+  questionId Int
+  choiceId   Int
+  Choice     Choice   @relation(fields: [choiceId], references: [id])
+  Question   Question @relation(fields: [questionId], references: [id])
+
+  @@id([questionId, choiceId])
+}
+
 enum Role {
   User
   Admin
@@ -143,4 +162,5 @@ enum subsidyStatus {
 enum answerType {
   BOOLEAN
   NUMBER
+  CHOICE
 }

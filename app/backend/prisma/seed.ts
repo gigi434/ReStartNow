@@ -9,6 +9,8 @@ import {
   SubsidyEligibilityCondition,
   QuestionGroupQuestion,
   QuestionGroup,
+  Choice,
+  QuestionChoice,
 } from '@prisma/client'
 import * as fs from 'fs'
 import * as path from 'path'
@@ -197,6 +199,32 @@ const doQuestionGroupSeed = async () => {
     })
   }
 }
+const doChoiceSeed = async () => {
+  const choices = await getUsersFromJsonDirectory<Omit<Choice, 'id'>>(
+    'prisma/master/choices',
+  )
+
+  for (const choice of choices) {
+    await prisma.choice.create({
+      data: {
+        ...choice,
+      },
+    })
+  }
+}
+const doQuestionChoiceSeed = async () => {
+  const questionChoices = await getUsersFromJsonDirectory<
+    Omit<QuestionChoice, 'id'>
+  >('prisma/master/question-choice')
+
+  for (const questionChoice of questionChoices) {
+    await prisma.questionChoice.create({
+      data: {
+        ...questionChoice,
+      },
+    })
+  }
+}
 
 const main = async () => {
   console.log(`Start seeding ...`)
@@ -212,6 +240,8 @@ const main = async () => {
   await doSubsidyEligibilityConditionSeed()
   await doSubsidyAmountConditionSeed()
   await doQuestionGroupQuestionSeed()
+  await doChoiceSeed()
+  await doQuestionChoiceSeed()
 
   console.log(`Seeding finished.`)
 }

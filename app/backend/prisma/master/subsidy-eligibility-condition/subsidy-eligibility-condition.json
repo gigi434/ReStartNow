@@ -33,17 +33,17 @@
     "conditionData": {
       "monthlyRentAfterEviction": 70000,
       "incomeThreshold": {
-        "salary": {
+        "salariedEmployees": {
           "single": 3887999,
           "couple": 4363999,
           "specialCategory": 3511999
         },
-        "business": {
+        "businessIncomeEarner": {
           "single": 2568000,
           "couple": 2948000,
           "specialCategory": 2276000
         },
-        "pension": {
+        "pensionIncomeEarner": {
           "single": 3924000,
           "couple": 4391764,
           "specialCategory": 3534666

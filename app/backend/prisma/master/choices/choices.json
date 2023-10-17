@@ -1,0 +1,14 @@
+[
+  {
+    "text": "給与所得者（収入）",
+    "value": "salariedEmployees"
+  },
+  {
+    "text": "事業所得者（所得）",
+    "value": "businessIncomeEarner"
+  },
+  {
+    "text": "年金所得者",
+    "value": "pensionIncomeEarner"
+  }
+]

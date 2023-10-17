@@ -1,5 +1,5 @@
-import { HousingGrantDto } from '@/src/result/dto/get-available-subsidies.dto'
-import { BaseGrantCalculator } from './BaseGrant'
+import { HousingGrantDto } from '@/src/result/dto'
+import { BaseGrantCalculator } from '@/src/result/factory/AbstractClass/base/BaseGrant'
 
 type EligibilityConditionData = {
   // 基準額
@@ -35,7 +35,7 @@ export abstract class BaseHousingGrant extends BaseGrantCalculator {
   /** 受給資格があるかどうか確認するメソッド */
   public checkEligibility(dto: HousingGrantDto): boolean {
     // (1) 離職等により経済的に困窮し、家賃の支払いが困難で、住居を喪失した、または住居喪失のおそれがあること。
-    if (!dto.economicHardship) {
+    if (dto.economicHardship !== true) {
       return false
     }
 
@@ -65,10 +65,10 @@ export abstract class BaseHousingGrant extends BaseGrantCalculator {
 
     // （5）申請を行う月に、申請者および申請者と同一の世帯に属する方の収入額（※）の合計が、次の表の「基準額」と実家賃の合計額を超えていないこと。
     // 世帯月収入上限額
-    const MaximumMonthlyHouseholdIncome: number =
+    const maximumMonthlyHouseholdIncome: number =
       this.eligibilityCondition.incomeThreshold[dto.numberOfHouseholdMembers]
     /* 基準額 + 実家賃が収入を超えていないことを確認する */
-    if (dto.monthlyHouseholdIncome > MaximumMonthlyHouseholdIncome + dto.rent) {
+    if (dto.monthlyHouseholdIncome > maximumMonthlyHouseholdIncome + dto.rent) {
       return false
     }
 
@@ -97,12 +97,12 @@ export abstract class BaseHousingGrant extends BaseGrantCalculator {
     }
 
     // （8）申請者及び申請者と生計を一とする同居の親族のいずれもが暴力団員ではないこと。
-    if (dto.isGangMember !== true) {
+    if (dto.isGangMember === true) {
       return false
     }
 
     // （9）申請者及び申請者と同一の世帯に属する方が生活保護を受けていないこと。
-    if (dto.isReceivingWelfare !== true) {
+    if (dto.isReceivingWelfare === true) {
       return false
     }
 
@@ -119,7 +119,8 @@ export abstract class BaseHousingGrant extends BaseGrantCalculator {
     // 実給付額
     const benefitAmount = maximumBenefitAmount - dto.monthlyHouseholdIncome
 
-    // 世帯月収が基準額と実家賃を上回り、かつ、給付金支給上限額を超える場合は給付金支給上限額を返す
+    // 世帯月収が基準額と実家賃を下回る場合は基準額と実家賃を合わせた金額を返す
+    // 世帯月収が基準額と実家賃を上回り、給付金支給上限額を超える場合は給付金支給上限額を返す
     if (dto.monthlyHouseholdIncome > maximumBenefitAmount) {
       return maximumBenefitAmount
     } else {

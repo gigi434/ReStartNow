@@ -93,5 +93,10 @@
     "answerType": "BOOLEAN",
     "text": "立ち退き後の家賃を入力してください",
     "propertyName": "monthlyRentAfterEviction"
+  },
+  {
+    "answerType": "CHOICE",
+    "text": "前年の収入の種類を選択してください",
+    "propertyName": "earningsCategory"
   }
 ]

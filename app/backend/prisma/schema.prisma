@@ -36,6 +36,7 @@ enum informationImportance {
 enum answerType {
   BOOLEAN
   NUMBER
+  CHOICE
 }
 
 // お知らせ
@@ -115,6 +116,7 @@ model Question {
   updatedAt             DateTime                @updatedAt
   propertyName          String                  @unique // クライアントサイドでリクエストに格納される回答のプロパティ
   questionGroupQuestion QuestionGroupQuestion[]
+  questionChoice QuestionChoice[] 
 }
 
 // 一問一答の質問を複数格納した質問グループ
@@ -166,3 +168,22 @@ model QuestionGroupQuestion {
   @@unique([questionId, questionGroupId])
 }
 
+// 質問の回答の種類として選択肢がある場合に使用される選択肢テーブル
+model Choice {
+  id          Int      @id @default(autoincrement())
+  text        String   // 選択肢として表示される文字列 例: "会社員", "自営業", "無職"
+  value       String   // 選択したときの値 例: "salary"
+  questionChoice   QuestionChoice[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// 質問テーブルと選択肢テーブルの中間テーブル
+model QuestionChoice {
+  question   Question @relation(fields: [questionId], references: [id])
+  questionId Int
+  choice     Choice   @relation(fields: [choiceId], references: [id])
+  choiceId   Int
+
+  @@id([questionId, choiceId])
+}

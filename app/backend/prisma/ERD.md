@@ -26,6 +26,7 @@ Low Low
         answerType {
             BOOLEAN BOOLEAN
 NUMBER NUMBER
+CHOICE CHOICE
         }
     
   "Information" {
@@ -133,6 +134,21 @@ NUMBER NUMBER
     DateTime updatedAt 
     }
   
+
+  "Choice" {
+    Int id "🗝️"
+    String text 
+    String value 
+    DateTime createdAt 
+    DateTime updatedAt 
+    }
+  
+
+  "QuestionChoice" {
+    Int questionId "🗝️"
+    Int choiceId "🗝️"
+    }
+  
     "Information" o|--|| "informationImportance" : "enum:importance"
     "Information" o|--|| "User" : "author"
     "User" o{--}o "Answer" : "answers"
@@ -149,6 +165,7 @@ NUMBER NUMBER
     "Subsidy" o|--|o "QuestionGroup" : "questionGroup"
     "Question" o|--|| "answerType" : "enum:answerType"
     "Question" o{--}o "QuestionGroupQuestion" : "questionGroupQuestion"
+    "Question" o{--}o "QuestionChoice" : "questionChoice"
     "QuestionGroup" o{--}o "QuestionGroupQuestion" : "questions"
     "QuestionGroup" o{--}o "Subsidy" : "subsidies"
     "Answer" o|--|| "Subsidy" : "subsidy"
@@ -157,4 +174,7 @@ NUMBER NUMBER
     "SubsidyAmountCondition" o|--|| "Subsidy" : "subsidy"
     "QuestionGroupQuestion" o|--|| "Question" : "question"
     "QuestionGroupQuestion" o|--|| "QuestionGroup" : "questionGroup"
+    "Choice" o{--}o "QuestionChoice" : "questionChoice"
+    "QuestionChoice" o|--|| "Question" : "question"
+    "QuestionChoice" o|--|| "Choice" : "choice"
 ```

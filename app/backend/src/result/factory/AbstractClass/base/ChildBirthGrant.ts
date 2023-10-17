@@ -1,4 +1,4 @@
-import { ChildbirthSupportGrantDto } from '@/src/result/dto/get-available-subsidies.dto'
+import { ChildbirthSupportGrantDto } from '@/src/result/dto'
 import { BaseGrantCalculator } from './BaseGrant'
 
 type EligibilityConditionData = {

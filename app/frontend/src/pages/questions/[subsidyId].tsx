@@ -4,13 +4,13 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import type { GetStaticProps, GetStaticPaths } from 'next'
 import {
+  ExtendedQuestion,
   fetchAllSubsidies,
   fetchQuestionsBySubsidyId,
 } from '@/src/utils/queries'
-import { Question } from '@prisma/client'
 
 type PageProps = {
-  questions: Question[]
+  questions: ExtendedQuestion[]
 }
 
 export default function Page({ questions }: PageProps) {

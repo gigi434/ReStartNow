@@ -1,4 +1,4 @@
-import { PrivateRentalHousingDto } from '@/src/result/dto/get-available-subsidies.dto'
+import { PrivateRentalHousingSubsidyDto } from '@/src/result/dto'
 import { BaseGrantCalculator } from './BaseGrant'
 
 type EligibilityConditionData = {
@@ -6,13 +6,13 @@ type EligibilityConditionData = {
   monthlyRentAfterEviction: number
   // 公営住宅法で定められた金額
   incomeThreshold: {
-    salary: {
+    salariedEmployees: {
       [K: string]: number
     }
-    business: {
+    businessIncomeEarner: {
       [K: string]: number
     }
-    pension: {
+    pensionIncomeEarner: {
       [K: string]: number
     }
   }
@@ -28,7 +28,7 @@ export abstract class BasePrivateRentalHousing extends BaseGrantCalculator {
   public eligibilityCondition: EligibilityConditionData
   public amountCondition: AmountData
 
-  public calculateAmount(dto: PrivateRentalHousingDto): number | false {
+  public calculateAmount(dto: PrivateRentalHousingSubsidyDto): number | false {
     if (!this.checkEligibility(dto)) {
       return false
     }
@@ -38,17 +38,17 @@ export abstract class BasePrivateRentalHousing extends BaseGrantCalculator {
     return totalAmount
   }
   /** 受給資格があるかどうか確認するメソッド */
-  public checkEligibility(dto: PrivateRentalHousingDto): boolean {
+  public checkEligibility(dto: PrivateRentalHousingSubsidyDto): boolean {
     // 現在の住居が民間賃貸であること
-    if (dto.currentHousing !== 'privateRental') return false
+    if (dto.currentHousing === false) return false
 
     // 自治体に引き続き2年以上居住し、住民登録をされていること。
-    if (dto.isRegisteredResidentForOverTwoYears) return false
+    if (dto.isRegisteredResidentForOverTwoYears === false) return false
 
     // 下記二つのどちらかに該当する世帯であること
     // 65歳以上の一人暮らし、または全員が65歳以上であることを確認
     // 心身障害者がいる、または一人親、または父母のない児童を養育している世帯であることを確認
-    if (!dto.hasSpecialFamilyCondition) return false
+    if (dto.hasSpecialFamilyCondition === false) return false
 
     // 前年の収入が公営住宅法で定められた金額以下であることを確認
     // 世帯の人数や特性に基づいて収入の上限を決定する
@@ -56,7 +56,7 @@ export abstract class BasePrivateRentalHousing extends BaseGrantCalculator {
       this.eligibilityCondition.incomeThreshold[dto.earningsCategory][
         dto.familyType
       ]
-    // ユーザーの収入が上限を超えていないことを確認する
+    // ユーザーの収入が上限を超えていないことを確認
     if (dto.yearlyEarnings > incomeThreshold) return false
 
     // 立ち退き後の家賃が上限額以下であることを確認
@@ -67,13 +67,13 @@ export abstract class BasePrivateRentalHousing extends BaseGrantCalculator {
       return false
 
     // 生活保護を受けていないことを確認
-    if (dto.isReceivingWelfare) return false
+    if (dto.isReceivingWelfare === true) return false
 
     // 全ての条件を満たした場合
     return true
   }
   /** どのくらい受給できるのか計算するメソッド */
-  public calculateConditionAmount(dto: PrivateRentalHousingDto): number {
+  public calculateConditionAmount(dto: PrivateRentalHousingSubsidyDto): number {
     let totalAmount = 0
 
     // 住宅家賃助成金の計算

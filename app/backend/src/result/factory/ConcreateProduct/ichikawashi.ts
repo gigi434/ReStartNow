@@ -3,7 +3,7 @@ import {
   ChibaPrivateRentalHousing,
   ChibaChildBirthGrant,
   ChibaHousingGrant,
-} from '../AbstractClass/prefecture/chiba'
+} from '@/src/result/factory/AbstractClass/prefecture/chiba'
 import { ResultRepository } from '@/src/result/result.repository'
 // 具象プロダクト
 @Injectable()

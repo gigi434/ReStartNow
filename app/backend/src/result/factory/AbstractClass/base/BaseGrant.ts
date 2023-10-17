@@ -1,5 +1,5 @@
 import { IBaseGrant } from '@/src/result/interface/subsidy-strategy-factory'
-import { AvailableSubsidiesDto } from '@/src/result/dto/get-available-subsidies.dto'
+import { AvailableSubsidiesDto } from '@/src/result/dto'
 import { ResultRepository } from '@/src/result/result.repository'
 import { Prisma } from '@prisma/client'
 

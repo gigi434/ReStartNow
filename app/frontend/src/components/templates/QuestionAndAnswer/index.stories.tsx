@@ -1,6 +1,7 @@
 import { QuestionAndAnswer } from '@/src/components'
 import type { Meta, StoryObj } from '@storybook/react'
 import { mockQuestions } from '@/mocks/api/questions/mockData'
+
 const meta: Meta<typeof QuestionAndAnswer> = {
   title: 'templates/QuestionAndAnswer',
   component: QuestionAndAnswer,
@@ -15,7 +16,8 @@ const Template: Story = {
   parameters: {
     nextjs: {
       router: {
-        basePath: '/profile',
+        pathname: '/questions/[subsidyId]',
+        query: { subsidyId: 1 },
       },
     },
   },
