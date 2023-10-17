@@ -68,7 +68,7 @@ model Municipality {
   id                  Int        @id @default(autoincrement())
   createdAt           DateTime   @default(now())
   updatedAt           DateTime   @updatedAt
-  name                String     @unique
+  name                String     
   municipalSymbolPath String
   isSupported         Boolean    @default(false)
   prefectureId        Int
