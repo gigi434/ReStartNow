@@ -55,6 +55,7 @@ CHOICE CHOICE
     DateTime createdAt 
     DateTime updatedAt 
     String name 
+    String hepburnName 
     String municipalSymbolPath 
     Boolean isSupported 
     Int prefectureId 
@@ -66,6 +67,7 @@ CHOICE CHOICE
     DateTime createdAt 
     DateTime updatedAt 
     String name 
+    String hepburnName 
     }
   
 

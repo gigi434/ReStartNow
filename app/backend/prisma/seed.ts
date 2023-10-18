@@ -14,32 +14,67 @@ import {
 } from '@prisma/client'
 import * as fs from 'fs'
 import * as path from 'path'
+import csv from 'csv-parser'
 
 const prisma = new PrismaClient()
 
-function getUsersFromJsonDirectory<T>(directoryPath: string): T[] {
+async function getDataFromDirectory<T>(directoryPath: string): Promise<T[]> {
   const objects: T[] = []
 
-  const recursiveReadDir = (dirPath: string) => {
-    fs.readdirSync(dirPath).forEach((filename) => {
+  const readCsv = (filePath: string): Promise<T[]> => {
+    return new Promise((resolve, reject) => {
+      const rows: T[] = []
+      fs.createReadStream(filePath)
+        .pipe(csv())
+        .on('data', (row) => {
+          // 数値に変換するフィールド
+          if (row['standard_region_code']) {
+            row['standard_region_code'] = parseInt(
+              row['standard_region_code'],
+              10,
+            )
+          }
+          if (row['prefecture_code']) {
+            row['prefecture_code'] = parseInt(row['prefecture_code'], 10)
+          }
+
+          rows.push(row as unknown as T)
+        })
+        .on('end', () => {
+          resolve(rows)
+        })
+        .on('error', (err) => {
+          reject(err)
+        })
+    })
+  }
+
+  const recursiveReadDir = async (dirPath: string) => {
+    for (const filename of fs.readdirSync(dirPath)) {
       const filePath = path.join(dirPath, filename)
       const stat = fs.statSync(filePath)
 
       if (stat.isDirectory()) {
-        recursiveReadDir(filePath)
-      } else if (stat.isFile() && path.extname(filename) === '.json') {
-        const data: T[] = JSON.parse(fs.readFileSync(filePath, 'utf-8'))
-        objects.push(...data)
+        await recursiveReadDir(filePath)
+      } else if (stat.isFile()) {
+        const fileExt = path.extname(filename)
+        if (fileExt === '.json') {
+          const data: T[] = JSON.parse(fs.readFileSync(filePath, 'utf-8'))
+          objects.push(...data)
+        } else if (fileExt === '.csv') {
+          const data: T[] = await readCsv(filePath)
+          objects.push(...data)
+        }
       }
-    })
+    }
   }
 
-  recursiveReadDir(directoryPath)
-  return objects as T[]
+  await recursiveReadDir(directoryPath)
+  return objects
 }
 
 const doSubsidySeed = async () => {
-  const subsidies = await getUsersFromJsonDirectory<Subsidy>(
+  const subsidies = await getDataFromDirectory<Subsidy>(
     'prisma/master/subsidy/chiba',
   )
 
@@ -53,7 +88,7 @@ const doSubsidySeed = async () => {
 }
 
 const doUserSeed = async () => {
-  const users = await getUsersFromJsonDirectory<User>('prisma/master/users')
+  const users = await getDataFromDirectory<User>('prisma/master/users')
 
   for (const user of users) {
     await prisma.user.create({
@@ -66,17 +101,19 @@ const doUserSeed = async () => {
 
 const doPrefectureSeed = async () => {
   interface PrefectureInJsonData {
-    prefCode: number
-    prefName: string
+    prefecture_code: number
+    prefecture_name: string
+    prefecture_romaji: string
   }
-  const prefectures = await getUsersFromJsonDirectory<PrefectureInJsonData>(
+  const prefectures = await getDataFromDirectory<PrefectureInJsonData>(
     'prisma/master/prefectures',
   )
 
   for (const prefecture of prefectures) {
     await prisma.prefecture.create({
       data: {
-        name: prefecture.prefName,
+        name: prefecture.prefecture_name,
+        hepburnName: prefecture.prefecture_romaji,
       },
     })
   }
@@ -84,30 +121,31 @@ const doPrefectureSeed = async () => {
 
 const doManicipalitySeed = async () => {
   interface MunicipalityInJsonData {
-    prefCode: number
-    cityCode: string
-    cityName: string
-    bigCityFlag: string
+    standard_region_code: number
+    municipality_name: string
+    municipality_romaji: string
+    prefecture_code: number
+    prefecture_name: string
   }
 
-  const municipalities =
-    await getUsersFromJsonDirectory<MunicipalityInJsonData>(
-      'prisma/master/municipalities',
-    )
+  const municipalities = await getDataFromDirectory<MunicipalityInJsonData>(
+    'prisma/master/municipalities',
+  )
 
   for (const municipality of municipalities) {
     await prisma.municipality.create({
       data: {
-        name: municipality.cityName,
-        municipalSymbolPath: `/municipality/${municipality.cityCode}`,
-        prefectureId: municipality.prefCode,
+        name: municipality.municipality_name,
+        municipalSymbolPath: `/municipality/${municipality.standard_region_code}`,
+        prefectureId: municipality.prefecture_code,
+        hepburnName: municipality.municipality_romaji,
       },
     })
   }
 }
 
 const doQuestionsSeed = async () => {
-  const questions = await getUsersFromJsonDirectory<Omit<Question, 'id'>>(
+  const questions = await getDataFromDirectory<Omit<Question, 'id'>>(
     'prisma/master/questions',
   )
 
@@ -121,7 +159,7 @@ const doQuestionsSeed = async () => {
 }
 
 const doInforamtionsSeed = async () => {
-  const informations = await getUsersFromJsonDirectory<Omit<Information, 'id'>>(
+  const informations = await getDataFromDirectory<Omit<Information, 'id'>>(
     'prisma/master/informations',
   )
 
@@ -135,7 +173,7 @@ const doInforamtionsSeed = async () => {
 }
 
 const doAnswersSeed = async () => {
-  const answers = await getUsersFromJsonDirectory<Omit<Answer, 'id'>>(
+  const answers = await getDataFromDirectory<Omit<Answer, 'id'>>(
     'prisma/master/answers',
   )
 
@@ -148,7 +186,7 @@ const doAnswersSeed = async () => {
   }
 }
 const doSubsidyAmountConditionSeed = async () => {
-  const subsidyAmountConditions = await getUsersFromJsonDirectory<
+  const subsidyAmountConditions = await getDataFromDirectory<
     Omit<SubsidyAmountCondition, 'id'>
   >('prisma/master/subsidy-amount-condition')
 
@@ -161,7 +199,7 @@ const doSubsidyAmountConditionSeed = async () => {
   }
 }
 const doSubsidyEligibilityConditionSeed = async () => {
-  const subsidyEligibilityConditions = await getUsersFromJsonDirectory<
+  const subsidyEligibilityConditions = await getDataFromDirectory<
     Omit<SubsidyEligibilityCondition, 'id'>
   >('prisma/master/subsidy-eligibility-condition')
 
@@ -174,7 +212,7 @@ const doSubsidyEligibilityConditionSeed = async () => {
   }
 }
 const doQuestionGroupQuestionSeed = async () => {
-  const questionGroupQuestions = await getUsersFromJsonDirectory<
+  const questionGroupQuestions = await getDataFromDirectory<
     Omit<QuestionGroupQuestion, 'id'>
   >('prisma/master/question-group-question')
 
@@ -187,9 +225,9 @@ const doQuestionGroupQuestionSeed = async () => {
   }
 }
 const doQuestionGroupSeed = async () => {
-  const questionGroups = await getUsersFromJsonDirectory<
-    Omit<QuestionGroup, 'id'>
-  >('prisma/master/question-group')
+  const questionGroups = await getDataFromDirectory<Omit<QuestionGroup, 'id'>>(
+    'prisma/master/question-group',
+  )
 
   for (const questionGroup of questionGroups) {
     await prisma.questionGroup.create({
@@ -200,7 +238,7 @@ const doQuestionGroupSeed = async () => {
   }
 }
 const doChoiceSeed = async () => {
-  const choices = await getUsersFromJsonDirectory<Omit<Choice, 'id'>>(
+  const choices = await getDataFromDirectory<Omit<Choice, 'id'>>(
     'prisma/master/choices',
   )
 
@@ -213,7 +251,7 @@ const doChoiceSeed = async () => {
   }
 }
 const doQuestionChoiceSeed = async () => {
-  const questionChoices = await getUsersFromJsonDirectory<
+  const questionChoices = await getDataFromDirectory<
     Omit<QuestionChoice, 'id'>
   >('prisma/master/question-choice')
 

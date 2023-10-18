@@ -69,6 +69,7 @@ model Municipality {
   createdAt           DateTime   @default(now())
   updatedAt           DateTime   @updatedAt
   name                String     
+  hepburnName         String
   municipalSymbolPath String
   isSupported         Boolean    @default(false)
   prefectureId        Int
@@ -82,6 +83,7 @@ model Prefecture {
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
   name           String         @unique
+  hepburnName    String         @unique
   municipalities Municipality[]
 }
 
