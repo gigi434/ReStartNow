@@ -11,19 +11,21 @@ import {
 
 // 具象ファクトリー
 @Injectable()
-export class IchikawashiFactory implements SubsidyCalculatorAbstractFactory {
+export class ChibakenIchikawashiFactory
+  implements SubsidyCalculatorAbstractFactory
+{
   constructor(
     private readonly ichikawashiHousingSubsidy: IchikawashiHousingSubsidy,
     private readonly ichikawashiChildBirthGrant: IchikawashiChildBirthGrant,
     private readonly ichikawashiPrivateRentalHousing: IchikawashiPrivateRentalHousing,
   ) {}
-  public getSubsidyAmountCalculator(subsidyId: number) {
-    switch (subsidyId) {
-      case 1: // 住居確保給付金
+  public getSubsidyAmountCalculator(subisdyName: string) {
+    switch (subisdyName) {
+      case 'HousingGrant': // 住居確保給付金
         return this.createHousingSubsidyCaluculator()
-      case 2: // 民間賃貸住宅家賃等助成制度
+      case 'PrivateRentalHousing': // 民間賃貸住宅家賃等助成制度
         return this.createPrivateRentalHousingCaluculator()
-      case 3: // 出産・子育て応援給付金
+      case 'ChildBirthGrant': // 出産・子育て応援給付金
         return this.createChildBirthGrantCaluculator()
       default:
         throw new Error('Unknown subsidy type')

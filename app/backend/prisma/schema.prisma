@@ -68,13 +68,15 @@ model Municipality {
   id                  Int        @id @default(autoincrement())
   createdAt           DateTime   @default(now())
   updatedAt           DateTime   @updatedAt
-  name                String     
+  name                String
   hepburnName         String
   municipalSymbolPath String
   isSupported         Boolean    @default(false)
   prefectureId        Int
   prefecture          Prefecture @relation(fields: [prefectureId], references: [id])
   subsidies           Subsidy[]
+
+  @@unique([prefectureId, name])
 }
 
 // 都道府県
@@ -85,28 +87,41 @@ model Prefecture {
   name           String         @unique
   hepburnName    String         @unique
   municipalities Municipality[]
+
+  @@unique([name, hepburnName])
+}
+
+// 助成金の名前を管理するテーブル
+model SubsidyName {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique // 助成金の名前
+  hepburnName String // 助成金のローマ字名
+  description String // 説明
+  subsidies   Subsidy[]
 }
 
 // 助成金
 model Subsidy {
   id                           Int                           @id @default(autoincrement())
-  name                         String
   deadlineForReceipt           DateTime? // 受給期限
   amountReceived               String // 受給額
   applicationAddress           String // 申請先
   applicationMethod            String // 申請方法
-  description                  String // 説明
   status                       subsidyStatus                 @default(Continuation) // 助成金の更新・廃止などの状態
   relatedLink                  String // 根拠となるリンク
   createdAt                    DateTime                      @default(now())
   updatedAt                    DateTime                      @updatedAt
   municipalityId               Int
   municipality                 Municipality                  @relation(fields: [municipalityId], references: [id])
+  subsidyNameId                Int
+  subsidyName                  SubsidyName                   @relation(fields: [subsidyNameId], references: [id])
   answers                      Answer[]
   subsidyeligibilityConditions SubsidyEligibilityCondition[]
   subsidyamountConditions      SubsidyAmountCondition[]
   questionGroupId              Int?
-  questionGroup                QuestionGroup?                 @relation(fields: [questionGroupId], references: [id])
+  questionGroup                QuestionGroup?                @relation(fields: [questionGroupId], references: [id])
+
+  @@unique([subsidyNameId, municipalityId])
 }
 
 // 一問一答の質問
@@ -118,17 +133,17 @@ model Question {
   updatedAt             DateTime                @updatedAt
   propertyName          String                  @unique // クライアントサイドでリクエストに格納される回答のプロパティ
   questionGroupQuestion QuestionGroupQuestion[]
-  questionChoice QuestionChoice[] 
+  questionChoice        QuestionChoice[]
 }
 
 // 一問一答の質問を複数格納した質問グループ
 model QuestionGroup {
-  id                   Int                     @id @default(autoincrement())
-  description          String
-  createdAt            DateTime                @default(now())
-  updatedAt            DateTime                @updatedAt
-  questions            QuestionGroupQuestion[]
-  subsidies            Subsidy[]
+  id          Int                     @id @default(autoincrement())
+  description String
+  createdAt   DateTime                @default(now())
+  updatedAt   DateTime                @updatedAt
+  questions   QuestionGroupQuestion[]
+  subsidies   Subsidy[]
 }
 
 // ユーザーの答えを保存するテーブル
@@ -172,12 +187,12 @@ model QuestionGroupQuestion {
 
 // 質問の回答の種類として選択肢がある場合に使用される選択肢テーブル
 model Choice {
-  id          Int      @id @default(autoincrement())
-  text        String   // 選択肢として表示される文字列 例: "会社員", "自営業", "無職"
-  value       String   // 選択したときの値 例: "salary"
-  questionChoice   QuestionChoice[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id             Int              @id @default(autoincrement())
+  text           String // 選択肢として表示される文字列 例: "会社員", "自営業", "無職"
+  value          String // 選択したときの値 例: "salary"
+  questionChoice QuestionChoice[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
 }
 
 // 質問テーブルと選択肢テーブルの中間テーブル

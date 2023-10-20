@@ -1,12 +1,16 @@
 import { SubsidySearch } from '@/src/components'
-import { fetchAllSubsidies, fetchSubsidies } from '@/src/utils/queries'
+import {
+  CustomSubsidy,
+  fetchAllSubsidies,
+  fetchSubsidies,
+} from '@/src/utils/queries'
 import { CircularProgress } from '@mui/material'
 import { GetStaticPaths, GetStaticProps } from 'next'
 import { useRouter } from 'next/router'
 import { Subsidy } from '@prisma/client'
 
 type PageProps = {
-  subsidies: Subsidy[]
+  subsidies: CustomSubsidy[]
 }
 
 export default function Page({ subsidies }: PageProps) {
@@ -20,7 +24,7 @@ export default function Page({ subsidies }: PageProps) {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   try {
-    const subsidies: Subsidy[] = await fetchAllSubsidies()
+    const subsidies = await fetchAllSubsidies()
     const paths = subsidies.map((subsidy) => ({
       params: { municipalityId: `${subsidy.municipalityId}` },
     }))

@@ -3,12 +3,13 @@ import { ResultService } from './result.service'
 import { ResultFactory } from './factory/result.factory'
 import { PrismaModule } from 'src/prisma/prisma.module'
 import { ResultController } from './result.controller'
-import { IchikawashiFactory } from './factory/ConcreateFactory/ichikawashi'
+import { ChibakenIchikawashiFactory } from './factory/ConcreateFactory/ichikawashi'
 import {
   IchikawashiChildBirthGrant,
   IchikawashiHousingSubsidy,
   IchikawashiPrivateRentalHousing,
 } from './factory/ConcreateProduct/ichikawashi'
+import { ResultAFConfigService } from './factory/abstract-factory-config'
 import { ResultRepository } from './result.repository'
 
 @Module({
@@ -16,10 +17,11 @@ import { ResultRepository } from './result.repository'
     ResultService,
     ResultFactory,
     ResultRepository,
-    IchikawashiFactory,
+    ChibakenIchikawashiFactory,
     IchikawashiChildBirthGrant,
     IchikawashiHousingSubsidy,
     IchikawashiPrivateRentalHousing,
+    ResultAFConfigService,
   ],
   imports: [PrismaModule],
   controllers: [ResultController],

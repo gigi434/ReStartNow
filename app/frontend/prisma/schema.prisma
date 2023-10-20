@@ -32,12 +32,15 @@ model Municipality {
   id                  Int        @id @default(autoincrement())
   createdAt           DateTime   @default(now())
   updatedAt           DateTime
-  name                String     @unique
+  name                String
   municipalSymbolPath String
   isSupported         Boolean    @default(false)
   prefectureId        Int
+  hepburnName         String
   Prefecture          Prefecture @relation(fields: [prefectureId], references: [id])
   Subsidy             Subsidy[]
+
+  @@unique([prefectureId, name])
 }
 
 model Prefecture {
@@ -45,7 +48,10 @@ model Prefecture {
   createdAt    DateTime       @default(now())
   updatedAt    DateTime
   name         String         @unique
+  hepburnName  String         @unique
   Municipality Municipality[]
+
+  @@unique([name, hepburnName])
 }
 
 model Question {
@@ -61,11 +67,9 @@ model Question {
 
 model Subsidy {
   id                          Int                          @id @default(autoincrement())
-  name                        String
   amountReceived              String
   applicationAddress          String
   applicationMethod           String
-  description                 String
   status                      subsidyStatus                @default(Continuation)
   createdAt                   DateTime                     @default(now())
   updatedAt                   DateTime
@@ -73,11 +77,15 @@ model Subsidy {
   relatedLink                 String
   deadlineForReceipt          DateTime?
   questionGroupId             Int?
+  subsidyNameId               Int
   Answer                      Answer[]
   Municipality                Municipality                 @relation(fields: [municipalityId], references: [id])
   QuestionGroup               QuestionGroup?               @relation(fields: [questionGroupId], references: [id])
+  SubsidyName                 SubsidyName                  @relation(fields: [subsidyNameId], references: [id])
   SubsidyAmountCondition      SubsidyAmountCondition?
   SubsidyEligibilityCondition SubsidyEligibilityCondition?
+
+  @@unique([subsidyNameId, municipalityId])
 }
 
 model User {
@@ -141,6 +149,14 @@ model QuestionChoice {
   Question   Question @relation(fields: [questionId], references: [id])
 
   @@id([questionId, choiceId])
+}
+
+model SubsidyName {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  hepburnName String
+  description String
+  Subsidy     Subsidy[]
 }
 
 enum Role {

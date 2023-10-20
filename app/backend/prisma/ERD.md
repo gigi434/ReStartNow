@@ -71,19 +71,26 @@ CHOICE CHOICE
     }
   
 
-  "Subsidy" {
+  "SubsidyName" {
     Int id "🗝️"
     String name 
+    String hepburnName 
+    String description 
+    }
+  
+
+  "Subsidy" {
+    Int id "🗝️"
     DateTime deadlineForReceipt "❓"
     String amountReceived 
     String applicationAddress 
     String applicationMethod 
-    String description 
     subsidyStatus status 
     String relatedLink 
     DateTime createdAt 
     DateTime updatedAt 
     Int municipalityId 
+    Int subsidyNameId 
     Int questionGroupId "❓"
     }
   
@@ -159,8 +166,10 @@ CHOICE CHOICE
     "Municipality" o|--|| "Prefecture" : "prefecture"
     "Municipality" o{--}o "Subsidy" : "subsidies"
     "Prefecture" o{--}o "Municipality" : "municipalities"
+    "SubsidyName" o{--}o "Subsidy" : "subsidies"
     "Subsidy" o|--|| "subsidyStatus" : "enum:status"
     "Subsidy" o|--|| "Municipality" : "municipality"
+    "Subsidy" o|--|| "SubsidyName" : "subsidyName"
     "Subsidy" o{--}o "Answer" : "answers"
     "Subsidy" o{--}o "SubsidyEligibilityCondition" : "subsidyeligibilityConditions"
     "Subsidy" o{--}o "SubsidyAmountCondition" : "subsidyamountConditions"

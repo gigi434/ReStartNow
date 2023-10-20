@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { updateSubsidySearch } from '@/src/slice'
 import { RootState } from '@/src/store'
 import { Subsidy } from '@prisma/client'
+import { CustomSubsidy } from '@/src/utils'
 
 // フォームで扱うデータ型を定義する
 type Inputs = {
@@ -19,29 +20,43 @@ type Inputs = {
 }
 
 type SubsidySearchFormProps = {
-  subsidies: Subsidy[]
+  subsidies: CustomSubsidy[]
 }
 
 /** 助成金の検索フォーム */
 export function SubsidySearchForm({ subsidies }: SubsidySearchFormProps) {
-  const subsiydSearch = useSelector((state: RootState) => state.subsidySearch)
+  const subsidySearch = useSelector((state: RootState) => state.subsidySearch)
   const dispatch = useDispatch()
   const {
     control,
     formState: { errors },
   } = useForm<Inputs>()
+  // 引数として受け取ったsubsidiesをフラット化する関数
+  function flattenSubsidiesArray(subsidies: CustomSubsidy[]) {
+    return subsidies.map((subsidy) => {
+      const { subsidyName, ...rest } = subsidy
+      return {
+        ...rest,
+        ...subsidyName,
+      }
+    })
+  }
 
-  const onSubsidyChange = (_prevValue: any, newValue: Subsidy | null) => {
+  const onSubsidyChange = (_prevValue: any, newValue: CustomSubsidy | null) => {
     dispatch(updateSubsidySearch(newValue))
   }
   // データ型に応じて文字列型に変換するコールバック関数
-  const formatOption = (option: string | number | Date | null) => {
+  const formatOption = (option: any): string => {
     if (typeof option === 'number') {
       return option.toString()
     }
 
     if (option instanceof Date) {
       return option.toLocaleDateString()
+    }
+
+    if (typeof option === 'object' && option !== null) {
+      return option.name || '' // ここでオブジェクトのnameプロパティを取得しています。
     }
 
     return option || ''
@@ -56,17 +71,15 @@ export function SubsidySearchForm({ subsidies }: SubsidySearchFormProps) {
         <Autocomplete
           options={Array.from(
             new Set(
-              subsidies.map((subsidy) => subsidy[name as keyof typeof subsidy])
+              flattenSubsidiesArray(subsidies).map((subsidy) =>
+                formatOption(subsidy.name)
+              )
             )
           )}
-          value={
-            subsiydSearch.subsidy?.[
-              name as keyof typeof subsiydSearch.subsidy
-            ] || null
-          }
+          value={subsidySearch.subsidy?.subsidyName?.name || null}
           onChange={(event, newValue) => {
             const selectedSubsidy = subsidies.find(
-              (subsidy) => subsidy[name as keyof typeof subsidy] === newValue
+              (subsidy) => subsidy.subsidyName.name === newValue
             )
             onSubsidyChange(event, selectedSubsidy || null)
             field.onChange(newValue)

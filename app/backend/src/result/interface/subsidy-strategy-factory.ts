@@ -1,7 +1,7 @@
 import { AvailableSubsidiesDto } from '@/src/result/dto'
 // 抽象ファクトリー
 export interface SubsidyCalculatorAbstractFactory {
-  getSubsidyAmountCalculator(subsidyId: number): IBaseGrant
+  getSubsidyAmountCalculator(subsidyName: string): IBaseGrant
 }
 
 // 抽象プロダクト

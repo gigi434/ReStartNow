@@ -5,13 +5,18 @@ import { PrismaService } from 'src/prisma/prisma.service'
 export class RegionService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  /* 対応している市町区村をすべて取得する */
+  /* 質問を保有している市町区村をすべて取得する */
   async getSupportedMunicipality() {
-    const supportedMunicipality =
-      await this.prismaService.municipality.findMany({
-        orderBy: { id: 'asc' },
-      })
-
-    return supportedMunicipality
+    return this.prismaService.municipality.findMany({
+      where: {
+        subsidies: {
+          some: {
+            questionGroupId: {
+              not: null,
+            },
+          },
+        },
+      },
+    })
   }
 }

@@ -11,6 +11,7 @@ import {
   QuestionGroup,
   Choice,
   QuestionChoice,
+  SubsidyName,
 } from '@prisma/client'
 import * as fs from 'fs'
 import * as path from 'path'
@@ -73,6 +74,19 @@ async function getDataFromDirectory<T>(directoryPath: string): Promise<T[]> {
   return objects
 }
 
+const doSubsidyNameSeed = async () => {
+  const subsidyNames = await getDataFromDirectory<SubsidyName>(
+    'prisma/master/subsidy-name',
+  )
+
+  for (const subsidyName of subsidyNames) {
+    await prisma.subsidyName.create({
+      data: {
+        ...subsidyName,
+      },
+    })
+  }
+}
 const doSubsidySeed = async () => {
   const subsidies = await getDataFromDirectory<Subsidy>(
     'prisma/master/subsidy/chiba',
@@ -267,6 +281,7 @@ const doQuestionChoiceSeed = async () => {
 const main = async () => {
   console.log(`Start seeding ...`)
 
+  await doSubsidyNameSeed()
   await doUserSeed()
   await doPrefectureSeed()
   await doManicipalitySeed()

@@ -32,15 +32,6 @@ export function RegionSearchForm({
     formState: { errors },
   } = useForm<Inputs>()
 
-  const validationRules = {
-    prefectures: {
-      required: '都道府県を選択してください。',
-    },
-    municipalities: {
-      required: '市区町村を選択してください。',
-    },
-  }
-
   // 都道府県を選択したときの市区町村の選択肢
   const [municipalitiesOptions, setMunicipalityOptions] = useState<
     Municipality[]
@@ -71,7 +62,6 @@ export function RegionSearchForm({
       <Controller
         name="prefectures"
         control={control}
-        rules={validationRules.prefectures}
         render={({ field }) => (
           <Autocomplete
             options={prefectures}
@@ -104,7 +94,6 @@ export function RegionSearchForm({
       <Controller
         name="municipalities"
         control={control}
-        rules={validationRules.municipalities}
         render={({ field }) => (
           <Autocomplete
             options={municipalitiesOptions}
