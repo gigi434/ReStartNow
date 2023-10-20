@@ -8,11 +8,10 @@ import {
 } from '@/src/components'
 import React, { Suspense } from 'react'
 import { useRouter } from 'next/router'
-import { ErrorBoundaryClass } from '@/src/utils'
-import { Question } from '@prisma/client'
+import { ErrorBoundaryClass, ExtendedQuestion } from '@/src/utils'
 
 type QuestionAndAnswerProps = {
-  questions: Question[]
+  questions: ExtendedQuestion[]
 }
 
 export function QuestionAndAnswer({ questions }: QuestionAndAnswerProps) {

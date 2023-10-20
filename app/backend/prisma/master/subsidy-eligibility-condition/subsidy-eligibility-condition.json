@@ -1,0 +1,54 @@
+[
+  {
+    "id": 1,
+    "subsidyId": 3,
+    "conditionData": {
+      "deadlineDate": "2023-03-08",
+      "isResidency": true
+    }
+  },
+  {
+    "id": 2,
+    "subsidyId": 1,
+    "conditionData": {
+      "incomeThreshold": {
+        "1": 84000,
+        "2": 130000,
+        "3": 172000,
+        "4": 214000,
+        "5": 255000,
+        "6": 297000,
+        "7": 334000
+      },
+      "financialAssets": {
+        "1": 504000,
+        "2": 780000,
+        "3": 1000000
+      }
+    }
+  },
+  {
+    "id": 3,
+    "subsidyId": 2,
+    "conditionData": {
+      "monthlyRentAfterEviction": 70000,
+      "incomeThreshold": {
+        "salariedEmployees": {
+          "single": 3887999,
+          "couple": 4363999,
+          "specialCategory": 3511999
+        },
+        "businessIncomeEarner": {
+          "single": 2568000,
+          "couple": 2948000,
+          "specialCategory": 2276000
+        },
+        "pensionIncomeEarner": {
+          "single": 3924000,
+          "couple": 4391764,
+          "specialCategory": 3534666
+        }
+      }
+    }
+  }
+]

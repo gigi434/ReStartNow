@@ -1,9 +1,9 @@
 import axios, { AxiosError } from 'axios'
-import type { Subsidy } from '@prisma/client'
+import type { CustomSubsidy } from './fetchSubsidies'
 
 export async function fetchAllSubsidies() {
   try {
-    const { data: subsidies } = await axios.get<Subsidy[]>(
+    const { data: subsidies } = await axios.get<CustomSubsidy[]>(
       process.env.NODE_ENV === 'development'
         ? `${process.env.NEXT_PUBLIC_BASE_URL}/api/subsidies`
         : `${process.env.API_SERVER_URL}/subsidies`

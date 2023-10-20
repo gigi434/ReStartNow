@@ -4,13 +4,13 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import type { GetStaticProps, GetStaticPaths } from 'next'
 import {
-  fetchAllQuestions,
+  ExtendedQuestion,
+  fetchAllSubsidies,
   fetchQuestionsBySubsidyId,
 } from '@/src/utils/queries'
-import { Question } from '@prisma/client'
 
 type PageProps = {
-  questions: Question[]
+  questions: ExtendedQuestion[]
 }
 
 export default function Page({ questions }: PageProps) {
@@ -25,16 +25,11 @@ export default function Page({ questions }: PageProps) {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   try {
-    const questions = await fetchAllQuestions()
-    // 最大のidを取得
-    const maxId = Math.max(...questions.map((q) => q.subsidyId))
+    const subsidies = await fetchAllSubsidies()
 
-    // maxId回ループを回して、指定されたオブジェクトを生成してpaths配列に追加
-    const paths = Array.from({ length: maxId }, (_, index) => {
-      return {
-        params: { subsidyId: `${index + 1}` }, // indexは0から始まるので、1を足してidとする
-      }
-    })
+    const paths = subsidies.map((subsidy) => ({
+      params: { subsidyId: `${subsidy.id}` },
+    }))
 
     return { paths, fallback: false }
   } catch (err) {

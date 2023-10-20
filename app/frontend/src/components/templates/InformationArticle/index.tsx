@@ -1,7 +1,6 @@
 import { Stack, Button, Typography, Container, Box } from '@mui/material'
 import React from 'react'
 import { Divider, Header, Footer } from '@/src/components'
-import { format, parseISO } from 'date-fns'
 import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutlined'
 import { useTheme } from '@mui/system'
 import type { Information } from '@prisma/client'
@@ -14,7 +13,6 @@ type InformationArticleProps = {
 export function InformationArticle({ information }: InformationArticleProps) {
   const theme = useTheme()
   const router = useRouter()
-  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone // ブラウザのタイムゾーンを取得する
 
   return (
     <Stack>
@@ -73,17 +71,17 @@ export function InformationArticle({ information }: InformationArticleProps) {
             <Stack alignItems={'flex-end'} spacing={1}>
               {/* 公開日 */}
               <Typography variant="caption" suppressHydrationWarning={true}>
-                {`公開日: ${formatDateWithTimeZone(
-                  information.createdAt,
-                  timeZone
-                )}`}
+                {`公開日: ${formatDateWithTimeZone({
+                  date: information.createdAt,
+                  includeTime: true,
+                })}`}
               </Typography>
               {/* 更新日 */}
               <Typography variant="caption" suppressHydrationWarning={true}>
-                {`更新日: ${formatDateWithTimeZone(
-                  information.createdAt,
-                  timeZone
-                )}`}
+                {`更新日: ${formatDateWithTimeZone({
+                  date: information.updatedAt,
+                  includeTime: true,
+                })}`}
               </Typography>
             </Stack>
             {/* 分割線 */}

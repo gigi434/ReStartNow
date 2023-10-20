@@ -8,9 +8,10 @@ import {
 import { Container, Grid, Stack, Typography, useTheme } from '@mui/material'
 import { ErrorBoundaryClass } from '@/src/utils/error'
 import { Subsidy } from '@prisma/client'
+import { CustomSubsidy } from '@/src/utils'
 
 type SubsidySearchProps = {
-  subsidies: Subsidy[]
+  subsidies: CustomSubsidy[]
 }
 
 export function SubsidySearch({ subsidies }: SubsidySearchProps) {

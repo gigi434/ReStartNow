@@ -9,7 +9,11 @@ export class SubsidiesService {
    * 全ての助成金を取得する関数オブジェクト
    */
   async getAllSubsidies() {
-    const subsidies = await this.prismaService.subsidy.findMany()
+    const subsidies = await this.prismaService.subsidy.findMany({
+      include: {
+        subsidyName: true,
+      },
+    })
     return subsidies
   }
 
@@ -18,6 +22,9 @@ export class SubsidiesService {
     const subsidy = await this.prismaService.subsidy.findMany({
       where: {
         municipalityId: municipalityId,
+      },
+      include: {
+        subsidyName: true,
       },
     })
 

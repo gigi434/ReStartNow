@@ -11,12 +11,12 @@ import TableSortLabel from '@mui/material/TableSortLabel'
 import Paper from '@mui/material/Paper'
 import { visuallyHidden } from '@mui/utils'
 import { useTheme } from '@mui/material'
-import type { Subsidy } from '@prisma/client'
 import { Prisma } from '@prisma/client'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/src/store'
 import Link from 'next/link'
 import { Link as MuiLink } from '@mui/material'
+import { CustomSubsidy, formatDateWithTimeZone } from '@/src/utils'
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -59,23 +59,17 @@ function stableSort<T>(
 
 interface HeadCell {
   disablePadding: boolean
-  id: keyof Subsidy
+  id: keyof CustomSubsidy
   label: string
   numeric: boolean
 }
 
 const headCells: readonly HeadCell[] = [
   {
-    id: 'name',
+    id: 'subsidyName',
     numeric: false,
     disablePadding: false,
-    label: '助成金',
-  },
-  {
-    id: 'ageLimit',
-    numeric: true,
-    disablePadding: false,
-    label: '最大受給年齢',
+    label: '名前',
   },
   {
     id: 'applicationAddress',
@@ -88,12 +82,6 @@ const headCells: readonly HeadCell[] = [
     numeric: false,
     disablePadding: false,
     label: '申請方法',
-  },
-  {
-    id: 'applicationRequirements',
-    numeric: false,
-    disablePadding: false,
-    label: '申請資格',
   },
   {
     id: 'amountReceived',
@@ -110,7 +98,7 @@ const headCells: readonly HeadCell[] = [
 ]
 
 interface EnhancedTableProps {
-  onRequestSort: (property: keyof Subsidy) => void
+  onRequestSort: (property: keyof CustomSubsidy) => void
   order: Order
   orderBy: string
 }
@@ -119,25 +107,25 @@ interface EnhancedTableProps {
  * 助成金検索フォームにより検索する値を含んだ助成金レコードを表示するためのコールバック関数
  */
 function filterSubsidies(
-  subsidies: Subsidy[],
+  subsidies: CustomSubsidy[],
   filters: RootState['subsidySearch']
 ) {
-  const actualFilters = filters.subsidy || {}
+  const actualFilterName = filters.subsidy?.subsidyName?.name
 
-  const matchedSubsidiesRecord = subsidies.filter((subsidy) =>
-    Object.keys(actualFilters).every((key) => {
-      const filterValue = actualFilters[key as keyof typeof actualFilters]
-      const subsidyValue = subsidy[key as keyof typeof subsidy]
-      return !filterValue || subsidyValue === filterValue
-    })
-  )
+  // 助成金の名前だけでフィルタリングする
+  const matchedSubsidiesRecord = subsidies.filter((subsidy) => {
+    return (
+      !actualFilterName || subsidy.subsidyName.name.includes(actualFilterName)
+    )
+  })
+
   return matchedSubsidiesRecord
 }
 
 function EnhancedTableHead(props: EnhancedTableProps) {
   const theme = useTheme()
   const { onRequestSort, order, orderBy } = props
-  const createSortHandler = (property: keyof Subsidy) => () => {
+  const createSortHandler = (property: keyof CustomSubsidy) => () => {
     onRequestSort(property)
   }
 
@@ -170,10 +158,15 @@ function EnhancedTableHead(props: EnhancedTableProps) {
   )
 }
 
-export function CustomTable({ subsidies = [] }: { subsidies: Subsidy[] }) {
+export function CustomTable({
+  subsidies = [],
+}: {
+  subsidies: CustomSubsidy[]
+}) {
   const subsidySearch = useSelector((state: RootState) => state.subsidySearch)
   const [order, setOrder] = React.useState<Order>('asc')
-  const [orderBy, setOrderBy] = React.useState<keyof Subsidy>('name')
+  const [orderBy, setOrderBy] =
+    React.useState<keyof CustomSubsidy>('subsidyName')
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
 
@@ -181,7 +174,7 @@ export function CustomTable({ subsidies = [] }: { subsidies: Subsidy[] }) {
     throw new Error('subsidies is undefined')
   }
 
-  const handleRequestSort = (property: keyof Subsidy) => {
+  const handleRequestSort = (property: keyof CustomSubsidy) => {
     const isAsc = orderBy === property && order === 'asc'
     setOrder(isAsc ? 'desc' : 'asc')
     setOrderBy(property)
@@ -202,7 +195,7 @@ export function CustomTable({ subsidies = [] }: { subsidies: Subsidy[] }) {
 
   const visibleRows = React.useMemo(
     () =>
-      stableSort<Subsidy>(
+      stableSort<CustomSubsidy>(
         filteredSubsidies,
         getComparator(order, orderBy)
       ).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
@@ -237,7 +230,7 @@ export function CustomTable({ subsidies = [] }: { subsidies: Subsidy[] }) {
                       hover
                       role="checkbox"
                       tabIndex={-1}
-                      key={row.name}
+                      key={row.subsidyName.name}
                       sx={{
                         cursor: 'pointer',
                       }}
@@ -249,12 +242,7 @@ export function CustomTable({ subsidies = [] }: { subsidies: Subsidy[] }) {
                         scope="row"
                       >
                         <MuiLink underline="none" color="inherit">
-                          {row.name}
-                        </MuiLink>
-                      </TableCell>
-                      <TableCell align="left">
-                        <MuiLink underline="none" color="inherit">
-                          {row.ageLimit}
+                          {row.subsidyName.name}
                         </MuiLink>
                       </TableCell>
                       <TableCell align="left">
@@ -269,17 +257,20 @@ export function CustomTable({ subsidies = [] }: { subsidies: Subsidy[] }) {
                       </TableCell>
                       <TableCell align="left">
                         <MuiLink underline="none" color="inherit">
-                          {row.applicationRequirements}
-                        </MuiLink>
-                      </TableCell>
-                      <TableCell align="left">
-                        <MuiLink underline="none" color="inherit">
                           {row.amountReceived}
                         </MuiLink>
                       </TableCell>
                       <TableCell align="left">
-                        <MuiLink underline="none" color="inherit">
-                          {row.deadlineForReceipt}
+                        <MuiLink
+                          underline="none"
+                          color="inherit"
+                          suppressHydrationWarning
+                        >
+                          {row.deadlineForReceipt
+                            ? formatDateWithTimeZone({
+                                date: row.deadlineForReceipt,
+                              })
+                            : '特になし'}
                         </MuiLink>
                       </TableCell>
                     </TableRow>

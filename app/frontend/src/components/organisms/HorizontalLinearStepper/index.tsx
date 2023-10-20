@@ -11,17 +11,18 @@ import {
   useTheme,
 } from '@mui/material'
 import { ProgressBar } from '@/src/components'
-import { postResultByQuestions } from '@/src/utils/queries'
-import { Question } from '@prisma/client'
+import { ExtendedQuestion, postResultByQuestions } from '@/src/utils/queries'
+import { useRouter } from 'next/router'
 
 type HorizontalLinearStepperProps = {
-  questions: Question[]
+  questions: ExtendedQuestion[]
 }
 
 export function HorizontalLinearStepper({
   questions,
 }: HorizontalLinearStepperProps) {
   const theme = useTheme()
+  const router = useRouter()
   const [activeStep, setActiveStep] = React.useState(0) // アクティブなステップのインデックスを管理するstate
   const [answers, setAnswers] = React.useState<{
     [key: string]: string | boolean
@@ -81,7 +82,7 @@ export function HorizontalLinearStepper({
     try {
       const data = await postResultByQuestions({
         answers: convertedAnswers,
-        subsidyId: questions[0].subsidyId,
+        subsidyId: Number(router.query.subsidyId),
       })
       setGrantAmount(data?.amount)
       handleNext() // ステップを進める
@@ -111,7 +112,23 @@ export function HorizontalLinearStepper({
           </Box>
           {/* 回答種類が論理型であるならはいかいいえの二択を表示し、数値型ならインプット要素を表示する */}
           {/* 注意：論理型のvalue属性を文字列型ではなく論理型にして格納するといいえボタンをクリックしても反応しなくなるため、 送信する際に値を文字列から論理型にする*/}
-          {questions[activeStep].answerType === 'boolean' ? (
+          {questions[activeStep].answerType === 'CHOICE' ? (
+            <RadioGroup
+              aria-label={`question-${questions[activeStep].propertyName}`}
+              name={`question-${questions[activeStep].propertyName}`}
+              value={answers[questions[activeStep].propertyName] || ''}
+              onChange={handleChange}
+            >
+              {questions[activeStep].questionChoice.map((choiceItem) => (
+                <FormControlLabel
+                  key={choiceItem.choiceId}
+                  value={choiceItem.choice.value}
+                  control={<Radio />}
+                  label={choiceItem.choice.text}
+                />
+              ))}
+            </RadioGroup>
+          ) : questions[activeStep].answerType === 'BOOLEAN' ? (
             <RadioGroup
               aria-label={`question-${questions[activeStep].propertyName}`}
               name={`question-${questions[activeStep].propertyName}`}
