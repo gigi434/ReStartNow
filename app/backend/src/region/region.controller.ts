@@ -18,7 +18,7 @@ export class RegionController {
           message: `Missing municipalitieshadQuesitons)`,
         })
       }
-      return
+      return municipalitiesHeldQuesitons
     } catch (err) {
       throw new Error(err.toString())
     }
