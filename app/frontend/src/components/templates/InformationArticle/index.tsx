@@ -88,7 +88,9 @@ export function InformationArticle({ information }: InformationArticleProps) {
             <Divider />
             {/* 本文 */}
             <Box>
-              <Typography>{information.body}</Typography>
+              <Typography style={{ whiteSpace: 'pre-line' }}>
+                {information.body}
+              </Typography>
             </Box>
           </Stack>
         </Stack>
