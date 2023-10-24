@@ -1,3 +1,4 @@
+import { mockInformations } from '@/mocks/api/information/mockData'
 import { InformationArticle } from '@/src/components'
 import type { Meta, StoryObj } from '@storybook/react'
 
@@ -20,15 +21,7 @@ const Template: Story = {
     },
   },
   args: {
-    information: {
-      id: 1,
-      title: 'example text',
-      body: 'example text',
-      createdAt: new Date('2020/06/28 15:32:21'),
-      updatedAt: new Date('2020/06/28 15:32:21'),
-      importance: 'Low',
-      authorId: 1,
-    },
+    information: mockInformations[1],
   },
 }
 
