@@ -82,5 +82,21 @@
   {
     "questionId": 10,
     "questionGroupId": 2
+  },
+  {
+    "questionId": 21,
+    "questionGroupId": 2
+  },
+  {
+    "questionId": 22,
+    "questionGroupId": 2
+  },
+  {
+    "questionId": 23,
+    "questionGroupId": 2
+  },
+  {
+    "questionId": 24,
+    "questionGroupId": 2
   }
 ]

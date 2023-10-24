@@ -14,7 +14,7 @@ export class QuestionController {
 
   /** 全ての質問を返す関数オブジェクト */
   @Get()
-  async GetAllQuesitons() {
+  async getAllQuesitons() {
     const questions = await this.questionService.GetAllQuestions()
 
     try {
@@ -34,15 +34,14 @@ export class QuestionController {
   async getQuestionsBySubsidyId(
     @Param('subsidyId', ParseIntPipe) subsidyId: number,
   ) {
-    const questions = await this.questionService.getQuestionsBySubsidyId(
-      subsidyId,
-    )
-    if (questions.length === 0) {
+    const questionsWithSubsidy =
+      await this.questionService.getQuestionsBySubsidyId(subsidyId)
+    if (questionsWithSubsidy.questions.length === 0) {
       throw new NotFoundException({
         statusCode: HttpStatus.NOT_FOUND,
         message: `Missing questions(subsidyId: ${subsidyId})`,
       })
     }
-    return questions
+    return questionsWithSubsidy
   }
 }

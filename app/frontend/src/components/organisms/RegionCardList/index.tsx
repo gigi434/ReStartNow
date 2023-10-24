@@ -69,7 +69,7 @@ export function RegionCardList({ municipalities }: RegionCardListProps) {
           .map((relatedMunicipality) => (
             <Grid item key={relatedMunicipality.name} xs={6} sm={6} md={3}>
               <LinkCard
-                image={relatedMunicipality.municipalSymbolPath}
+                image={`${relatedMunicipality.municipalSymbolPath}.png`}
                 title={relatedMunicipality.name}
                 href={`/subsidies/${relatedMunicipality.id}`}
                 clickable={true}

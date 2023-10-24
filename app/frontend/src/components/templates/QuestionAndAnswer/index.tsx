@@ -8,13 +8,15 @@ import {
 } from '@/src/components'
 import React, { Suspense } from 'react'
 import { useRouter } from 'next/router'
-import { ErrorBoundaryClass, ExtendedQuestion } from '@/src/utils'
+import { ErrorBoundaryClass, QuestionsBySubsidyId } from '@/src/utils'
 
 type QuestionAndAnswerProps = {
-  questions: ExtendedQuestion[]
+  fetchedQuestions: QuestionsBySubsidyId
 }
 
-export function QuestionAndAnswer({ questions }: QuestionAndAnswerProps) {
+export function QuestionAndAnswer({
+  fetchedQuestions,
+}: QuestionAndAnswerProps) {
   const router = useRouter()
   const theme = useTheme()
 
@@ -61,7 +63,7 @@ export function QuestionAndAnswer({ questions }: QuestionAndAnswerProps) {
           {/* ステッパー */}
           <Suspense fallback={<Skeleton />}>
             <ErrorBoundaryClass>
-              <HorizontalLinearStepper questions={questions} />
+              <HorizontalLinearStepper fetchedQuestions={fetchedQuestions} />
             </ErrorBoundaryClass>
           </Suspense>
         </Stack>

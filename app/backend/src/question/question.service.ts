@@ -5,6 +5,14 @@ export class QuestionService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async getQuestionsBySubsidyId(subsidyId: number) {
+    const subsidy = await this.prismaService.subsidy.findUnique({
+      where: {
+        id: subsidyId,
+      },
+      select: {
+        relatedLink: true,
+      },
+    })
     const questions = await this.prismaService.question.findMany({
       where: {
         questionGroupQuestion: {
@@ -19,7 +27,9 @@ export class QuestionService {
         },
       },
     })
-    return questions
+    const questionsWithSubsidy = { questions, ...subsidy }
+
+    return questionsWithSubsidy
   }
 
   async GetAllQuestions() {
@@ -32,6 +42,7 @@ export class QuestionService {
                 subsidies: {
                   select: {
                     id: true,
+                    relatedLink: true,
                   },
                 },
               },

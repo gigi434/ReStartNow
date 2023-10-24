@@ -21,6 +21,9 @@ export class PrivateRentalHousingSubsidyDto {
   @IsNumber()
   @IsNotEmpty()
   monthlyRentAfterEviction: number // 立ち退き後の住宅の家賃
+  @IsNumber()
+  @IsNotEmpty()
+  monthlyRentBeforeEviction: number // 立ち退き前の住宅家賃
   @IsBoolean()
   @IsNotEmpty()
   hasSpecialFamilyCondition: boolean // 心身障害者がいる、または一人親、または父母のない児童を養育している世帯であることを確認
@@ -31,14 +34,7 @@ export class PrivateRentalHousingSubsidyDto {
   familyType: 'single' | 'couple' | 'specialCategory' // 世帯の種類 単身者か2人か同居者に小学校就学の始期に達するまでの子がいる場合か
   @IsNumber()
   @IsNotEmpty()
-  previousRent: number // 立ち退き前の家賃
-  @IsNumber()
-  @IsNumber()
-  @IsNotEmpty()
-  newRent: number // 立ち退き後の家賃
-  @IsNumber()
-  @IsNotEmpty()
-  giftMoney: number // 立ち退き後の礼金
+  giftMoney: number // 立ち退き後に入居した住宅の礼金
   @IsNumber()
   @IsNotEmpty()
   brokerageFee: number // 仲介手数料

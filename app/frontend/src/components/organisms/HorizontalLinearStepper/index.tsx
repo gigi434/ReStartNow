@@ -9,18 +9,24 @@ import {
   Stack,
   Box,
   useTheme,
+  Link as MuiLink,
 } from '@mui/material'
 import { ProgressBar } from '@/src/components'
-import { ExtendedQuestion, postResultByQuestions } from '@/src/utils/queries'
+import {
+  QuestionsBySubsidyId,
+  postResultByQuestions,
+} from '@/src/utils/queries'
 import { useRouter } from 'next/router'
+import Link from 'next/link'
 
 type HorizontalLinearStepperProps = {
-  questions: ExtendedQuestion[]
+  fetchedQuestions: QuestionsBySubsidyId
 }
 
 export function HorizontalLinearStepper({
-  questions,
+  fetchedQuestions,
 }: HorizontalLinearStepperProps) {
+  const { questions, relatedLink } = fetchedQuestions
   const theme = useTheme()
   const router = useRouter()
   const [activeStep, setActiveStep] = React.useState(0) // アクティブなステップのインデックスを管理するstate
@@ -98,10 +104,24 @@ export function HorizontalLinearStepper({
       {/* 質問事項がなければ結果を表示する */}
       {activeStep === questions.length ? (
         <Box minHeight={theme.spacing(23)}>
+          {/* 受給資格がなければないことを表示し、あれば受給金額を表示する */}
           <Typography>
             {typeof grantAmount === 'boolean'
               ? '受給資格がありません'
-              : `受給額： ${grantAmount}`}
+              : grantAmount &&
+                `受給額： ${new Intl.NumberFormat('ja-JP', {
+                  style: 'currency',
+                  currency: 'JPY',
+                }).format(grantAmount)}`}
+          </Typography>
+          <Typography>
+            根拠となるリンク:{' '}
+            <Link href={relatedLink} passHref legacyBehavior>
+              <MuiLink
+                target="_brank"
+                rel="noopener"
+              >{`${relatedLink}`}</MuiLink>
+            </Link>
           </Typography>
         </Box>
       ) : (
