@@ -38,20 +38,6 @@ export function Footer() {
       >
         {/* ロゴ */}
         <LogoButton />
-        {/* ナビゲーション */}
-        <Stack
-          direction={'row'}
-          justifyContent={'center'}
-          alignItems={'center'}
-          spacing={2}
-        >
-          <NavigationMenu
-            navItems={[
-              { href: '/privacy', content: 'プライバシーポリシー' },
-              { href: '/sitemap', content: 'サイトマップ' },
-            ]}
-          />
-        </Stack>
         <Stack
           direction={'row'}
           justifyContent={'center'}
