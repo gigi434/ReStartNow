@@ -4,23 +4,23 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import type { GetStaticProps, GetStaticPaths } from 'next'
 import {
-  ExtendedQuestion,
+  QuestionsBySubsidyId,
   fetchAllSubsidies,
   fetchQuestionsBySubsidyId,
 } from '@/src/utils/queries'
 
 type PageProps = {
-  questions: ExtendedQuestion[]
+  fetchedQuestions: QuestionsBySubsidyId
 }
 
-export default function Page({ questions }: PageProps) {
+export default function Page({ fetchedQuestions }: PageProps) {
   const router = useRouter()
 
   if (router.isFallback) {
     return <CircularProgress />
   }
 
-  return <QuestionAndAnswer questions={questions ?? []} />
+  return <QuestionAndAnswer fetchedQuestions={fetchedQuestions ?? {}} />
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -40,11 +40,11 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = async (context) => {
   const subsidyId = context?.params?.subsidyId as string
 
-  const questions = await fetchQuestionsBySubsidyId(Number(subsidyId))
+  const fetchedQuestions = await fetchQuestionsBySubsidyId(Number(subsidyId))
 
   return {
     props: {
-      questions,
+      fetchedQuestions: fetchedQuestions,
     },
   }
 }

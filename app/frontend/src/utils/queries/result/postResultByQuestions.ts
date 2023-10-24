@@ -24,7 +24,6 @@ export async function postResultByQuestions({
         : `${process.env.NEXT_PUBLIC_API_BASE_PATH}/result/${subsidyId}`,
       answers
     )
-
     return response
   } catch (error) {
     if (error instanceof AxiosError) {

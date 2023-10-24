@@ -6,6 +6,8 @@ export const mockGetQuestions = rest.get(
   async (req, res, ctx) => {
     // 注意　パラメータが配列オブジェクトなのか不明のためstring | read only string[]として型推論するため型アサーションを使用する
     const subsidyId = req.params.subsidyId as string
+
+    const relatedLink = 'https://www.test.com'
     // 配列オブジェクトからパラメータのsubsidyIdを持つquestionsを見つける
     const questions = mockQuestions.filter((question) =>
       question.questionGroupQuestion.some((groupQuestion) =>
@@ -22,7 +24,10 @@ export const mockGetQuestions = rest.get(
       )
     }
 
-    const response = await res(ctx.status(200), ctx.json(questions))
+    const response = await res(
+      ctx.status(200),
+      ctx.json({ relatedLink, questions })
+    )
 
     return response
   }

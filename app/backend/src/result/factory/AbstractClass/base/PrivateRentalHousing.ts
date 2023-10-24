@@ -79,10 +79,12 @@ export abstract class BasePrivateRentalHousing extends BaseGrantCalculator {
     // 住宅家賃助成金の計算
     let rentDifference = 0
     // 立ち退き後に入居した住宅の家賃が給付上限額を超える場合、給付上限額と立ち退き前の家賃との差額を受給する
-    if (dto.newRent > this.amountCondition.newRentThreshold) {
-      rentDifference = this.amountCondition.newRentThreshold - dto.previousRent
+    if (dto.monthlyRentAfterEviction > this.amountCondition.newRentThreshold) {
+      rentDifference =
+        this.amountCondition.newRentThreshold - dto.monthlyRentBeforeEviction
     } else {
-      rentDifference = dto.newRent - dto.previousRent
+      rentDifference =
+        dto.monthlyRentAfterEviction - dto.monthlyRentBeforeEviction
     }
     // rentDifferenceがマイナスの場合は0を代入
     totalAmount += rentDifference = Math.max(rentDifference, 0)
