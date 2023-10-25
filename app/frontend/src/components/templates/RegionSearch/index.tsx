@@ -56,8 +56,19 @@ export function RegionSearch({
           </Grid>
           <Grid item xs={12} md={10} flexGrow={1}>
             <Stack spacing={2} sx={{ flexGrow: 1 }}>
-              {/* 見出し */}
-              <Typography variant="h6">地域一覧</Typography>
+              <Stack
+                alignItems={'flex-end'}
+                spacing={1}
+                direction={{ xs: 'column', sm: 'row' }}
+                justifyContent={'space-between'}
+              >
+                {/* 見出し */}
+                <Typography variant="h6">地域一覧</Typography>
+                {/* カード画像のクレジット表記 */}
+                <Typography variant="caption">
+                  地図画像提供: Map-It マップイット | 地図素材サイト
+                </Typography>
+              </Stack>
               {/* 地域一覧 */}
               <RegionCardList municipalities={municipalities} />
             </Stack>
