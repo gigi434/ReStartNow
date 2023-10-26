@@ -5,6 +5,7 @@ import {
   LogoButton,
   Divider,
   SocialButton,
+  LinkText,
 } from '@/src/components'
 import { Stack, useTheme } from '@mui/material'
 import { SocialButtonProps } from '@/src/components'
@@ -56,7 +57,7 @@ export function Footer() {
           )}
         </Stack>
         {/* コピーライト */}
-        <Copyright />
+        <Copyright>Re:Start Now</Copyright>
       </Stack>
     </section>
   )
