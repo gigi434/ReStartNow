@@ -4,6 +4,8 @@ import {
   Footer,
   RegionSearchForm,
   RegionCardList,
+  Copyright,
+  LinkText,
 } from '@/src/components'
 import { Container, Grid, Stack, Typography, useTheme } from '@mui/material'
 import { Municipality, Prefecture } from '@prisma/client'
@@ -65,9 +67,11 @@ export function RegionSearch({
                 {/* 見出し */}
                 <Typography variant="h6">地域一覧</Typography>
                 {/* カード画像のクレジット表記 */}
-                <Typography variant="caption">
-                  地図画像提供: Map-It マップイット | 地図素材サイト
-                </Typography>
+                <Copyright prefix="画像提供: ">
+                  <LinkText href="https://map-it.azurewebsites.net/">
+                    Map-It マップイット | 地図素材サイト
+                  </LinkText>
+                </Copyright>
               </Stack>
               {/* 地域一覧 */}
               <RegionCardList municipalities={municipalities} />

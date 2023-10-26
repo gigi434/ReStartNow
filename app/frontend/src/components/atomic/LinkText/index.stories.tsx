@@ -18,14 +18,7 @@ type Story = StoryObj<typeof LinkText>
 
 export const Default: Story = {
   args: {
-    children: (
-      <>
-        <Typography variant="body2">
-          Lizards are a widespread group of squamate reptiles, with over 6,000
-          species, ranging across all continents except Antarctica
-        </Typography>
-      </>
-    ),
-    underline: 'none',
+    children: 'Map-It マップイット | 地図素材サイト',
+    href: 'https://map-it.azurewebsites.net/',
   },
 }

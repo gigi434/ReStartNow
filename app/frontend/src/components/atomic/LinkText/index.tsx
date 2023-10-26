@@ -1,5 +1,10 @@
 import React from 'react'
 import MuiLink, { LinkProps as MuiLinkProps } from '@mui/material/Link'
+import Link from 'next/link'
+
+interface LinkTextProps extends MuiLinkProps {
+  href: string // これを追加してhrefを必須にします。
+}
 
 export function LinkText({
   color,
@@ -7,10 +12,18 @@ export function LinkText({
   variant = 'inherit',
   children,
   underline = 'always',
-}: MuiLinkProps) {
+}: LinkTextProps) {
   return (
-    <MuiLink href={href} color={color} variant={variant} underline={underline}>
-      {children}
-    </MuiLink>
+    <Link href={href} passHref legacyBehavior>
+      <MuiLink
+        color={color}
+        variant={variant}
+        underline={underline}
+        target="_brank"
+        rel="noopener"
+      >
+        {children}
+      </MuiLink>
+    </Link>
   )
 }

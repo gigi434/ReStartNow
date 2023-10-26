@@ -1,19 +1,23 @@
 import React from 'react'
-import Typography from '@mui/material/Typography'
-import MuiLink from '@mui/material/Link'
+import { Typography } from '@mui/material'
 
-/** 著作権を保持していることを明記する文字列
- * @param none
- * @return JSX.Element
+type CopyrightProps = {
+  prefix?: string
+  displayYear?: boolean
+  children: React.ReactNode
+}
+/**
+ * 著作権を明記するためのコンポーネント
  */
-export function Copyright() {
+export function Copyright({
+  prefix = 'Copyright',
+  displayYear = true,
+  children,
+}: CopyrightProps) {
+  const year = new Date().getFullYear()
   return (
     <Typography variant="body2" color="text.secondary" align="center">
-      {'Copyright © '}
-      <MuiLink color="inherit" href="https://mui.com/">
-        RestartNow
-      </MuiLink>{' '}
-      {new Date().getFullYear()}.
+      {prefix} © {displayYear ? year : ''} {children}
     </Typography>
   )
 }
