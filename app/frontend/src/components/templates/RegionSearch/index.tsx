@@ -59,7 +59,7 @@ export function RegionSearch({
           <Grid item xs={12} md={10} flexGrow={1}>
             <Stack spacing={2} sx={{ flexGrow: 1 }}>
               <Stack
-                alignItems={'flex-end'}
+                alignItems={{ xs: 'flex-start', sm: 'flex-end' }}
                 spacing={1}
                 direction={{ xs: 'column', sm: 'row' }}
                 justifyContent={'space-between'}
