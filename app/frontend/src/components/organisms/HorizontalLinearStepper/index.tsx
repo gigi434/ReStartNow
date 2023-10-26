@@ -106,10 +106,11 @@ export function HorizontalLinearStepper({
         <Box minHeight={theme.spacing(23)}>
           {/* 受給資格がなければないことを表示し、あれば受給金額を表示する */}
           <Typography>
-            {typeof grantAmount === 'boolean'
+            {typeof grantAmount === 'boolean' ||
+            grantAmount === null ||
+            grantAmount === undefined
               ? '受給資格がありません'
-              : grantAmount &&
-                `受給額： ${new Intl.NumberFormat('ja-JP', {
+              : `受給額： ${new Intl.NumberFormat('ja-JP', {
                   style: 'currency',
                   currency: 'JPY',
                 }).format(grantAmount)}`}
