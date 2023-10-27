@@ -23,11 +23,13 @@ export function Header() {
           {/* ナビゲーション */}
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <NavigationMenu
-              navItems={[
-                // { href: '/results', content: '結果閲覧' },
-                { href: '/informations', content: 'お知らせ' },
-                // { href: '/profile', content: 'プロフィール' },
-              ]}
+              navItems={
+                [
+                  // { href: '/results', content: '結果閲覧' },
+                  // { href: '/informations', content: 'お知らせ' },
+                  // { href: '/profile', content: 'プロフィール' },
+                ]
+              }
             />
           </Box>
         </Toolbar>
