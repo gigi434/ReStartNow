@@ -16,7 +16,7 @@ import { useSelector } from 'react-redux'
 import { RootState } from '@/src/store'
 import Link from 'next/link'
 import { Link as MuiLink } from '@mui/material'
-import { CustomSubsidy, formatDateWithTimeZone } from '@/src/utils'
+import { CustomSubsidy } from '@/src/utils'
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -93,7 +93,7 @@ const headCells: readonly HeadCell[] = [
     id: 'deadlineForReceipt',
     numeric: false,
     disablePadding: false,
-    label: '受付締切日',
+    label: '申請期限',
   },
 ]
 
@@ -266,11 +266,7 @@ export function CustomTable({
                           color="inherit"
                           suppressHydrationWarning
                         >
-                          {row.deadlineForReceipt
-                            ? formatDateWithTimeZone({
-                                date: row.deadlineForReceipt,
-                              })
-                            : '特になし'}
+                          {row.deadlineForReceipt ? 'あり' : 'なし'}
                         </MuiLink>
                       </TableCell>
                     </TableRow>
