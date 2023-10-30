@@ -1,5 +1,5 @@
 import React from 'react'
-import { Stack, Typography, Grid, Box } from '@mui/material'
+import { Stack, Typography, Grid, Box, List, ListItem } from '@mui/material'
 import Image from 'next/image'
 
 export function IntroduceFeatures() {
@@ -36,10 +36,18 @@ export function IntroduceFeatures() {
               flexDirection={'column'}
               justifyContent="flex-start"
             >
-              <Typography>一問一答</Typography>
-              <Typography>
-                受給資格の確認機能シンプルな一問一答方式で、あなたが受け取れる助成金サービスを簡単に知ることができます。そのため、面倒な条件のチェック作業を短縮し、スムーズに助成金の受給資格を確認できます。
+              <Typography variant="h6" gutterBottom>
+                一問一答の特徴:
               </Typography>
+              <List>
+                <ListItem>
+                  1. 受け取れそうな助成金・給付金サービスが瞬時に知れる。
+                </ListItem>
+                <ListItem>
+                  2.
+                  一問一答方式で、おおよその受給資格及び受給金額を直感的に確認可能。
+                </ListItem>
+              </List>
             </Box>
           </Grid>
         </Grid>
