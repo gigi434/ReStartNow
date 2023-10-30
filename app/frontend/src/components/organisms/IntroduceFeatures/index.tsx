@@ -1,8 +1,19 @@
 import React from 'react'
-import { Stack, Typography, Grid, Box, List, ListItem } from '@mui/material'
+import {
+  Stack,
+  Typography,
+  Grid,
+  Box,
+  List,
+  ListItem,
+  useTheme,
+  useMediaQuery,
+} from '@mui/material'
 import Image from 'next/image'
 
 export function IntroduceFeatures() {
+  const theme = useTheme()
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'))
   return (
     <Stack spacing={2}>
       <Typography
@@ -18,40 +29,38 @@ export function IntroduceFeatures() {
       >
         機能紹介
       </Typography>
-      <Stack direction={'row'} p={2}>
-        <Grid container direction={'row'} justifyContent={'space-between'}>
-          <Grid item sm={12} md={6}>
-            <Box display="flex" justifyContent="center" alignItems="center">
-              <Image
-                src={'/LP/Illustration - Scene Wireframe_512w.png'}
-                alt="human"
-                width={320}
-                height={240}
-              />
-            </Box>
-          </Grid>
-          <Grid item sm={12} md={6}>
-            <Box
-              display="flex"
-              flexDirection={'column'}
-              justifyContent="flex-start"
-            >
-              <Typography variant="h6" gutterBottom>
-                一問一答の特徴:
-              </Typography>
-              <List>
-                <ListItem>
-                  1. 受け取れそうな助成金・給付金サービスが瞬時に知れる。
-                </ListItem>
-                <ListItem>
-                  2.
-                  一問一答方式で、おおよその受給資格及び受給金額を直感的に確認可能。
-                </ListItem>
-              </List>
-            </Box>
-          </Grid>
+      <Grid container direction={'row'} justifyContent={'space-between'}>
+        <Grid item sm={12} md={6} width={'100%'}>
+          <Box display="flex" justifyContent="center" alignItems="center">
+            <Image
+              src={'/LP/Illustration - Scene Wireframe_512w.png'}
+              alt="human"
+              width={isSmallScreen ? 160 : 320}
+              height={isSmallScreen ? 120 : 240}
+            />
+          </Box>
         </Grid>
-      </Stack>
+        <Grid
+          item
+          sm={12}
+          md={6}
+          flexDirection={'column'}
+          justifyContent="center"
+        >
+          <List>
+            <ListItem>
+              {
+                '- 受給できそうな助成金・給付金サービスが瞬時に知ることができます。'
+              }
+            </ListItem>
+            <ListItem>
+              {
+                '- 一問一答方式で、おおよその受給資格及び受給金額を直感的に確認可能です。'
+              }
+            </ListItem>
+          </List>
+        </Grid>
+      </Grid>
     </Stack>
   )
 }
