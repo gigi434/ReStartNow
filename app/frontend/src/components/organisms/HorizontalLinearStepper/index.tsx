@@ -110,13 +110,13 @@ export function HorizontalLinearStepper({
             grantAmount === null ||
             grantAmount === undefined
               ? '受給資格がありません'
-              : `受給額： ${new Intl.NumberFormat('ja-JP', {
+              : `受給できそうな金額： ${new Intl.NumberFormat('ja-JP', {
                   style: 'currency',
                   currency: 'JPY',
                 }).format(grantAmount)}`}
           </Typography>
           <Typography>
-            根拠となるリンク:{' '}
+            質問作成の参照先:{' '}
             <Link href={relatedLink} passHref legacyBehavior>
               <MuiLink
                 target="_brank"
