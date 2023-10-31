@@ -39,11 +39,11 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_PORT=${POSTGRES_PORT}
-      - REDIS_USER=${REDIS_USER}
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
-      - REDIS_HOST=${REDIS_HOST}
-      - REDIS_PORT=${REDIS_PORT}
-      - REDIS_SECRET=${REDIS_SECRET}
+      # - REDIS_USER=${REDIS_USER}
+      # - REDIS_PASSWORD=${REDIS_PASSWORD}
+      # - REDIS_HOST=${REDIS_HOST}
+      # - REDIS_PORT=${REDIS_PORT}
+      # - REDIS_SECRET=${REDIS_SECRET}
     volumes:
       - "./app/backend:/home/node/nestjs"
       - "backend_node_modules:/home/node/nestjs/node_modules"
@@ -65,13 +65,13 @@ services:
       - POSTGRES_PORT=${POSTGRES_PORT}
     restart: always
 
-  redis:
-    build:
-      context: .
-      dockerfile: docker/redis/Dockerfile
-    container_name: redis_container
-    ports:
-      - "6379:6379"
+  # redis:
+  #   build:
+  #     context: .
+  #     dockerfile: docker/redis/Dockerfile
+  #   container_name: redis_container
+  #   ports:
+  #     - "6379:6379"
 
 volumes:
   frontend_node_modules:
