@@ -8,6 +8,10 @@ import { ValidationPipe } from '@nestjs/common'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
+  // 検証または本番環境であるかのフラグ
+  const isProductionOrTestEnv = ['production', 'test'].includes(
+    process.env.NODE_ENV,
+  )
   // whitelistはリクエストからdtoに定義されていないメンバーを削除する
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }))
 
@@ -38,11 +42,10 @@ async function bootstrap() {
 
   // CORSの設定
   app.enableCors({
-    credentials: false,
-    origin: ['*'],
-    allowedHeaders: ['Origin, X-Requested-With, Content-Type, Accept'],
+    credentials: isProductionOrTestEnv,
+    origin: ['https'],
   })
 
-  await app.listen(3005)
+  await app.listen(process.env.NESTJS_PORT)
 }
 bootstrap()
