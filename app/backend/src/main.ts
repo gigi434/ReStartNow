@@ -42,8 +42,8 @@ async function bootstrap() {
 
   // CORSの設定
   app.enableCors({
-    credentials: isProductionOrTestEnv,
-    origin: ['https'],
+    credentials: true,
+    origin: ['https://restartnow.vercel.app', 'http://localhost:3000'],
   })
 
   await app.listen(process.env.NESTJS_PORT)
