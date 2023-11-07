@@ -8,10 +8,6 @@ import { ValidationPipe } from '@nestjs/common'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
-  // 検証または本番環境であるかのフラグ
-  const isProductionOrTestEnv = ['production', 'test'].includes(
-    process.env.NODE_ENV,
-  )
   // whitelistはリクエストからdtoに定義されていないメンバーを削除する
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }))
 
