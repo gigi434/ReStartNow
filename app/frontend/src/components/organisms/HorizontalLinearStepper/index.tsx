@@ -70,19 +70,21 @@ export function HorizontalLinearStepper({
 
   /** 最後の質問が表示された後、結果を表示するためのコールバック関数 */
   const handleSubmit = async () => {
-    // 文字列型の "true" と "false" を論理値に変換
+    // リクエストとして送信する前に型を文字列型から任意の型に変換する
     const convertedAnswers = Object.entries(answers).reduce(
       (acc, [key, value]) => {
         if (value === 'true') {
           acc[key] = true
         } else if (value === 'false') {
           acc[key] = false
+        } else if (typeof value === 'string' &&/^\d+$/.test(value)) { // 正規表現で数値のみの文字列をチェック
+          acc[key] = Number(value); // 数値の文字列を数値に変換
         } else {
           acc[key] = value
         }
         return acc
       },
-      {} as { [key: string]: string | boolean }
+      {} as { [key: string]: string | boolean | number}
     )
 
     try {

@@ -16,7 +16,7 @@
   },
   {
     "answerType": "BOOLEAN",
-    "text": "公共職業安定所等での求職活動を行う、または、経営相談など自立に向けた活動を行う（自営業のかたのみ）",
+    "text": "公共職業安定所等での求職活動を実施している、または、経営相談など自立に向けた活動を実施している（自営業のかたのみ）",
     "propertyName": "activityStatus"
   },
   {
@@ -26,7 +26,7 @@
   },
   {
     "answerType": "NUMBER",
-    "text": "申請を行う月に、申請者および申請者と同一の世帯に属する方の収入額を入力してください",
+    "text": "申請を行う月に、申請者および申請者と同一の世帯に属する方の収入額の合計を入力してください",
     "propertyName": "monthlyHouseholdIncome"
   },
   {
@@ -51,18 +51,18 @@
   },
   {
     "answerType": "BOOLEAN",
-    "text": "現在住んでいる市町区村の住民票がある",
+    "text": "市町区村の住民票がある",
     "propertyName": "isResidency"
   },
   {
     "answerType": "BOOLEAN",
     "text": "妊娠届出時に面談を実施した",
-    "propertyName": "haveChildcareInterview"
+    "propertyName": "havePregnancyInterview"
   },
   {
     "answerType": "BOOLEAN",
     "text": "出生届出後に面談を実施した",
-    "propertyName": "havePregnancyInterview"
+    "propertyName": "haveChildcareInterview"
   },
   {
     "answerType": "BOOLEAN",
@@ -75,24 +75,24 @@
     "propertyName": "isRegisteredResidentForOverTwoYears"
   },
   {
-    "answerType": "BOOLEAN",
-    "text": "65歳以上の一人暮らし、または全員が65歳以上である、または、 心身障害者がいる、または一人親、または父母のない児童を養育している世帯である",
+    "answerType": "CHOICE",
+    "text": "次のいずれかに該当する世帯である",
     "propertyName": "hasSpecialFamilyCondition"
   },
   {
-    "answerType": "NUMBER",
+    "answerType": "CHOICE",
     "text": "世帯の人数を入力してください",
     "propertyName": "familyType"
   },
   {
     "answerType": "NUMBER",
-    "text": "前年の収入が公営住宅法で定められた金額以下であることを確認します。前年の収入を入力してください",
+    "text": "前年の収入を入力してください",
     "propertyName": "yearlyEarnings"
   },
   {
     "answerType": "NUMBER",
-    "text": "立ち退き後の家賃を入力してください",
-    "propertyName": "monthlyRentAfterEviction"
+    "text": "新たに入居する住宅の家賃を入力してください",
+    "propertyName": "monthlyNewHousingRent"
   },
   {
     "answerType": "CHOICE",
@@ -106,17 +106,37 @@
   },
   {
     "answerType": "NUMBER",
-    "text": "立ち退き後に入居した住宅の仲介手数料を入力してください",
+    "text": "新たに入居する住宅の仲介手数料を入力してください",
     "propertyName": "brokerageFee"
   },
   {
     "answerType": "NUMBER",
-    "text": "大家さん側の都合で入居者に退去してもらうため、その損害を補償である立ち退き料を入力してください",
+    "text": "大家さん側の都合で入居者に退去してもらうため、その損害を補償する立ち退き料を入力してください",
     "propertyName": "evictionFee"
   },
   {
     "answerType": "NUMBER",
-    "text": "立ち退き後に入居した住宅の礼金を入力してください",
-    "propertyName": "giftMoney"
+    "text": "新しく入居する住宅の礼金を入力してください",
+    "propertyName": "gratuityFee"
+  },
+  {
+    "answerType": "NUMBER",
+    "text": "月ごとに支払う家賃を入力してください",
+    "propertyName": "monthlyRent"
+  },
+  {
+    "answerType": "BOOLEAN",
+    "text": "令和4年4月1日以降に妊娠届出をした、または、出産をした",
+    "propertyName": "isPregnancyReportedOrChildBornAfterApril2022"
+  },
+  {
+    "answerType": "NUMBER",
+    "text": "出産する予定の子供の数を入力してください",
+    "propertyName": "numberOfExpectedChildren"
+  },
+  {
+    "answerType": "BOOLEAN",
+    "text": "現在居住している民間賃貸住宅の取り壊し等のため立ち退きを求められている",
+    "propertyName": "isEvictionRequested"
   }
 ]

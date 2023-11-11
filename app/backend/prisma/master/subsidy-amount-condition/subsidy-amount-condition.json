@@ -28,7 +28,8 @@
     "amountData": {
       "newRentThreshold": 60000,
       "housingRentSubsidyThreshold": 38000,
-      "relocationSubsidyThreshold": 190000
+      "relocationSubsidyThreshold": 190000,
+      "rentSubsidyCap": 38000
     }
   }
 ]

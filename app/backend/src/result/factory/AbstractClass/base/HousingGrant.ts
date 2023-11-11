@@ -19,6 +19,7 @@ type AmountData = {
   }
 }
 
+// 住宅確保給付金
 export abstract class BaseHousingGrant extends BaseGrantCalculator {
   public eligibilityCondition: EligibilityConditionData
   public amountCondition: AmountData
@@ -34,12 +35,12 @@ export abstract class BaseHousingGrant extends BaseGrantCalculator {
   }
   /** 受給資格があるかどうか確認するメソッド */
   public checkEligibility(dto: HousingGrantDto): boolean {
-    // (1) 離職等により経済的に困窮し、家賃の支払いが困難で、住居を喪失した、または住居喪失のおそれがあること。
+    // 離職等により経済的に困窮し、家賃の支払いが困難で、住居を喪失した、または住居喪失のおそれがあること。
     if (dto.economicHardship !== true) {
       return false
     }
 
-    // （2）次のイまたはロのいずれかに該当すること。
+    // 次のイまたはロのいずれかに該当すること。
     // イ）申請日において、離職・自営業の廃業の日から原則2年以内である。
     // 疾病・負傷・育児・介護などやむを得ない事情があり2年を経過した場合は、別途ご相談ください。
     // ロ）給与等を得る機会が本人の責に帰すべき理由、本人の都合によらないで減少し、離職や廃業と同程度の状況にある。
@@ -67,12 +68,15 @@ export abstract class BaseHousingGrant extends BaseGrantCalculator {
     // 世帯月収入上限額
     const maximumMonthlyHouseholdIncome: number =
       this.eligibilityCondition.incomeThreshold[dto.numberOfHouseholdMembers]
-    /* 基準額 + 実家賃が収入を超えていないことを確認する */
-    if (dto.monthlyHouseholdIncome > maximumMonthlyHouseholdIncome + dto.rent) {
+    /* 収入が基準額 + 実家賃を超えていないことを確認する */
+    if (
+      dto.monthlyHouseholdIncome >
+      maximumMonthlyHouseholdIncome + dto.monthlyRent
+    ) {
       return false
     }
 
-    // （6）申請日において、申請者及び申請者と同一の世帯に属する方の所有する金融資産（現金、預貯金）の合計額が次の表の金額以下であること。
+    // 申請日において、申請者及び申請者と同一の世帯に属する方の所有する金融資産（現金、預貯金）の合計額が次の表の金額以下であること。
     // financialAssetsの中で最大のnumberOfHouseholdMembersのキーを取得
     const maxHouseholdKey = Math.max(
       ...Object.keys(this.eligibilityCondition.financialAssets).map(Number),
@@ -91,18 +95,18 @@ export abstract class BaseHousingGrant extends BaseGrantCalculator {
       return false
     }
 
-    // （7）住居確保給付金に類似する雇用対策給付等を、申請者及び申請者と同一の世帯に属する方が受けていないこと。
-    if (dto.isReceivingSimilarSubsidy !== true) {
+    //（住居確保給付金に類似する雇用対策給付等を、申請者及び申請者と同一の世帯に属する方が受けていないこと。
+    if (dto.isReceivingSimilarSubsidy === false) {
       return false
     }
 
-    // （8）申請者及び申請者と生計を一とする同居の親族のいずれもが暴力団員ではないこと。
-    if (dto.isGangMember !== true) {
+    // 申請者及び申請者と生計を一とする同居の親族のいずれもが暴力団員ではないこと。
+    if (dto.isGangMember === false) {
       return false
     }
 
-    // （9）申請者及び申請者と同一の世帯に属する方が生活保護を受けていないこと。
-    if (dto.isReceivingWelfare === true) {
+    // 申請者及び申請者と同一の世帯に属する方が生活保護を受けていないこと。
+    if (dto.isReceivingWelfare === false) {
       return false
     }
 

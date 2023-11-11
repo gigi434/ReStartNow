@@ -3,7 +3,6 @@ import { BaseGrantCalculator } from './BaseGrant'
 
 type EligibilityConditionData = {
   isResidency: boolean
-  deadlineDate: string
 }
 
 type AmountData = {
@@ -35,11 +34,8 @@ export abstract class BaseChildBirthGrant extends BaseGrantCalculator {
     if (this.eligibilityCondition.isResidency !== dto.isResidency) {
       return false
     }
-    // 令和5年3月8日（2023年3月8日）以前に妊娠届出または出産をした人は申請期限を過ぎていれば受給要件に合致しない
-    if (
-      new Date(dto.childBirthDate).getTime() <
-      new Date(this.eligibilityCondition.deadlineDate).getTime()
-    ) {
+    // 令和5年3月8日（2023年3月8日）以前に妊娠届出または出産をした人は申請期限を過ぎていれば受給要件を満たさない
+    if (dto.isPregnancyReportedOrChildBornAfterApril2022 === false) {
       return false
     }
 
@@ -50,14 +46,16 @@ export abstract class BaseChildBirthGrant extends BaseGrantCalculator {
   public calculateConditionAmount(dto: ChildbirthSupportGrantDto): number {
     let amount = 0
 
-    // 妊娠面談を受けていないなら受給できる
-    if (!dto.havePregnancyInterview) {
+    // 妊娠面談を受けていないなら出産応援給付金を受給できる
+    if (dto.havePregnancyInterview === false) {
       amount += this.amountCondition.havePregnancyInterview
     }
 
-    // 出産面談を受けていないなら受給できる
-    if (!dto.haveChildcareInterview) {
-      amount += this.amountCondition.haveChildcareInterview
+    // 出産面談を受けていないなら子育て応援給付金を出産する子供の数に応じて受給できる
+    if (dto.haveChildcareInterview === false) {
+      amount +=
+        this.amountCondition.haveChildcareInterview *
+        dto.numberOfExpectedChildren
     }
 
     return amount
