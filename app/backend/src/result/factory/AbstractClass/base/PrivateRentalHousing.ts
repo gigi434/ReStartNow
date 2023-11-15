@@ -53,7 +53,7 @@ export abstract class BasePrivateRentalHousing extends BaseGrantCalculator {
 
     // 前年の収入が公営住宅法で定められた金額以下であることを確認する
     // 特別な家族構成かどうかを判断
-    const isSpecialFamily =
+    let isSpecialFamily =
       this.eligibilityCondition.specialFamilyConditions.includes(
         dto.hasSpecialFamilyCondition,
       )
@@ -68,6 +68,8 @@ export abstract class BasePrivateRentalHousing extends BaseGrantCalculator {
             threshold.familyType === 'single'
           )
         } else {
+          // 小学校就学の始期までの子供がいれば特別な家族構成フラグをなくし、収入制限を緩和する
+          if (dto.hasPreSchoolChild === true) isSpecialFamily = false
           // 二人世帯の場合は特別な家族構成フラグを考慮します。
           return (
             threshold.earningsCategory === dto.earningsCategory &&

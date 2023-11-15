@@ -57,15 +57,15 @@ export abstract class BaseHousingGrant extends BaseGrantCalculator {
     }
 
     // （4）次のイまたはロのいずれかの活動を行うことができる。
-    //   イ）公共職業安定所等での求職活動を行う
+    // イ）公共職業安定所等での求職活動を行う
     // ロ）経営相談など自立に向けた活動を行う（自営業のかたのみ選択できます。）
     // 離職・自営業の廃業をした方は、ハローワークへの求職登録を行い、求職受付票（ハローワークカード）の写しをご提出いただきます。
     if (dto.activityStatus !== true) {
       return false
     }
 
-    // （5）申請を行う月に、申請者および申請者と同一の世帯に属する方の収入額（※）の合計が、次の表の「基準額」と実家賃の合計額を超えていないこと。
-    // 世帯月収入上限額
+    // 申請を行う月に、申請者および申請者と同一の世帯に属する方の収入額（※）の合計が、次の表の「基準額」と実家賃の合計額を超えていないこと。
+    // 世帯月収入上限額を取得する
     const maximumMonthlyHouseholdIncome: number =
       this.eligibilityCondition.incomeThreshold[dto.numberOfHouseholdMembers]
     /* 収入が基準額 + 実家賃を超えていないことを確認する */
@@ -81,32 +81,30 @@ export abstract class BaseHousingGrant extends BaseGrantCalculator {
     const maxHouseholdKey = Math.max(
       ...Object.keys(this.eligibilityCondition.financialAssets).map(Number),
     )
-
     // numberOfHouseholdMembersがテーブルに存在しない場合、最大値を参照する
     const lookupNumberOfHouseholdMembers = this.eligibilityCondition
       .financialAssets[dto.numberOfHouseholdMembers]
       ? dto.numberOfHouseholdMembers
       : maxHouseholdKey
-
+    // 金融資産上限額を取得し上限額未満か比較する
     const maxFinancialAssets =
       this.eligibilityCondition.financialAssets[lookupNumberOfHouseholdMembers]
-
     if (dto.financialAssets > maxFinancialAssets) {
       return false
     }
 
-    //（住居確保給付金に類似する雇用対策給付等を、申請者及び申請者と同一の世帯に属する方が受けていないこと。
+    // 住居確保給付金に類似する雇用対策給付等を、申請者及び申請者と同一の世帯に属する方が受けていないこと。
     if (dto.isReceivingSimilarSubsidy === false) {
       return false
     }
 
     // 申請者及び申請者と生計を一とする同居の親族のいずれもが暴力団員ではないこと。
-    if (dto.isGangMember === false) {
+    if (dto.isGangMember !== false) {
       return false
     }
 
     // 申請者及び申請者と同一の世帯に属する方が生活保護を受けていないこと。
-    if (dto.isReceivingWelfare === false) {
+    if (dto.isReceivingWelfare !== false) {
       return false
     }
 
@@ -123,8 +121,8 @@ export abstract class BaseHousingGrant extends BaseGrantCalculator {
     // 実給付額
     const benefitAmount = maximumBenefitAmount - dto.monthlyHouseholdIncome
 
-    // 世帯月収が基準額と実家賃を下回る場合は基準額と実家賃を合わせた金額を返す
-    // 世帯月収が基準額と実家賃を上回り、給付金支給上限額を超える場合は給付金支給上限額を返す
+    // 世帯月収が基準額と実家賃を下回る場合、基準額と実家賃を合わせた金額を返す
+    // 世帯月収が基準額と実家賃を上回り、給付金支給上限額を超える場合、給付金支給上限額を返す
     if (dto.monthlyHouseholdIncome > maximumBenefitAmount) {
       return maximumBenefitAmount
     } else {

@@ -31,7 +31,7 @@ export abstract class BaseChildBirthGrant extends BaseGrantCalculator {
       throw new Error('Eligibility condition is null or undefined.')
     }
     // 住民票がないなら受給要件を満たさない
-    if (this.eligibilityCondition.isResidency !== dto.isResidency) {
+    if (dto.isResidency !== this.eligibilityCondition.isResidency) {
       return false
     }
     // 令和5年3月8日（2023年3月8日）以前に妊娠届出または出産をした人は申請期限を過ぎていれば受給要件を満たさない
