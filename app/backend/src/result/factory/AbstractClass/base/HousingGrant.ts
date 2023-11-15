@@ -77,7 +77,7 @@ export abstract class BaseHousingGrant extends BaseGrantCalculator {
     }
 
     // 申請日において、申請者及び申請者と同一の世帯に属する方の所有する金融資産（現金、預貯金）の合計額が次の表の金額以下であること。
-    // financialAssetsの中で最大のnumberOfHouseholdMembersのキーを取得
+    // financialAssetsの中で最大のnumberOfHouseholdMembersのキーを取得する
     const maxHouseholdKey = Math.max(
       ...Object.keys(this.eligibilityCondition.financialAssets).map(Number),
     )
@@ -115,15 +115,18 @@ export abstract class BaseHousingGrant extends BaseGrantCalculator {
   public calculateConditionAmount(dto: HousingGrantDto): number {
     // 世帯人数に依存しているため、世帯人数に応じた受給額を返す
 
-    // 支給額上限
+    // 給付金支給上限額を格納する
     const maximumBenefitAmount =
       this.amountCondition.numberOfFamilyMembers[dto.numberOfHouseholdMembers]
-    // 実給付額
-    const benefitAmount = maximumBenefitAmount - dto.monthlyHouseholdIncome
+    // 実給付額を計算する
+    const benefitAmount = Math.max(
+      maximumBenefitAmount + dto.monthlyRent - dto.monthlyHouseholdIncome,
+      0,
+    )
 
     // 世帯月収が基準額と実家賃を下回る場合、基準額と実家賃を合わせた金額を返す
     // 世帯月収が基準額と実家賃を上回り、給付金支給上限額を超える場合、給付金支給上限額を返す
-    if (dto.monthlyHouseholdIncome > maximumBenefitAmount) {
+    if (benefitAmount > maximumBenefitAmount) {
       return maximumBenefitAmount
     } else {
       return benefitAmount

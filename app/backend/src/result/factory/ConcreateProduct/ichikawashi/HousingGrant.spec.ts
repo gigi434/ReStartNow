@@ -45,7 +45,6 @@ const mockDto: HousingGrantDto = {
   isGangMember: false,
   isReceivingWelfare: false,
   monthlyRent: 30000,
-  monthlyIncome: 0,
 }
 
 let service: IchikawashiHousingSubsidy
@@ -155,6 +154,87 @@ it('助成対象外: 申請者および申請者と同一の世帯に属する�
   }
   expect(service.checkEligibility(dto)).toEqual(false)
 })
+// it('助成対象: 世帯人数が負の値で金融資産額が上限額以下である場合', () => {
+//   const dto: HousingGrantDto = {
+//     ...mockDto,
+//     numberOfHouseholdMembers: -5,
+//     financialAssets: 504000,
+//   }
+//   expect(service.checkEligibility(dto)).toEqual(false)
+// })
+// it('助成対象外: 世帯人数が負の値で金融資産額が上限額より大きい場合', () => {
+//   const dto: HousingGrantDto = {
+//     ...mockDto,
+//     numberOfHouseholdMembers: -5,
+//     financialAssets: 504001,
+//   }
+//   expect(service.checkEligibility(dto)).toEqual(false)
+// })
+it('助成対象: 世帯人数1人で金融資産額が上限額以下である場合', () => {
+  const dto: HousingGrantDto = {
+    ...mockDto,
+    numberOfHouseholdMembers: 1,
+    financialAssets: 504000,
+  }
+  expect(service.checkEligibility(dto)).toEqual(true)
+})
+it('助成対象外: 世帯人数1人で金融資産額が上限額より大きい場合', () => {
+  const dto: HousingGrantDto = {
+    ...mockDto,
+    numberOfHouseholdMembers: 1,
+    financialAssets: 504001,
+  }
+  expect(service.checkEligibility(dto)).toEqual(false)
+})
+it('助成対象: 世帯人数2人で金融資産額が上限額以下である場合', () => {
+  const dto: HousingGrantDto = {
+    ...mockDto,
+    numberOfHouseholdMembers: 2,
+    financialAssets: 780000,
+  }
+  expect(service.checkEligibility(dto)).toEqual(true)
+})
+it('助成対象外: 世帯人数2人で金融資産額が上限額より大きい場合', () => {
+  const dto: HousingGrantDto = {
+    ...mockDto,
+    numberOfHouseholdMembers: 2,
+    financialAssets: 780001,
+  }
+  expect(service.checkEligibility(dto)).toEqual(false)
+})
+it('助成対象: 世帯人数3人で金融資産額が上限額以下である場合', () => {
+  const dto: HousingGrantDto = {
+    ...mockDto,
+    numberOfHouseholdMembers: 3,
+    financialAssets: 1000000,
+  }
+  expect(service.checkEligibility(dto)).toEqual(true)
+})
+it('助成対象外: 世帯人数3人で金融資産額が上限額より大きい場合', () => {
+  const dto: HousingGrantDto = {
+    ...mockDto,
+    numberOfHouseholdMembers: 2,
+    financialAssets: 1000001,
+  }
+  expect(service.checkEligibility(dto)).toEqual(false)
+})
+it('助成対象: 世帯人数7人で金融資産額が上限額以下である場合', () => {
+  const dto: HousingGrantDto = {
+    ...mockDto,
+    numberOfHouseholdMembers: 7,
+    financialAssets: 1000000,
+  }
+  expect(service.checkEligibility(dto)).toEqual(true)
+})
+it('助成対象外: 世帯人数7人で金融資産額が上限額より大きい場合', () => {
+  const dto: HousingGrantDto = {
+    ...mockDto,
+    numberOfHouseholdMembers: 7,
+    financialAssets: 1000001,
+  }
+  expect(service.checkEligibility(dto)).toEqual(false)
+})
+
 it('助成対象外: 申請者及び申請者と同一の世帯に属する方の所有する金融資産（現金、預貯金）の合計額が次の表の金額より大きい場合', () => {
   const dto: HousingGrantDto = {
     ...mockDto,
@@ -193,20 +273,56 @@ it('助成対象外: 申請者及び申請者と同一の世帯に属する方�
 })
 
 // 受給金額計算
-it('受給金額計算: 同値分割59800円の場合', () => {
+it('世帯人数1人で収入が基準額と実家賃の合計額を超えない場合', () => {
+  const dto: HousingGrantDto = {
+    ...mockDto,
+    numberOfHouseholdMembers: 1,
+    monthlyHouseholdIncome: 70000,
+    monthlyRent: 30000,
+  }
+  expect(service.calculateAmount(dto)).toEqual(6000)
+})
+it('世帯人数1人で収入が基準額と実家賃の合計額を超える場合', () => {
+  const dto: HousingGrantDto = {
+    ...mockDto,
+    numberOfHouseholdMembers: 1,
+    monthlyHouseholdIncome: 20000,
+    monthlyRent: 30000,
+  }
+  expect(service.calculateAmount(dto)).toEqual(46000)
+})
+it('世帯人数4人で収入が基準額と実家賃の合計額を超えない場合', () => {
   const dto: HousingGrantDto = {
     ...mockDto,
     numberOfHouseholdMembers: 4,
-    monthlyHouseholdIncome: 244000,
+    monthlyHouseholdIncome: 70000,
+    monthlyRent: 30000,
+  }
+  expect(service.calculateAmount(dto)).toEqual(19800)
+})
+it('世帯人数4人で収入が基準額と実家賃の合計額を超える場合', () => {
+  const dto: HousingGrantDto = {
+    ...mockDto,
+    numberOfHouseholdMembers: 4,
+    monthlyHouseholdIncome: 20000,
     monthlyRent: 30000,
   }
   expect(service.calculateAmount(dto)).toEqual(59800)
 })
-it('受給金額計算: 同値分割71800円の場合', () => {
+it('世帯人数7人で収入が基準額と実家賃の合計額を超えない場合', () => {
   const dto: HousingGrantDto = {
     ...mockDto,
     numberOfHouseholdMembers: 7,
-    monthlyHouseholdIncome: 244000,
+    monthlyHouseholdIncome: 70000,
+    monthlyRent: 30000,
+  }
+  expect(service.calculateAmount(dto)).toEqual(31800)
+})
+it('世帯人数7人で収入が基準額と実家賃の合計額を超える場合', () => {
+  const dto: HousingGrantDto = {
+    ...mockDto,
+    numberOfHouseholdMembers: 7,
+    monthlyHouseholdIncome: 20000,
     monthlyRent: 30000,
   }
   expect(service.calculateAmount(dto)).toEqual(71800)

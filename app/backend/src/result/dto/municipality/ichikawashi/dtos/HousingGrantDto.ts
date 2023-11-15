@@ -15,9 +15,6 @@ export class HousingGrantDto {
   activityStatus: boolean // 次の条件に当てはまるか イ) 公共職業安定所等での求職活動を行う　ロ）経営相談など自立に向けた活動を行う（自営業のかたのみ選択できます。）
   @IsNumber()
   @IsNotEmpty()
-  monthlyIncome: number // 月の収入額
-  @IsNumber()
-  @IsNotEmpty()
   financialAssets: number //金融資産（現金、預貯金）の合計額
   @IsBoolean()
   @IsNotEmpty()
