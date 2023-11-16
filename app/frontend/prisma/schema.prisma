@@ -1,0 +1,182 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Answer {
+  id        Int      @id @default(autoincrement())
+  subsidyId Int
+  userId    Int
+  createdAt DateTime @default(now())
+  answers   Json
+  Subsidy   Subsidy  @relation(fields: [subsidyId], references: [id])
+  User      User     @relation(fields: [userId], references: [id])
+}
+
+model Information {
+  id         Int                   @id @default(autoincrement())
+  title      String
+  body       String
+  createdAt  DateTime              @default(now())
+  updatedAt  DateTime
+  importance informationImportance @default(Low)
+  authorId   Int
+  User       User                  @relation(fields: [authorId], references: [id])
+}
+
+model Municipality {
+  id                  Int        @id @default(autoincrement())
+  createdAt           DateTime   @default(now())
+  updatedAt           DateTime
+  name                String
+  municipalSymbolPath String
+  isSupported         Boolean    @default(false)
+  prefectureId        Int
+  hepburnName         String
+  Prefecture          Prefecture @relation(fields: [prefectureId], references: [id])
+  Subsidy             Subsidy[]
+
+  @@unique([prefectureId, name])
+}
+
+model Prefecture {
+  id           Int            @id @default(autoincrement())
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime
+  name         String         @unique
+  hepburnName  String         @unique
+  Municipality Municipality[]
+
+  @@unique([name, hepburnName])
+}
+
+model Question {
+  id                    Int                     @id @default(autoincrement())
+  text                  String
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime
+  propertyName          String                  @unique
+  answerType            answerType
+  QuestionChoice        QuestionChoice[]
+  QuestionGroupQuestion QuestionGroupQuestion[]
+}
+
+model Subsidy {
+  id                          Int                          @id @default(autoincrement())
+  amountReceived              String
+  applicationAddress          String
+  applicationMethod           String
+  status                      subsidyStatus                @default(Continuation)
+  createdAt                   DateTime                     @default(now())
+  updatedAt                   DateTime
+  municipalityId              Int
+  relatedLink                 String
+  deadlineForReceipt          DateTime?
+  questionGroupId             Int?
+  subsidyNameId               Int
+  Answer                      Answer[]
+  Municipality                Municipality                 @relation(fields: [municipalityId], references: [id])
+  QuestionGroup               QuestionGroup?               @relation(fields: [questionGroupId], references: [id])
+  SubsidyName                 SubsidyName                  @relation(fields: [subsidyNameId], references: [id])
+  SubsidyAmountCondition      SubsidyAmountCondition?
+  SubsidyEligibilityCondition SubsidyEligibilityCondition?
+
+  @@unique([subsidyNameId, municipalityId])
+}
+
+model User {
+  id             Int           @id @default(autoincrement())
+  email          String        @unique
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime
+  hashedPassword String
+  role           Role          @default(User)
+  Answer         Answer[]
+  Information    Information[]
+}
+
+model SubsidyAmountCondition {
+  id         Int     @id @default(autoincrement())
+  subsidyId  Int     @unique
+  amountData Json
+  Subsidy    Subsidy @relation(fields: [subsidyId], references: [id])
+}
+
+model SubsidyEligibilityCondition {
+  id            Int     @id @default(autoincrement())
+  subsidyId     Int     @unique
+  conditionData Json
+  Subsidy       Subsidy @relation(fields: [subsidyId], references: [id])
+}
+
+model QuestionGroup {
+  id                    Int                     @id @default(autoincrement())
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime
+  description           String
+  QuestionGroupQuestion QuestionGroupQuestion[]
+  Subsidy               Subsidy[]
+}
+
+model QuestionGroupQuestion {
+  questionId      Int
+  questionGroupId Int
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime
+  QuestionGroup   QuestionGroup @relation(fields: [questionGroupId], references: [id])
+  Question        Question      @relation(fields: [questionId], references: [id])
+
+  @@unique([questionId, questionGroupId])
+}
+
+model Choice {
+  id             Int              @id @default(autoincrement())
+  text           String
+  value          String
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime
+  QuestionChoice QuestionChoice[]
+}
+
+model QuestionChoice {
+  questionId Int
+  choiceId   Int
+  Choice     Choice   @relation(fields: [choiceId], references: [id])
+  Question   Question @relation(fields: [questionId], references: [id])
+
+  @@id([questionId, choiceId])
+}
+
+model SubsidyName {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  hepburnName String
+  description String
+  Subsidy     Subsidy[]
+}
+
+enum Role {
+  User
+  Admin
+}
+
+enum informationImportance {
+  High
+  Middle
+  Low
+}
+
+enum subsidyStatus {
+  Abolition
+  Continuation
+}
+
+enum answerType {
+  BOOLEAN
+  NUMBER
+  CHOICE
+}

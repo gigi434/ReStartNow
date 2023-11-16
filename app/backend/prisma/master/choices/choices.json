@@ -1,0 +1,46 @@
+[
+  {
+    "text": "給与所得者（収入）",
+    "value": "salariedEmployees"
+  },
+  {
+    "text": "事業所得者（所得）",
+    "value": "businessIncomeEarner"
+  },
+  {
+    "text": "年金所得者",
+    "value": "pensionIncomeEarner"
+  },
+  {
+    "text": "65歳以上でひとり暮らしの世帯",
+    "value": "seniorSingleHousehold"
+  },
+  {
+    "text": "65歳以上の方で構成される世帯",
+    "value": "seniorOnlyHousehold"
+  },
+  {
+    "text": "心身障がい者がいる世帯",
+    "value": "disabilityInHousehold"
+  },
+  {
+    "text": "ひとり親で児童を養育する世帯",
+    "value": "singleParentHousehold"
+  },
+  {
+    "text": "父母のない児童を養育する世帯",
+    "value": "orphanedChildHousehold"
+  },
+  {
+    "text": "該当なし",
+    "value": "N/A"
+  },
+  {
+    "text": "単身者",
+    "value": "single"
+  },
+  {
+    "text": "2人世帯",
+    "value": "double"
+  }
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "subsidyNameId": 1,
+    "amountReceived": "最大7万1800円",
+    "applicationAddress": "最寄りの自立相談支援機関",
+    "applicationMethod": "窓口にお電話でお問い合わせ",
+    "status": "Continuation",
+    "relatedLink": "https://www.city.ichikawa.lg.jp/wel07/0000376345.html",
+    "municipalityId": 603,
+    "questionGroupId": 1
+  },
+  {
+    "subsidyNameId": 2,
+    "amountReceived": "最大21万8000円",
+    "applicationAddress": "最寄りの自立相談支援機関",
+    "applicationMethod": "市営住宅課（第1庁舎3階）",
+    "status": "Continuation",
+    "relatedLink": "https://www.city.ichikawa.lg.jp/wel08/1111000004.html",
+    "municipalityId": 603,
+    "questionGroupId": 2
+  },
+  {
+    "subsidyNameId": 3,
+    "amountReceived": "子供の数に依存",
+    "applicationAddress": "保健センター健康支援課",
+    "applicationMethod": "複合",
+    "status": "Continuation",
+    "relatedLink": "https://www.city.ichikawa.lg.jp/pub03/0000421131.html",
+    "municipalityId": 603,
+    "questionGroupId": 3
+  }
+]

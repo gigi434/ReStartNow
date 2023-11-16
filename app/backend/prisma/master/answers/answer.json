@@ -1,0 +1,11 @@
+[
+  {
+    "subsidyId": 3,
+    "userId": 1,
+    "answers": {
+      "hasResidence": true,
+      "hasPregnancyInterview": false,
+      "hasChildcareInterview": true
+    }
+  }
+]

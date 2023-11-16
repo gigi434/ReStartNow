@@ -1,0 +1,93 @@
+[
+  {
+    "id": 1,
+    "subsidyId": 3,
+    "conditionData": {
+      "isResidency": true
+    }
+  },
+  {
+    "id": 2,
+    "subsidyId": 1,
+    "conditionData": {
+      "incomeThreshold": {
+        "1": 84000,
+        "2": 130000,
+        "3": 172000,
+        "4": 214000,
+        "5": 255000,
+        "6": 297000,
+        "7": 334000
+      },
+      "financialAssets": {
+        "1": 504000,
+        "2": 780000,
+        "3": 1000000
+      }
+    }
+  },
+  {
+    "id": 3,
+    "subsidyId": 2,
+    "conditionData": {
+      "specialFamilyConditions": [
+        "singleParentHousehold",
+        "orphanedChildHousehold"
+      ],
+      "monthlyNewHousingRent": 70000,
+      "incomeThresholds": [
+        {
+          "earningsCategory": "salariedEmployees",
+          "familyType": "single",
+          "threshold": 3887999
+        },
+        {
+          "earningsCategory": "salariedEmployees",
+          "familyType": "couple",
+          "isSpecialFamilyCondition": false,
+          "threshold": 4363999
+        },
+        {
+          "earningsCategory": "salariedEmployees",
+          "familyType": "couple",
+          "isSpecialFamilyCondition": true,
+          "threshold": 3511999
+        },
+        {
+          "earningsCategory": "businessIncomeEarner",
+          "familyType": "single",
+          "threshold": 2568000
+        },
+        {
+          "earningsCategory": "businessIncomeEarner",
+          "familyType": "couple",
+          "isSpecialFamilyCondition": false,
+          "threshold": 2948000
+        },
+        {
+          "earningsCategory": "businessIncomeEarner",
+          "familyType": "couple",
+          "isSpecialFamilyCondition": true,
+          "threshold": 2276000
+        },
+        {
+          "earningsCategory": "pensionIncomeEarner",
+          "familyType": "single",
+          "threshold": 3924000
+        },
+        {
+          "earningsCategory": "pensionIncomeEarner",
+          "familyType": "couple",
+          "isSpecialFamilyCondition": false,
+          "threshold": 4391764
+        },
+        {
+          "earningsCategory": "pensionIncomeEarner",
+          "familyType": "couple",
+          "isSpecialFamilyCondition": true,
+          "threshold": 3534666
+        }
+      ]
+    }
+  }
+]

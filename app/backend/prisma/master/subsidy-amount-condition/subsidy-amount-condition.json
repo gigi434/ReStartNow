@@ -1,0 +1,35 @@
+[
+  {
+    "id": 1,
+    "subsidyId": 3,
+    "amountData": {
+      "havePregnancyInterview": 50000,
+      "haveChildcareInterview": 50000
+    }
+  },
+  {
+    "id": 2,
+    "subsidyId": 1,
+    "amountData": {
+      "numberOfFamilyMembers": {
+        "1": 46000,
+        "2": 55000,
+        "3": 59800,
+        "4": 59800,
+        "5": 59800,
+        "6": 64000,
+        "7": 71800
+      }
+    }
+  },
+  {
+    "id": 3,
+    "subsidyId": 2,
+    "amountData": {
+      "newRentThreshold": 60000,
+      "housingRentSubsidyThreshold": 38000,
+      "relocationSubsidyThreshold": 190000,
+      "rentSubsidyCap": 38000
+    }
+  }
+]

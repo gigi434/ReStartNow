@@ -1,6 +1,28 @@
 version: "3"
 
 services:
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend/Dockerfile
+    container_name: nextjs_container
+    environment:
+      - DB_CONTAINER_NAME=${DB_CONTAINER_NAME}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+    ports:
+      # Next.js
+      - "3000:3000"
+      # Storybook
+      - "6006:6006"
+    volumes:
+      - "./app/frontend:/home/node/nextjs"
+      - "frontend_node_modules:/home/node/nextjs/node_modules"
+    tty: true
+    stdin_open: true
+    
   backend:
     build:
       context: .
@@ -17,8 +39,14 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_PORT=${POSTGRES_PORT}
+      # - REDIS_USER=${REDIS_USER}
+      # - REDIS_PASSWORD=${REDIS_PASSWORD}
+      # - REDIS_HOST=${REDIS_HOST}
+      # - REDIS_PORT=${REDIS_PORT}
+      # - REDIS_SECRET=${REDIS_SECRET}
     volumes:
       - "./app/backend:/home/node/nestjs"
+      - "backend_node_modules:/home/node/nestjs/node_modules"
     tty: true
     stdin_open: true
 
@@ -36,3 +64,15 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_PORT=${POSTGRES_PORT}
     restart: always
+
+  # redis:
+  #   build:
+  #     context: .
+  #     dockerfile: docker/redis/Dockerfile
+  #   container_name: redis_container
+  #   ports:
+  #     - "6379:6379"
+
+volumes:
+  frontend_node_modules:
+  backend_node_modules:

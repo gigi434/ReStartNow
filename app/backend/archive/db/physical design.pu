@@ -1,0 +1,133 @@
+@startuml failure-story
+
+' hide the spot
+hide circle
+
+' avoid problems with angled crows feet
+skinparam linetype ortho
+
+entity "User" as user {
+    *id : int @id @default(autoincrement())
+    --
+    *email: String
+    createdAt: DateTime @default(now())
+    updatedAt: DateTime @updatedAt
+    *hashedPassword :String
+    role: Enum
+    answers: Answer[]
+}
+
+entity "Municipality" as manicipality {
+    *id : Int @id @default(autoincrement())
+    --
+    createdAt: DateTime @default(now())                  
+    updatedAt: DateTime @updatedAt                  
+    *name: String
+    *municipalSymbolPath: String
+    *isSupported: Boolean
+    *prefectureId: Int
+    prefecture: Prefecture @relation(fields: [prefectureId], references: [id])
+    *subsidies: Subsidy[]
+}
+
+entity "Information" as information {
+    *id: int @id @default(autoincrement())
+    --
+    *title: String
+    *body: String
+    createdAt: DateTime @default(now())
+    updatedAt: DateTime @updatedAt
+}
+
+entity "Prefecture" as prefecture {
+    *id: Int @id @default(autoincrement())
+    --
+    createdAt: DateTime @default(now())
+    updatedAt: DateTime @updatedAt
+    *name: String
+    *municipalities: Municipality[]
+}
+
+entity "Subsidy" as subsidy {
+    +id: Int @id @default(autoincrement())
+  --
+    *name: String <<unique>>
+    *deadlineForReceipt DateTime // 受給期限
+    *ageLimit String // 年齢制限
+    *amountReceived Int // 受給額
+    *applicationAddress String // 申請先
+    *applicationMethod String // 申請方法
+    *applicationRequirements String // 申請条件
+    description String // 説明
+    status: String // 助成金の更新・廃止などの状態
+    *municipalityId: Int
+    Municipality: Manicipality @relation(fields: [manicipalityId], references: [id])
+    createdAt: DateTime @default(now())
+    updatedAt: DateTime @updatedAt
+    question: Question[]
+}
+
+' 一問一答の質問
+entity "Question" as question {
+    *id: Int @id @default(autoincrement())
+    --
+    *answerType: String
+    *text: String
+    *subsidyId: Int
+    subsidy: Subsidy @relation(fields: [SubsidyId], references: [id])
+    createdAt: DateTime @default(now())
+    updatedAt: DateTime @updatedAt
+}
+
+' ユーザーの答えを保存するテーブル
+entity "Answer" as answer {
+    *id: Int @id @default(autoincrement())
+    --
+    *questionId: Int
+    question: Question @relation(fields: [questionId], references: [id])
+    user: User @relation(fields: [userId], references: [id])
+    *userId: Int 
+    createdAt: DateTime @default(now())
+}
+
+entity  "HousingSubsidyCondition" as HousingSubsidyCondition {
+  *subsidyId @id
+  --
+  economicHardship        Boolean //経済的困窮の有無（true/false）
+  lossOfHousing           Boolean // 住居喪失の有無（true/false）
+  lossOfHousingRisk       Boolean // 住居喪失のおそれの有無（true/false）
+  employmentLoss          Boolean //  離職・廃業から2年以内か、減収減収減額のための離職・廃業同等の状況にあるか（true/false）
+  livingExpensesSupported Boolean //  生計を主として維持している世帯員がいるか（true/false）
+  jobSeeking              Boolean //  求職活動を行っているか（true/false）
+  monthlyIncome           Int // 収入額
+  householdNumber         Int // 世帯員数
+  financialAssets         Int // 金融資産の合計額
+  employmentMeasures      Boolean // 雇用対策給付を受けていないか（true/false）
+  yakuzaMember            Boolean // 暴力団員でないか（true/false）
+  disabledPerson          Boolean // 介護や障がい者等の世話をしているか（true/false）
+}
+
+entity "ChildbirthSubsidyCondition" as ChildbirthSubsidyCondition {
+  *municipalityId          Int @unique
+  *subsidyId               Int @unique
+  --
+  maximumBenefitPayments  Int[] // 最大受給金額
+  isResidency             Boolean // 現在市町区村に住民票があるか
+  isChildcareInterview    Boolean // 妊娠届出時に面談をしたか
+  isPregnancyInterview    Boolean // 出産後面談をしたか
+  subsidy                 Subsidy @relation(fields: [subsidyId], references: [id])
+  municipality            Municipality @relation(fields: [municipalityId], references: [id])
+  @@id([municipalityId, subsidyId])
+}
+
+manicipality }o--|| prefecture
+question ||--o{ answer
+question }o--|| subsidy
+subsidy }o--|| manicipality
+subsidy ||--o| HousingSubsidyCondition
+subsidy ||--o| ChildbirthSubsidyCondition
+user ||--o{ answer
+
+
+
+@enduml

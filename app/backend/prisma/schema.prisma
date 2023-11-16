@@ -5,46 +5,78 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator erd {
+  provider                  = "prisma-erd-generator"
+  theme                     = "forest"
+  output                    = "ERD.md"
+  includeRelationFromFields = true
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-generator erd {
-  provider = "prisma-erd-generator"
-  output   = "./ERD.md"
+enum Role {
+  User
+  Admin
+}
+
+enum subsidyStatus {
+  Abolition
+  Continuation
+}
+
+enum informationImportance {
+  High
+  Middle
+  Low
+}
+
+enum answerType {
+  BOOLEAN
+  NUMBER
+  CHOICE
 }
 
 // お知らせ
 model Information {
-  id        Int      @id @default(autoincrement())
-  title     String
-  body      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         Int                   @id @default(autoincrement())
+  title      String
+  body       String
+  createdAt  DateTime              @default(now())
+  updatedAt  DateTime              @updatedAt
+  importance informationImportance @default(Low)
+  authorId   Int
+  author     User                  @relation(fields: [authorId], references: [id])
 }
 
 // ユーザー
 model User {
-  id                       Int                       @id @default(autoincrement())
-  email                    String                    @unique
-  createdAt                DateTime                  @default(now())
-  updatedAt                DateTime                  @updatedAt
-  hashedPassword           String
-  questionAndAnswerResults QuestionAndAnswerResult[]
+  id             Int           @id @default(autoincrement())
+  email          String        @unique
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  hashedPassword String
+  answers        Answer[]
+  role           Role          @default(User)
+  information    Information[]
 }
 
 // 市町区村
 model Municipality {
-  id                       Int                       @id @default(autoincrement())
-  createdAt                DateTime                  @default(now())
-  updatedAt                DateTime                  @updatedAt
-  name                     String                    @unique
-  municipalSymbol          String                    @unique
-  questionAndAnswerResults QuestionAndAnswerResult[]
-  prefectureId             Int
-  prefecture               Prefecture                @relation(fields: [prefectureId], references: [id])
-  subsidies                Subsidy[]
+  id                  Int        @id @default(autoincrement())
+  createdAt           DateTime   @default(now())
+  updatedAt           DateTime   @updatedAt
+  name                String
+  hepburnName         String
+  municipalSymbolPath String
+  isSupported         Boolean    @default(false)
+  prefectureId        Int
+  prefecture          Prefecture @relation(fields: [prefectureId], references: [id])
+  subsidies           Subsidy[]
+
+  @@unique([prefectureId, name])
 }
 
 // 都道府県
@@ -53,57 +85,122 @@ model Prefecture {
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
   name           String         @unique
+  hepburnName    String         @unique
   municipalities Municipality[]
+
+  @@unique([name, hepburnName])
+}
+
+// 助成金の名前を管理するテーブル
+model SubsidyName {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique // 助成金の名前
+  hepburnName String // 助成金のローマ字名
+  description String // 説明
+  subsidies   Subsidy[]
 }
 
 // 助成金
 model Subsidy {
-  id                 Int          @id @default(autoincrement())
-  name               String       @unique
-  deadlineForReceipt DateTime // 受給期限
-  ageLimit           String // 年齢制限
-  amountReceived     Int // 受給額
-  addressApplication String // 申請先
-  description        String // 説明
-  municipality       Municipality @relation(fields: [municipalityId], references: [id])
-  municipalityId     Int
+  id                           Int                           @id @default(autoincrement())
+  deadlineForReceipt           DateTime? // 受給期限
+  amountReceived               String // 受給額
+  applicationAddress           String // 申請先
+  applicationMethod            String // 申請方法
+  status                       subsidyStatus                 @default(Continuation) // 助成金の更新・廃止などの状態
+  relatedLink                  String // 根拠となるリンク
+  createdAt                    DateTime                      @default(now())
+  updatedAt                    DateTime                      @updatedAt
+  municipalityId               Int
+  municipality                 Municipality                  @relation(fields: [municipalityId], references: [id])
+  subsidyNameId                Int
+  subsidyName                  SubsidyName                   @relation(fields: [subsidyNameId], references: [id])
+  answers                      Answer[]
+  subsidyeligibilityConditions SubsidyEligibilityCondition[]
+  subsidyamountConditions      SubsidyAmountCondition[]
+  questionGroupId              Int?
+  questionGroup                QuestionGroup?                @relation(fields: [questionGroupId], references: [id])
+
+  @@unique([subsidyNameId, municipalityId])
 }
 
-// 一問一答の条件
-model QuestionAndAnswerRequirements {
-  id                                   Int     @id @default(autoincrement())
-  addressForApplication                String
-  // 離職等により経済的に困窮し、家賃の支払いが困難で、住居を喪失した、または住居喪失のおそれがある
-  encryptedIsEconomicallyDistressed    Boolean
-  encryptedIsHomeless                  Boolean
-  // 下記条件のどちらかに当てはまる
-  //  イ）申請日において、離職・自営業の廃業の日から2年以内である。
-  //  ロ）給与等を得る機会が本人の責に帰すべき理由、本人の都合によらないで減少し、離職や廃業と同程度の状況にある。
-  encryptedHasRecentlyLostJobOrIncome  Boolean
-  // 下記条件のどちらかに当てはまる
-  //  イ）離職等の日において、その属する世帯の生計を主として維持していた。
-  //  ロ）申請日の属する月において、その属する世帯の生計を主として維持している。
-  encryptedIsMainEarnerOfHousehold     Boolean
-  // 誠実かつ熱心に求職活動を行うこと
-  encryptedIsActivelySeekingEmployment Boolean
-  // 申請を行う月に、申請者および申請者と同一の世帯に属する方の収入額（※）の合計が、次の表の「基準額」と実家賃の合計額を超えていないこと。
-  encryptedHasRegisteredWithHelloWork  Boolean
-  encryptedHouseholdIncome             Int
-  encryptedRent                        Int
-  // 申請日において、申請者及び申請者と同一の世帯に属する方の所有する金融資産（現金、預貯金）の合計額が次の表の金額以下であること。
-  encryptedHouseholdSize               Int
-  encryptedFinancialAssets             Int
-  encryptedIsFinancialAssetsBelowLimit Boolean
-  // 国の雇用施策による貸付（職業訓練受講給付金）または地方公共団体が実施する類似の雇用対策給付等を、申請者及び申請者と同一の世帯に属する方が受けていないこ
-  encryptedIsEligible                  Boolean
+// 一問一答の質問
+model Question {
+  id                    Int                     @id @default(autoincrement())
+  answerType            answerType // YesとNoで答えられる質問か、数値など具体的な回答を要する質問なのか
+  text                  String // 質問文
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  propertyName          String                  @unique // クライアントサイドでリクエストに格納される回答のプロパティ
+  questionGroupQuestion QuestionGroupQuestion[]
+  questionChoice        QuestionChoice[]
 }
 
-// 一問一答結果
-model QuestionAndAnswerResult {
-  id             Int          @id @default(autoincrement())
-  createdAt      DateTime     @default(now())
-  authorId       Int?         @unique
-  author         User?        @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  municipalityId Int          @unique
-  municipality   Municipality @relation(fields: [municipalityId], references: [id])
+// 一問一答の質問を複数格納した質問グループ
+model QuestionGroup {
+  id          Int                     @id @default(autoincrement())
+  description String
+  createdAt   DateTime                @default(now())
+  updatedAt   DateTime                @updatedAt
+  questions   QuestionGroupQuestion[]
+  subsidies   Subsidy[]
+}
+
+// ユーザーの答えを保存するテーブル
+model Answer {
+  id        Int      @id @default(autoincrement())
+  subsidyId Int
+  subsidy   Subsidy  @relation(fields: [subsidyId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  createdAt DateTime @default(now())
+  answers   Json
+}
+
+// 助成金の受給要件テーブル
+model SubsidyEligibilityCondition {
+  id            Int     @id @default(autoincrement())
+  subsidyId     Int     @unique
+  subsidy       Subsidy @relation(fields: [subsidyId], references: [id])
+  conditionData Json
+}
+
+// 助成金の受給金額テーブル
+model SubsidyAmountCondition {
+  id         Int     @id @default(autoincrement())
+  subsidyId  Int     @unique
+  subsidy    Subsidy @relation(fields: [subsidyId], references: [id])
+  amountData Json
+}
+
+// 質問群と質問の中間テーブル
+model QuestionGroupQuestion {
+  questionId      Int
+  question        Question      @relation(fields: [questionId], references: [id])
+  questionGroupId Int
+  questionGroup   QuestionGroup @relation(fields: [questionGroupId], references: [id])
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@unique([questionId, questionGroupId])
+}
+
+// 質問の回答の種類として選択肢がある場合に使用される選択肢テーブル
+model Choice {
+  id             Int              @id @default(autoincrement())
+  text           String // 選択肢として表示される文字列 例: "会社員", "自営業", "無職"
+  value          String // 選択したときの値 例: "salary"
+  questionChoice QuestionChoice[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+}
+
+// 質問テーブルと選択肢テーブルの中間テーブル
+model QuestionChoice {
+  question   Question @relation(fields: [questionId], references: [id])
+  questionId Int
+  choice     Choice   @relation(fields: [choiceId], references: [id])
+  choiceId   Int
+
+  @@id([questionId, choiceId])
 }
