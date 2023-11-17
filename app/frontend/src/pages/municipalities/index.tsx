@@ -26,5 +26,6 @@ export const getStaticProps: GetStaticProps = async () => {
       prefectures,
       municipalities,
     },
+    revalidate: 60
   }
 }

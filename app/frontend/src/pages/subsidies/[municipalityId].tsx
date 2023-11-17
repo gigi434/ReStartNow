@@ -58,6 +58,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         subsidies: [],
       },
       notFound: true,
+      revalidate: 60,
     }
   }
 }
