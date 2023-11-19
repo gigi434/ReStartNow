@@ -6,6 +6,8 @@ import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
 import { initMocks } from '@/mocks'
 import { AxiosErrorHandleProvider } from '@/src/utils'
 import { ErrorBoundaryClass } from '@/src/utils'
+import { Analytics } from '@vercel/analytics/react';
+
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -26,6 +28,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <AxiosErrorHandleProvider>
           <ErrorBoundaryClass>
             <Component {...pageProps} />
+            <Analytics />
           </ErrorBoundaryClass>
         </AxiosErrorHandleProvider>
       </QueryClientProvider>
