@@ -15,7 +15,7 @@ import { SocialButtonProps } from '@/src/components'
 export function Footer() {
   const theme = useTheme()
   const socialApplication: SocialButtonProps[] = [
-    { socialApplicationName: 'twitter', href: 'https://twitter.com' },
+    { socialApplicationName: 'twitter', href: 'https://twitter.com/ReStartNow_jp' },
   ]
   return (
     <section>
