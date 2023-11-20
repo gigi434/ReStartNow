@@ -115,21 +115,23 @@ export abstract class BaseHousingGrant extends BaseGrantCalculator {
   public calculateConditionAmount(dto: HousingGrantDto): number {
     // 世帯人数に依存しているため、世帯人数に応じた受給額を返す
 
-    // 給付金支給上限額を格納する
-    const maximumBenefitAmount =
-      this.amountCondition.numberOfFamilyMembers[dto.numberOfHouseholdMembers]
-    // 実給付額を計算する
-    const benefitAmount = Math.max(
-      maximumBenefitAmount + dto.monthlyRent - dto.monthlyHouseholdIncome,
+    // 基準額と実家賃を足し、収入額を減じた支給額
+    const allowanceAmount = Math.max(
+      this.eligibilityCondition.incomeThreshold[dto.numberOfHouseholdMembers] +
+        dto.monthlyRent -
+        dto.monthlyHouseholdIncome,
       0,
     )
 
+    // 給付金支給上限額を格納する
+    const maximumAllowanceAmount =
+      this.amountCondition.numberOfFamilyMembers[dto.numberOfHouseholdMembers]
     // 世帯月収が基準額と実家賃を下回る場合、基準額と実家賃を合わせた金額を返す
     // 世帯月収が基準額と実家賃を上回り、給付金支給上限額を超える場合、給付金支給上限額を返す
-    if (benefitAmount > maximumBenefitAmount) {
-      return maximumBenefitAmount
+    if (allowanceAmount > maximumAllowanceAmount) {
+      return maximumAllowanceAmount
     } else {
-      return benefitAmount
+      return allowanceAmount
     }
   }
 }
