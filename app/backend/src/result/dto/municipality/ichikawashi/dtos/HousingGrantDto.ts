@@ -21,10 +21,10 @@ export class HousingGrantDto {
   isReceivingSimilarSubsidy: boolean //住居確保給付金に類似する雇用対策給付等を、申請者及び申請者と同一の世帯に属する方が受けていない
   @IsBoolean()
   @IsNotEmpty()
-  isGangMember: boolean //申請者及び申請者と生計を一とする同居の親族のいずれもが暴力団員ではないか
+  isNotGangMember: boolean //申請者及び申請者と生計を一とする同居の親族のいずれもが暴力団員ではないか
   @IsBoolean()
   @IsNotEmpty()
-  isReceivingWelfare: boolean //生活保護を受けていないか
+  isNotReceivingWelfare: boolean //生活保護を受けていないか
   @IsNotEmpty()
   @IsNumber()
   numberOfHouseholdMembers: number // 世帯人数

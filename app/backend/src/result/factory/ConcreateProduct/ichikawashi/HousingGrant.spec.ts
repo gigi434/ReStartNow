@@ -42,8 +42,8 @@ const mockDto: HousingGrantDto = {
   numberOfHouseholdMembers: 1,
   financialAssets: 0,
   isReceivingSimilarSubsidy: true,
-  isGangMember: false,
-  isReceivingWelfare: false,
+  isNotGangMember: false,
+  isNotReceivingWelfare: false,
   monthlyRent: 30000,
 }
 
@@ -253,21 +253,14 @@ it('助成対象外: 住居確保給付金に類似する雇用対策給付等�
 it('助成対象外: 申請者及び申請者と生計を一とする同居の親族のいずれもが暴力団員である', () => {
   const dto: HousingGrantDto = {
     ...mockDto,
-    isGangMember: true,
-  }
-  expect(service.checkEligibility(dto)).toEqual(false)
-})
-it('助成対象外: 申請者及び申請者と生計を一とする同居の親族のいずれかが暴力団員である', () => {
-  const dto: HousingGrantDto = {
-    ...mockDto,
-    isGangMember: true,
+    isNotGangMember: false,
   }
   expect(service.checkEligibility(dto)).toEqual(false)
 })
 it('助成対象外: 申請者及び申請者と同一の世帯に属する方が生活保護を受けている場合', () => {
   const dto: HousingGrantDto = {
     ...mockDto,
-    isReceivingWelfare: true,
+    isNotReceivingWelfare: false,
   }
   expect(service.checkEligibility(dto)).toEqual(false)
 })
