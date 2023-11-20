@@ -99,12 +99,12 @@ export abstract class BaseHousingGrant extends BaseGrantCalculator {
     }
 
     // 申請者及び申請者と生計を一とする同居の親族のいずれもが暴力団員ではないこと。
-    if (dto.isGangMember !== false) {
+    if (dto.isNotGangMember === false) {
       return false
     }
 
     // 申請者及び申請者と同一の世帯に属する方が生活保護を受けていないこと。
-    if (dto.isReceivingWelfare !== false) {
+    if (dto.isNotReceivingWelfare === false) {
       return false
     }
 
