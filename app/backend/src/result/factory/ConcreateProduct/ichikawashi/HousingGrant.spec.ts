@@ -273,16 +273,25 @@ it('助成対象外: 申請者及び申請者と同一の世帯に属する方�
 })
 
 // 受給金額計算
-it('世帯人数1人で収入が基準額と実家賃の合計額を超えない場合', () => {
+it('同値分割34000円ケース: 世帯人数1人で収入が基準額と実家賃の合計額を超えない場合', () => {
   const dto: HousingGrantDto = {
     ...mockDto,
     numberOfHouseholdMembers: 1,
-    monthlyHouseholdIncome: 70000,
+    monthlyHouseholdIncome: 80000,
     monthlyRent: 30000,
   }
-  expect(service.calculateAmount(dto)).toEqual(6000)
+  expect(service.calculateAmount(dto)).toEqual(34000)
 })
-it('世帯人数1人で収入が基準額と実家賃の合計額を超える場合', () => {
+it('境界値分析45999円ケース: 世帯人数1人で収入が基準額と実家賃の合計額を超えない場合', () => {
+  const dto: HousingGrantDto = {
+    ...mockDto,
+    numberOfHouseholdMembers: 1,
+    monthlyHouseholdIncome: 68001,
+    monthlyRent: 30000,
+  }
+  expect(service.calculateAmount(dto)).toEqual(45999)
+})
+it('境界値分析46000円ケース: 世帯人数1人で収入が基準額と実家賃の合計額を超える場合', () => {
   const dto: HousingGrantDto = {
     ...mockDto,
     numberOfHouseholdMembers: 1,
@@ -291,38 +300,92 @@ it('世帯人数1人で収入が基準額と実家賃の合計額を超える場
   }
   expect(service.calculateAmount(dto)).toEqual(46000)
 })
-it('世帯人数4人で収入が基準額と実家賃の合計額を超えない場合', () => {
+it('同値分割46000円ケース: 世帯人数1人で収入が基準額と実家賃の合計額を超える場合', () => {
   const dto: HousingGrantDto = {
     ...mockDto,
-    numberOfHouseholdMembers: 4,
-    monthlyHouseholdIncome: 70000,
+    numberOfHouseholdMembers: 1,
+    monthlyHouseholdIncome: 10000,
     monthlyRent: 30000,
   }
-  expect(service.calculateAmount(dto)).toEqual(19800)
+  expect(service.calculateAmount(dto)).toEqual(46000)
 })
-it('世帯人数4人で収入が基準額と実家賃の合計額を超える場合', () => {
+it('同値分割29900円ケース: 世帯人数4人で収入が基準額と実家賃の合計額を超えない場合', () => {
   const dto: HousingGrantDto = {
     ...mockDto,
     numberOfHouseholdMembers: 4,
-    monthlyHouseholdIncome: 20000,
+    monthlyHouseholdIncome: 214100,
+    monthlyRent: 30000,
+  }
+  expect(service.calculateAmount(dto)).toEqual(29900)
+})
+it('境界値分析59800円ケース: 世帯人数4人で収入が基準額と実家賃の合計額を超えない場合', () => {
+  const dto: HousingGrantDto = {
+    ...mockDto,
+    numberOfHouseholdMembers: 4,
+    monthlyHouseholdIncome: 184200,
     monthlyRent: 30000,
   }
   expect(service.calculateAmount(dto)).toEqual(59800)
 })
-it('世帯人数7人で収入が基準額と実家賃の合計額を超えない場合', () => {
+it('境界値分析59800円ケース: 世帯人数4人で収入が基準額と実家賃の合計額を超える場合', () => {
   const dto: HousingGrantDto = {
     ...mockDto,
-    numberOfHouseholdMembers: 7,
-    monthlyHouseholdIncome: 70000,
+    numberOfHouseholdMembers: 4,
+    monthlyHouseholdIncome: 184199,
     monthlyRent: 30000,
   }
-  expect(service.calculateAmount(dto)).toEqual(31800)
+  expect(service.calculateAmount(dto)).toEqual(59800)
 })
-it('世帯人数7人で収入が基準額と実家賃の合計額を超える場合', () => {
+it('同値分割59800円ケース: 世帯人数4人で収入が基準額と実家賃の合計額を超える場合', () => {
+  const dto: HousingGrantDto = {
+    ...mockDto,
+    numberOfHouseholdMembers: 4,
+    monthlyHouseholdIncome: 100000,
+    monthlyRent: 30000,
+  }
+  expect(service.calculateAmount(dto)).toEqual(59800)
+})
+it('同値分割35900円ケース: 世帯人数7人で収入が基準額と実家賃の合計額を超えない場合', () => {
   const dto: HousingGrantDto = {
     ...mockDto,
     numberOfHouseholdMembers: 7,
-    monthlyHouseholdIncome: 20000,
+    monthlyHouseholdIncome: 328100,
+    monthlyRent: 30000,
+  }
+  expect(service.calculateAmount(dto)).toEqual(35900)
+})
+it('境界値分析35900円ケース世帯人数7人で収入が基準額と実家賃の合計額を超えない場合', () => {
+  const dto: HousingGrantDto = {
+    ...mockDto,
+    numberOfHouseholdMembers: 7,
+    monthlyHouseholdIncome: 328100,
+    monthlyRent: 30000,
+  }
+  expect(service.calculateAmount(dto)).toEqual(35900)
+})
+it('境界値分析71800円ケース: 世帯人数7人で収入が基準額と実家賃の合計額を超えない場合', () => {
+  const dto: HousingGrantDto = {
+    ...mockDto,
+    numberOfHouseholdMembers: 7,
+    monthlyHouseholdIncome: 292200,
+    monthlyRent: 30000,
+  }
+  expect(service.calculateAmount(dto)).toEqual(71800)
+})
+it('境界値分析71800円ケース: 世帯人数7人で収入が基準額と実家賃の合計額を超える場合', () => {
+  const dto: HousingGrantDto = {
+    ...mockDto,
+    numberOfHouseholdMembers: 7,
+    monthlyHouseholdIncome: 292199,
+    monthlyRent: 30000,
+  }
+  expect(service.calculateAmount(dto)).toEqual(71800)
+})
+it('同値分割71800円ケース: 世帯人数7人で収入が基準額と実家賃の合計額を超える場合', () => {
+  const dto: HousingGrantDto = {
+    ...mockDto,
+    numberOfHouseholdMembers: 7,
+    monthlyHouseholdIncome: 146100,
     monthlyRent: 30000,
   }
   expect(service.calculateAmount(dto)).toEqual(71800)
