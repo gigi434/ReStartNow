@@ -42,12 +42,12 @@
   {
     "answerType": "BOOLEAN",
     "text": "申請者及び申請者と生計を一とする同居の親族のいずれもが暴力団員ではない",
-    "propertyName": "isGangMember"
+    "propertyName": "isNotGangMember"
   },
   {
     "answerType": "BOOLEAN",
     "text": "申請者及び申請者と同一の世帯に属する方が生活保護を受けていない",
-    "propertyName": "isReceivingWelfare"
+    "propertyName": "isNotReceivingWelfare"
   },
   {
     "answerType": "BOOLEAN",
