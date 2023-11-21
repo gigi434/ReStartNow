@@ -123,7 +123,12 @@ export function HorizontalLinearStepper({
               <MuiLink
                 target="_brank"
                 rel="noopener"
-              >{`${relatedLink}`}</MuiLink>
+              >
+                {/* 禁則処置を考慮しながらもコンテンツボックスからあふれる場合に、ブラウザーが改行を挿入する */}
+                <Typography style={{ whiteSpace: 'pre-line', wordBreak: 'normal', overflowWrap: 'anywhere' }}>
+                  {relatedLink}
+                </Typography>
+              </MuiLink>
             </Link>
           </Typography>
         </Box>
@@ -131,7 +136,7 @@ export function HorizontalLinearStepper({
         <Box minHeight={theme.spacing(23)}>
           {/* 質問文 */}
           <Box minHeight={theme.spacing(12)}>
-            <Typography variant="h6">{questions[activeStep].text}</Typography>
+            <Typography variant="body1" gutterBottom>{questions[activeStep].text}</Typography>
           </Box>
           {/* 回答種類が論理型であるならはいかいいえの二択を表示し、数値型ならインプット要素を表示する */}
           {/* 注意：論理型のvalue属性を文字列型ではなく論理型にして格納するといいえボタンをクリックしても反応しなくなるため、 送信する際に値を文字列から論理型にする*/}
