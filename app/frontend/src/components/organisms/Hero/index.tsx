@@ -9,9 +9,11 @@ import {
 import DoubleArrowIcon from '@mui/icons-material/DoubleArrow'
 import React from 'react'
 import Link from 'next/link'
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 export function Hero() {
   const theme = useTheme()
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'))
   return (
     <section>
       <Stack
@@ -24,29 +26,31 @@ export function Hero() {
           {/* 見出し */}
           <Typography
             variant="h3"
-            fontWeight={700}
+            fontWeight={'bold'}
             sx={{
               fontSize: {
-                xs: '1.25rem',
-                sm: '1.5rem',
-                md: '2rem',
+                xs: '1.5rem',
+                sm: '2rem',
+                md: '3rem',
               },
             }}
           >
-            失業保険だけじゃない！
+            {`3ステップでわかる!`}
           </Typography>
           {/* 副見出し */}
           <Typography
-            variant="h4"
+            style={{ whiteSpace: 'pre-line', wordBreak: 'normal', overflowWrap: 'anywhere' }}
+            variant="subtitle2"
+            align='center'
             sx={{
               fontSize: {
-                xs: '1.125rem',
+                xs: '1rem',
                 sm: '1.25rem',
                 md: '1.5rem',
               },
             }}
           >
-            受給できそうな助成金・給付金が一問一答で分かるサイト
+            {isSmallScreen ? `受給できそうな助成金・給付金が\n一問一答で分かるサイト` : `受給できそうな助成金・給付金が一問一答で分かるサイト`}
           </Typography>
         </Stack>
         {/* CTA */}
