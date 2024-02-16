@@ -9,14 +9,17 @@ import {
 } from '@/src/components'
 import {
   Box,
+  Button,
   Container,
   Grid,
   Stack,
   Typography,
   useTheme,
 } from '@mui/material'
+import { ArrowBackIosNewOutlined } from '@mui/icons-material'
 import { Municipality, Prefecture } from '@prisma/client'
 import useMediaQuery from '@mui/material/useMediaQuery'
+import { useRouter } from 'next/router'
 
 type RegionSearchProps = {
   prefectures: Prefecture[]
@@ -29,6 +32,7 @@ export function RegionSearch({
 }: RegionSearchProps) {
   const theme = useTheme()
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'))
+  const router = useRouter()
   return (
     <Stack>
       <Header />
@@ -50,6 +54,15 @@ export function RegionSearch({
           },
         }}
       >
+        {/* 戻るボタン */}
+        <Box>
+          <Button
+            startIcon={<ArrowBackIosNewOutlined />}
+            onClick={() => router.back()}
+          >
+            Back
+          </Button>
+        </Box>
         {/* この画面で何をするのかを示す文章 */}
         <Stack
           alignItems={isSmallScreen ? 'center' : 'baseline'}

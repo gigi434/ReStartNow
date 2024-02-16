@@ -7,6 +7,7 @@ import {
 } from '@/src/components'
 import {
   Box,
+  Button,
   Container,
   Grid,
   Stack,
@@ -17,6 +18,8 @@ import { ErrorBoundaryClass } from '@/src/utils/error'
 import { Subsidy } from '@prisma/client'
 import { CustomSubsidy } from '@/src/utils'
 import useMediaQuery from '@mui/material/useMediaQuery'
+import { useRouter } from 'next/router'
+import { ArrowBackIosNewOutlined } from '@mui/icons-material'
 
 type SubsidySearchProps = {
   subsidies: CustomSubsidy[]
@@ -25,6 +28,7 @@ type SubsidySearchProps = {
 export function SubsidySearch({ subsidies }: SubsidySearchProps) {
   const theme = useTheme()
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'))
+  const router = useRouter()
 
   return (
     <Stack>
@@ -47,6 +51,15 @@ export function SubsidySearch({ subsidies }: SubsidySearchProps) {
           },
         }}
       >
+        {/* 戻るボタン */}
+        <Box>
+          <Button
+            startIcon={<ArrowBackIosNewOutlined />}
+            onClick={() => router.back()}
+          >
+            Back
+          </Button>
+        </Box>
         {/* この画面で何をするのかを示す文章 */}
         <Stack
           alignItems={isSmallScreen ? 'center' : 'baseline'}
