@@ -1,4 +1,11 @@
-import { Container, useTheme, Button, Box, Stack } from '@mui/material'
+import {
+  Container,
+  useTheme,
+  Button,
+  Box,
+  Stack,
+  Typography,
+} from '@mui/material'
 import { ArrowBackIosNewOutlined } from '@mui/icons-material'
 import {
   Header,
@@ -9,6 +16,7 @@ import {
 import React, { Suspense } from 'react'
 import { useRouter } from 'next/router'
 import { ErrorBoundaryClass, QuestionsBySubsidyId } from '@/src/utils'
+import useMediaQuery from '@mui/material/useMediaQuery'
 
 type QuestionAndAnswerProps = {
   fetchedQuestions: QuestionsBySubsidyId
@@ -19,6 +27,7 @@ export function QuestionAndAnswer({
 }: QuestionAndAnswerProps) {
   const router = useRouter()
   const theme = useTheme()
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'))
 
   return (
     <Stack>
@@ -43,6 +52,43 @@ export function QuestionAndAnswer({
           },
         }}
       >
+        {/* 戻るボタン */}
+        <Box>
+          <Button
+            startIcon={<ArrowBackIosNewOutlined />}
+            onClick={() => router.back()}
+          >
+            Back
+          </Button>
+        </Box>
+        {/* この画面で何をするのかを示す文章 */}
+        <Stack
+          alignItems={isSmallScreen ? 'center' : 'baseline'}
+          direction={isSmallScreen ? 'column' : 'row'}
+          justifyContent={'center'}
+          sx={{
+            fontSize: {
+              xs: '1.125rem',
+              sm: '1.25rem',
+            },
+            paddingBottom: {
+              xs: theme.spacing(3),
+              sm: theme.spacing(5),
+            },
+          }}
+        >
+          <Typography
+            component={'div'}
+            fontWeight={'bold'}
+            fontSize={{ xs: '1.5rem', sm: '1.75rem' }}
+            sx={{ color: theme.palette.primary.main }}
+          >
+            {`回答`}
+          </Typography>
+          <Typography component={'div'} fontSize={'inherit'}>
+            {`してください`}
+          </Typography>
+        </Stack>
         <Stack
           direction={'column'}
           justifyContent="flex-start"
@@ -50,16 +96,6 @@ export function QuestionAndAnswer({
           minHeight={`calc(100vh - ${theme.spacing(8)})`}
           spacing={{ xs: 4, md: 8 }}
         >
-          {/* 戻るボタン */}
-          <Box>
-            <Button
-              startIcon={<ArrowBackIosNewOutlined />}
-              onClick={() => router.back()}
-            >
-              Back
-            </Button>
-          </Box>
-
           {/* ステッパー */}
           <Suspense fallback={<Skeleton />}>
             <ErrorBoundaryClass>
