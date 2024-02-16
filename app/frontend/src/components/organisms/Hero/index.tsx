@@ -9,7 +9,7 @@ import {
 import DoubleArrowIcon from '@mui/icons-material/DoubleArrow'
 import React from 'react'
 import Link from 'next/link'
-import useMediaQuery from '@mui/material/useMediaQuery';
+import useMediaQuery from '@mui/material/useMediaQuery'
 
 export function Hero() {
   const theme = useTheme()
@@ -39,9 +39,13 @@ export function Hero() {
           </Typography>
           {/* 副見出し */}
           <Typography
-            style={{ whiteSpace: 'pre-line', wordBreak: 'normal', overflowWrap: 'anywhere' }}
+            style={{
+              whiteSpace: 'pre-line',
+              wordBreak: 'normal',
+              overflowWrap: 'anywhere',
+            }}
             variant="subtitle2"
-            align='center'
+            align="center"
             sx={{
               fontSize: {
                 xs: '1rem',
@@ -50,7 +54,9 @@ export function Hero() {
               },
             }}
           >
-            {isSmallScreen ? `受給できそうな助成金・給付金が\n一問一答で分かるサイト` : `受給できそうな助成金・給付金が一問一答で分かるサイト`}
+            {isSmallScreen
+              ? `受給できそうな助成金・給付金が\n一問一答で分かるサイト`
+              : `受給できそうな助成金・給付金が一問一答で分かるサイト`}
           </Typography>
         </Stack>
         {/* CTA */}
