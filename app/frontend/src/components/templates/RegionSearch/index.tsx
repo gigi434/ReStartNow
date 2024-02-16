@@ -7,8 +7,19 @@ import {
   Copyright,
   LinkText,
 } from '@/src/components'
-import { Container, Grid, Stack, Typography, useTheme } from '@mui/material'
+import {
+  Box,
+  Button,
+  Container,
+  Grid,
+  Stack,
+  Typography,
+  useTheme,
+} from '@mui/material'
+import { ArrowBackIosNewOutlined } from '@mui/icons-material'
 import { Municipality, Prefecture } from '@prisma/client'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import { useRouter } from 'next/router'
 
 type RegionSearchProps = {
   prefectures: Prefecture[]
@@ -20,6 +31,8 @@ export function RegionSearch({
   municipalities,
 }: RegionSearchProps) {
   const theme = useTheme()
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'))
+  const router = useRouter()
   return (
     <Stack>
       <Header />
@@ -41,6 +54,43 @@ export function RegionSearch({
           },
         }}
       >
+        {/* 戻るボタン */}
+        <Box>
+          <Button
+            startIcon={<ArrowBackIosNewOutlined />}
+            onClick={() => router.back()}
+          >
+            Back
+          </Button>
+        </Box>
+        {/* この画面で何をするのかを示す文章 */}
+        <Stack
+          alignItems={isSmallScreen ? 'center' : 'baseline'}
+          direction={isSmallScreen ? 'column' : 'row'}
+          justifyContent={'center'}
+          sx={{
+            fontSize: {
+              xs: '1.125rem',
+              sm: '1.25rem',
+            },
+            paddingBottom: {
+              xs: theme.spacing(3),
+              sm: theme.spacing(5),
+            },
+          }}
+        >
+          <Typography
+            component={'div'}
+            fontWeight={'bold'}
+            fontSize={{ xs: '1.5rem', sm: '1.75rem' }}
+            sx={{ color: theme.palette.primary.main }}
+          >
+            {`市町区村`}
+          </Typography>
+          <Typography component={'div'} fontSize={'inherit'}>
+            {`を選択してください`}
+          </Typography>
+        </Stack>
         <Grid
           container
           direction="row"
