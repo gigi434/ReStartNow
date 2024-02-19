@@ -18,6 +18,7 @@ import {
 } from '@/src/utils/queries'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
+import { ErrorCode } from '@/src/lib/error/errorCodes'
 
 type HorizontalLinearStepperProps = {
   fetchedQuestions: QuestionsBySubsidyId
@@ -77,14 +78,15 @@ export function HorizontalLinearStepper({
           acc[key] = true
         } else if (value === 'false') {
           acc[key] = false
-        } else if (typeof value === 'string' &&/^\d+$/.test(value)) { // 正規表現で数値のみの文字列をチェック
-          acc[key] = Number(value); // 数値の文字列を数値に変換
+        } else if (typeof value === 'string' && /^\d+$/.test(value)) {
+          // 正規表現で数値のみの文字列をチェック
+          acc[key] = Number(value) // 数値の文字列を数値に変換
         } else {
           acc[key] = value
         }
         return acc
       },
-      {} as { [key: string]: string | boolean | number}
+      {} as { [key: string]: string | boolean | number }
     )
 
     try {
@@ -96,6 +98,7 @@ export function HorizontalLinearStepper({
       handleNext() // ステップを進める
     } catch (error) {
       console.error(error)
+      throw new Error(ErrorCode.InvalidGrantRequest)
     }
   }
 
@@ -120,12 +123,15 @@ export function HorizontalLinearStepper({
           <Typography>
             質問作成の参照先:{' '}
             <Link href={relatedLink} passHref legacyBehavior>
-              <MuiLink
-                target="_brank"
-                rel="noopener"
-              >
+              <MuiLink target="_brank" rel="noopener">
                 {/* 禁則処置を考慮しながらもコンテンツボックスからあふれる場合に、ブラウザーが改行を挿入する */}
-                <Typography style={{ whiteSpace: 'pre-line', wordBreak: 'normal', overflowWrap: 'anywhere' }}>
+                <Typography
+                  style={{
+                    whiteSpace: 'pre-line',
+                    wordBreak: 'normal',
+                    overflowWrap: 'anywhere',
+                  }}
+                >
                   {relatedLink}
                 </Typography>
               </MuiLink>
@@ -136,7 +142,9 @@ export function HorizontalLinearStepper({
         <Box minHeight={theme.spacing(23)}>
           {/* 質問文 */}
           <Box minHeight={theme.spacing(12)}>
-            <Typography variant="body1" gutterBottom>{questions[activeStep].text}</Typography>
+            <Typography variant="body1" gutterBottom>
+              {questions[activeStep].text}
+            </Typography>
           </Box>
           {/* 回答種類が論理型であるならはいかいいえの二択を表示し、数値型ならインプット要素を表示する */}
           {/* 注意：論理型のvalue属性を文字列型ではなく論理型にして格納するといいえボタンをクリックしても反応しなくなるため、 送信する際に値を文字列から論理型にする*/}
