@@ -96,7 +96,7 @@ export function HorizontalLinearStepper({
         subsidyId: Number(router.query.subsidyId),
       })
       setGrantAmount(data?.amount)
-      if (activeStep < questions.length - 1) handleNext() // ステップを進める
+      if (activeStep <= questions.length) handleNext() // ステップを進める
     } catch (err) {
       throw new Error(ErrorCode.InvalidGrantRequest)
     }
