@@ -8,6 +8,7 @@ import {
   fetchAllSubsidies,
   fetchQuestionsBySubsidyId,
 } from '@/src/utils/queries'
+import { ErrorCode } from '@/src/lib/error'
 
 type PageProps = {
   fetchedQuestions: QuestionsBySubsidyId
@@ -33,7 +34,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
     return { paths, fallback: false }
   } catch (err) {
-    throw new Error('Questions fetching is occurred')
+    throw new Error(ErrorCode.QuestionsFetchingError)
   }
 }
 
@@ -46,6 +47,6 @@ export const getStaticProps: GetStaticProps = async (context) => {
     props: {
       fetchedQuestions: fetchedQuestions,
     },
-    revalidate: 60
+    revalidate: 60,
   }
 }

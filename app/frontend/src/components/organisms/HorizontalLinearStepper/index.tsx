@@ -18,7 +18,7 @@ import {
 } from '@/src/utils/queries'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-import { ErrorCode } from '@/src/lib/error/errorCodes'
+import { ErrorCode } from '@/src/lib/error'
 import * as Sentry from '@sentry/nextjs'
 
 type HorizontalLinearStepperProps = {
@@ -96,9 +96,9 @@ export function HorizontalLinearStepper({
         subsidyId: Number(router.query.subsidyId),
       })
       setGrantAmount(data?.amount)
-      handleNext() // ステップを進める
-    } catch (error) {
-      Sentry.captureException(error)
+      if (activeStep < questions.length - 1) handleNext() // ステップを進める
+    } catch (err) {
+      throw new Error(ErrorCode.InvalidGrantRequest)
     }
   }
 
