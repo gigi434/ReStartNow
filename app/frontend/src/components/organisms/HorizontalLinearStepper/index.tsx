@@ -90,13 +90,13 @@ export function HorizontalLinearStepper({
       {} as { [key: string]: string | boolean | number }
     )
 
+    if (activeStep < questions.length) handleNext() // ステップを進める
     try {
       const data = await postResultByQuestions({
         answers: convertedAnswers,
         subsidyId: Number(router.query.subsidyId),
       })
       setGrantAmount(data?.amount)
-      if (activeStep < questions.length) handleNext() // ステップを進める
     } catch (err) {
       throw new Error(ErrorCode.InvalidGrantRequest)
     }
