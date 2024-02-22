@@ -96,7 +96,7 @@ export function HorizontalLinearStepper({
         subsidyId: Number(router.query.subsidyId),
       })
       setGrantAmount(data?.amount)
-      if (activeStep <= questions.length) handleNext() // ステップを進める
+      if (activeStep < questions.length) handleNext() // ステップを進める
     } catch (err) {
       throw new Error(ErrorCode.InvalidGrantRequest)
     }
@@ -194,7 +194,7 @@ export function HorizontalLinearStepper({
       )}
       <Box>
         {/* 質問事項があれば戻るボタンと次へボタンを表示する */}
-        {activeStep !== questions.length ? (
+        {activeStep < questions.length ? (
           <Stack spacing={2} direction="row" justifyContent="space-between">
             <Stack spacing={2} direction="row">
               {/* 戻るボタン */}
@@ -208,7 +208,8 @@ export function HorizontalLinearStepper({
               </Button>
               <Button
                 disabled={
-                  answers[questions[activeStep].propertyName] === undefined
+                  answers[questions[activeStep].propertyName] === undefined ||
+                  activeStep >= questions.length
                 }
                 variant={'contained'}
                 onClick={
