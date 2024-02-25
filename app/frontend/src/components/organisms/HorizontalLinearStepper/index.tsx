@@ -10,6 +10,7 @@ import {
   Box,
   useTheme,
   Link as MuiLink,
+  CircularProgress,
 } from '@mui/material'
 import { ProgressBar } from '@/src/components'
 import {
@@ -19,7 +20,7 @@ import {
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { ErrorCode } from '@/src/lib/error'
-import * as Sentry from '@sentry/nextjs'
+import { usePostResult } from '@/src/utils'
 
 type HorizontalLinearStepperProps = {
   fetchedQuestions: QuestionsBySubsidyId
@@ -38,6 +39,7 @@ export function HorizontalLinearStepper({
   const [grantAmount, setGrantAmount] = React.useState<
     number | boolean | null
   >()
+  const postResultMutation = usePostResult()
 
   if (questions.length === 0) {
     throw new Error('questions fetching error is occured')
@@ -92,11 +94,11 @@ export function HorizontalLinearStepper({
 
     if (activeStep < questions.length) handleNext() // ステップを進める
     try {
-      const data = await postResultByQuestions({
+      const data = await postResultMutation.mutateAsync({
         answers: convertedAnswers,
         subsidyId: Number(router.query.subsidyId),
       })
-      setGrantAmount(data?.amount)
+      setGrantAmount(data.amount)
     } catch (err) {
       throw new Error(ErrorCode.InvalidGrantRequest)
     }
@@ -108,36 +110,38 @@ export function HorizontalLinearStepper({
       <ProgressBar progress={progress} />
       {/* 質問事項がなければ結果を表示する */}
       {activeStep === questions.length ? (
-        <Box minHeight={theme.spacing(23)}>
-          {/* 受給資格がなければないことを表示し、あれば受給金額を表示する */}
-          <Typography>
-            {typeof grantAmount === 'boolean' ||
-            grantAmount === null ||
-            grantAmount === undefined
-              ? '受給資格がありません'
-              : `受給できそうな金額： ${new Intl.NumberFormat('ja-JP', {
-                  style: 'currency',
-                  currency: 'JPY',
-                }).format(grantAmount)}`}
-          </Typography>
-          <Typography>
-            質問作成の参照先:{' '}
-            <Link href={relatedLink} passHref legacyBehavior>
-              <MuiLink target="_brank" rel="noopener">
-                {/* 禁則処置を考慮しながらもコンテンツボックスからあふれる場合に、ブラウザーが改行を挿入する */}
-                <Typography
-                  style={{
-                    whiteSpace: 'pre-line',
-                    wordBreak: 'normal',
-                    overflowWrap: 'anywhere',
-                  }}
-                >
-                  {relatedLink}
-                </Typography>
-              </MuiLink>
-            </Link>
-          </Typography>
-        </Box>
+        postResultMutation.isPending ? (
+          <CircularProgress />
+        ) : (
+          <Box minHeight={theme.spacing(23)}>
+            {/* 受給資格がなければないことを表示し、あれば受給金額を表示する */}
+            <Typography>
+              {typeof grantAmount === 'number'
+                ? `受給できそうな金額： ${new Intl.NumberFormat('ja-JP', {
+                    style: 'currency',
+                    currency: 'JPY',
+                  }).format(grantAmount)}`
+                : '受給資格がありません'}
+            </Typography>
+            <Typography>
+              質問作成の参照先:{' '}
+              <Link href={relatedLink} passHref legacyBehavior>
+                <MuiLink target="_brank" rel="noopener">
+                  {/* 禁則処置を考慮しながらもコンテンツボックスからあふれる場合に、ブラウザーが改行を挿入する */}
+                  <Typography
+                    style={{
+                      whiteSpace: 'pre-line',
+                      wordBreak: 'normal',
+                      overflowWrap: 'anywhere',
+                    }}
+                  >
+                    {relatedLink}
+                  </Typography>
+                </MuiLink>
+              </Link>
+            </Typography>
+          </Box>
+        )
       ) : (
         <Box minHeight={theme.spacing(23)}>
           {/* 質問文 */}
