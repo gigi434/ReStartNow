@@ -1,5 +1,6 @@
 import axios, { AxiosError } from 'axios'
 import type { Answer } from '@prisma/client'
+import { useMutation } from '@tanstack/react-query'
 
 type PostResultByQuestionsResult = Pick<Answer, 'answers'> & {
   subsidyId: number
@@ -31,4 +32,12 @@ export async function postResultByQuestions({
     }
     return { amount: null }
   }
+}
+
+export function usePostResult() {
+  return useMutation({
+    mutationKey: ['result'],
+    mutationFn: (arg: PostResultByQuestionsResult) =>
+      postResultByQuestions(arg),
+  })
 }
