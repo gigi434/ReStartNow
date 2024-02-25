@@ -13,10 +13,7 @@ import {
   CircularProgress,
 } from '@mui/material'
 import { ProgressBar } from '@/src/components'
-import {
-  QuestionsBySubsidyId,
-  postResultByQuestions,
-} from '@/src/utils/queries'
+import { QuestionsBySubsidyId } from '@/src/utils/queries'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { ErrorCode } from '@/src/lib/error'
@@ -104,97 +101,116 @@ export function HorizontalLinearStepper({
     }
   }
 
+  const BooleanQuestion = () => (
+    <RadioGroup
+      aria-label={`question-${questions[activeStep].propertyName}`}
+      name={`question-${questions[activeStep].propertyName}`}
+      value={answers[questions[activeStep].propertyName] || ''}
+      onChange={handleChange}
+    >
+      <FormControlLabel value="true" control={<Radio />} label="はい" />
+      <FormControlLabel value="false" control={<Radio />} label="いいえ" />
+    </RadioGroup>
+  )
+
+  const NumberQuestion = () => (
+    <TextField
+      id={`question-${questions[activeStep].propertyName}`}
+      type="number"
+      value={answers[questions[activeStep].propertyName] || ''}
+      onChange={handleChange}
+    />
+  )
+
+  const QuestionsDisplay = () => {
+    return (
+      <Box minHeight={theme.spacing(23)}>
+        <Box minHeight={theme.spacing(12)}>
+          <Typography variant="body1" gutterBottom>
+            {questions[activeStep].text}
+          </Typography>
+        </Box>
+        {/* 回答種類に応じた表示 */}
+        {questions[activeStep].answerType === 'CHOICE' && (
+          <RadioGroup
+            aria-label={`question-${questions[activeStep].propertyName}`}
+            name={`question-${questions[activeStep].propertyName}`}
+            value={answers[questions[activeStep].propertyName] || ''}
+            onChange={handleChange}
+          >
+            {questions[activeStep].questionChoice.map((choiceItem) => (
+              <FormControlLabel
+                key={choiceItem.choiceId}
+                value={choiceItem.choice.value}
+                control={<Radio />}
+                label={choiceItem.choice.text}
+              />
+            ))}
+          </RadioGroup>
+        )}
+        {questions[activeStep].answerType === 'BOOLEAN' && <BooleanQuestion />}
+        {questions[activeStep].answerType === 'NUMBER' && <NumberQuestion />}
+      </Box>
+    )
+  }
+  // 結果表示コンポーネント
+  const ResultDisplay = () => {
+    if (postResultMutation.isPending) {
+      return (
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          minHeight={theme.spacing(23)}
+        >
+          <CircularProgress />
+        </Box>
+      )
+    } else {
+      return (
+        <Box minHeight={theme.spacing(23)}>
+          <Typography>
+            {typeof grantAmount === 'number'
+              ? `受給できそうな金額： ${new Intl.NumberFormat('ja-JP', {
+                  style: 'currency',
+                  currency: 'JPY',
+                }).format(grantAmount)}`
+              : '受給資格がありません'}
+          </Typography>
+          <Typography>
+            質問作成の参照先: <MuiLinkComponent link={relatedLink} />
+          </Typography>
+        </Box>
+      )
+    }
+  }
+
+  // Link コンポーネントのラップ
+  const MuiLinkComponent = ({ link }: { link: string }) => (
+    <Link href={link} passHref legacyBehavior>
+      <MuiLink target="_blank" rel="noopener">
+        <Typography
+          style={{
+            whiteSpace: 'pre-line',
+            wordBreak: 'normal',
+            overflowWrap: 'anywhere',
+          }}
+        >
+          {link}
+        </Typography>
+      </MuiLink>
+    </Link>
+  )
+
   return (
     <Stack spacing={5}>
       {/* プログレスバー */}
       <ProgressBar progress={progress} />
       {/* 質問事項がなければ結果を表示する */}
       {activeStep === questions.length ? (
-        postResultMutation.isPending ? (
-          <CircularProgress />
-        ) : (
-          <Box minHeight={theme.spacing(23)}>
-            {/* 受給資格がなければないことを表示し、あれば受給金額を表示する */}
-            <Typography>
-              {typeof grantAmount === 'number'
-                ? `受給できそうな金額： ${new Intl.NumberFormat('ja-JP', {
-                    style: 'currency',
-                    currency: 'JPY',
-                  }).format(grantAmount)}`
-                : '受給資格がありません'}
-            </Typography>
-            <Typography>
-              質問作成の参照先:{' '}
-              <Link href={relatedLink} passHref legacyBehavior>
-                <MuiLink target="_brank" rel="noopener">
-                  {/* 禁則処置を考慮しながらもコンテンツボックスからあふれる場合に、ブラウザーが改行を挿入する */}
-                  <Typography
-                    style={{
-                      whiteSpace: 'pre-line',
-                      wordBreak: 'normal',
-                      overflowWrap: 'anywhere',
-                    }}
-                  >
-                    {relatedLink}
-                  </Typography>
-                </MuiLink>
-              </Link>
-            </Typography>
-          </Box>
-        )
+        <ResultDisplay />
       ) : (
-        <Box minHeight={theme.spacing(23)}>
-          {/* 質問文 */}
-          <Box minHeight={theme.spacing(12)}>
-            <Typography variant="body1" gutterBottom>
-              {questions[activeStep].text}
-            </Typography>
-          </Box>
-          {/* 回答種類が論理型であるならはいかいいえの二択を表示し、数値型ならインプット要素を表示する */}
-          {/* 注意：論理型のvalue属性を文字列型ではなく論理型にして格納するといいえボタンをクリックしても反応しなくなるため、 送信する際に値を文字列から論理型にする*/}
-          {questions[activeStep].answerType === 'CHOICE' ? (
-            <RadioGroup
-              aria-label={`question-${questions[activeStep].propertyName}`}
-              name={`question-${questions[activeStep].propertyName}`}
-              value={answers[questions[activeStep].propertyName] || ''}
-              onChange={handleChange}
-            >
-              {questions[activeStep].questionChoice.map((choiceItem) => (
-                <FormControlLabel
-                  key={choiceItem.choiceId}
-                  value={choiceItem.choice.value}
-                  control={<Radio />}
-                  label={choiceItem.choice.text}
-                />
-              ))}
-            </RadioGroup>
-          ) : questions[activeStep].answerType === 'BOOLEAN' ? (
-            <RadioGroup
-              aria-label={`question-${questions[activeStep].propertyName}`}
-              name={`question-${questions[activeStep].propertyName}`}
-              value={answers[questions[activeStep].propertyName] || ''}
-              onChange={handleChange}
-            >
-              <FormControlLabel
-                value={'true'}
-                control={<Radio />}
-                label="はい"
-              />
-              <FormControlLabel
-                value={'false'}
-                control={<Radio />}
-                label="いいえ"
-              />
-            </RadioGroup>
-          ) : (
-            <TextField
-              id={`question-${questions[activeStep].propertyName}`}
-              type="number"
-              value={answers[questions[activeStep].propertyName] || ''}
-              onChange={handleChange}
-            />
-          )}
-        </Box>
+        <QuestionsDisplay />
       )}
       <Box>
         {/* 質問事項があれば戻るボタンと次へボタンを表示する */}
