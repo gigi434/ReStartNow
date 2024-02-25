@@ -1,5 +1,6 @@
 import React, { Component, ReactNode } from 'react'
 import { Button, Typography, Card, CardContent, Collapse } from '@mui/material'
+import * as Sentry from '@sentry/nextjs'
 
 type ErrorBoundaryProps = {
   children: ReactNode
@@ -35,6 +36,11 @@ export class ErrorBoundaryClass extends Component<
    */
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
     // You can use your own error logging service here
+    Sentry.withScope((scope) => {
+      // ErrorInfoオブジェクトを文字列型からインデックス型として適切な型に変換する
+      scope.setExtras({ componentStack: errorInfo.componentStack })
+      Sentry.captureException(error)
+    })
     this.setState({ errorInfo })
   }
 

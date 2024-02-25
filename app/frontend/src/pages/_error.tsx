@@ -1,4 +1,5 @@
 import { NextPage, NextPageContext } from 'next'
+import * as Sentry from '@sentry/nextjs'
 import Error from 'next/error'
 import React from 'react'
 
@@ -14,8 +15,13 @@ const ErrorPage: NextPage<Props> = ({ statusCode }) => {
   )
 }
 
-ErrorPage.getInitialProps = ({ res, err }: NextPageContext) => {
-  const statusCode = res ? res.statusCode : err ? err.statusCode : 404
+ErrorPage.getInitialProps = async (ctx: NextPageContext) => {
+  await Sentry.captureUnderscoreErrorException(ctx)
+  const statusCode = ctx.res
+    ? ctx.res.statusCode
+    : ctx.err
+    ? ctx.err.statusCode
+    : 404
   return { statusCode }
 }
 

@@ -7,7 +7,7 @@
   "files.autoSave": "onFocusChange",
   // ファイル保存時にESLintによる自動フォーマットを実行するか
   "editor.codeActionsOnSave": {
-    "source.fixAll": true
+    "source.fixAll": "explicit"
   },
   /** エラー回避のため導入した
   @see https://github.com/prettier/prettier-vscode/issues/3000#issuecomment-1547290873 */

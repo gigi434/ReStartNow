@@ -19,6 +19,9 @@ export const mockPostAnswers = rest.post<BodyType>(
       const { isResidency, haveChildcareInterview, havePregnancyInterview } =
         (await req.json()) as BodyType
 
+      // 2秒遅延させる
+      await new Promise((resolve) => setTimeout(resolve, 2000))
+
       // 住民票がなければ受給要件に合致しない
       if (isResidency !== true) {
         return await res(ctx.json({ amount: false }))
