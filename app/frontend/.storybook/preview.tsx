@@ -8,22 +8,11 @@ import { CssBaseline, ThemeProvider } from '@mui/material'
 import { withThemeFromJSXProvider } from '@storybook/addon-styling'
 import { lightTheme, darkTheme } from './themes'
 import { initialize, mswLoader } from 'msw-storybook-addon'
-import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
-import { store } from '../src/store'
-import { Provider } from 'react-redux'
 import React from 'react'
 import { handlers } from '../mocks/handlers'
-import { ErrorBoundaryClass } from '../src/utils/error'
+import { AppProvider } from '../src/providers'
 
 initialize()
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      suspense: true,
-    },
-  },
-})
 
 const preview: Preview = {
   parameters: {
@@ -44,12 +33,9 @@ const preview: Preview = {
       const theme = context.globals.theme === 'dark' ? darkTheme : lightTheme
       return (
         <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <Provider store={store}>
-            <QueryClientProvider client={queryClient}>
-              <Story />
-            </QueryClientProvider>
-          </Provider>
+          <AppProvider>
+            <Story />
+          </AppProvider>
         </ThemeProvider>
       )
     },
@@ -73,9 +59,3 @@ export const decorators = [
     GlobalStyles: CssBaseline,
   }),
 ]
-
-export const parameters = {
-  nextjs: {
-    appDirectory: true,
-  },
-}
