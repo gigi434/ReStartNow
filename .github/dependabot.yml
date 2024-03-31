@@ -1,0 +1,16 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/app/backend"
+    schedule:
+      interval: "daily"
+    labels:
+      - "npm dependencies for backend"
+    target-branch: "develop"
+  - package-ecosystem: "npm"
+    directory: "/app/frontend"
+    schedule:
+      interval: "daily"
+    labels:
+      - "npm dependencies for frontend"
+    target-branch: "develop"
