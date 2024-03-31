@@ -1,0 +1,92 @@
+# バージョンタグの名前を指定するテンプレートです。
+# $RESOLVED_VERSIONは実際のバージョン番号に置き換えられます。
+# 例えば、v1.2.3 🌈といった形式でタグ名を作成します。
+name-template: 'v$RESOLVED_VERSION 🌈'
+# バージョンタグの形式を指定するテンプレートです。
+# $RESOLVED_VERSIONが実際のバージョン番号に置き換えられます。
+# 例えば、v1.2.3といった形式でタグを作成します。
+tag-template: 'v$RESOLVED_VERSION'
+
+# リリースノートのカテゴリを定義します。
+# 各カテゴリには対応するラベルが設定されています。
+# 例えば、featureラベルは「🚀 Features」カテゴリに対応しています。
+categories:
+  - title: '🚀 Features'
+    labels:
+      - 'feature'
+  - title: '💪 Enhancement'
+    labels:
+      - 'enhancement'
+  - title: '🐛 Bug Fixes'
+    labels:
+      - 'fix'
+      - 'bugfix'
+      - 'bug'
+  - title: '🧰 Maintenance'
+    label: 'chore'
+  - title: '🔧 Refactoring'
+    label: 'refactor'
+  - title: '📖 Documentation'
+    label: 'documentation'
+  - title: '⛓️ Dependency update'
+    label: 'dependencies'
+
+# 各変更のフォーマットを指定します。
+# $TITLE、$AUTHOR、$NUMBERは実際の変更のタイトル、作者、プルリクエスト番号に置き換えられます。
+change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
+
+# タイトル内のエスケープ文字を指定します。
+# 例えば、\<*_&は<, *, _, &をエスケープします。
+change-title-escapes: '\<*_&' # You can add # and @ to disable mentions, and add ` to disable code blocks.
+
+# プルリクエストのラベルに基づいてどのバージョン番号を繰り上げるか決定する
+# major、minor、patchの各セクションで、対応するラベルを指定しています。
+version-resolver:
+  major:
+    labels:
+      - 'major'
+  minor:
+    labels:
+      - 'minor'
+  patch:
+    labels:
+      - 'patch'
+  default: patch
+
+# リリースノートのテンプレートを指定します。$CHANGESは実際の変更内容に置き換えられます。
+template: |
+  ## Changes
+
+  $CHANGES
+
+# 自動ラベル付けの設定です。ブランチ名やファイル名に基づいてラベルを自動的に付けることができます。
+# 例えば、nextjsラベルはsrc/**/*やpackage.jsonなどのファイルに変更があった場合に自動的に付けられます。
+autolabeler:
+  - label: feature
+    branch:
+      - '/^feat(ure)?[/-].+/'
+  - label: bug
+    branch:
+      - '/^fix[/-].+/'
+  - label: chore
+    branch:
+      - '/^chore[/-].+/'
+  - label: refactor
+    branch:
+      - '/(refactor|refactoring)[/-].+/'
+  - label: documentation
+    branch:
+      - '/doc(umentation)[/-].+/'
+    files:
+      - '*.md'
+  - label: enhancement
+    branch:
+      - '/(enhancement|improve)[/-].+/'
+  - label: docker
+    files:
+      - 'docker/**/*'
+      - 'Dockerfile'
+      - '.dockerignore'
+  - label: github
+    files:
+      - '.github/**/*'
