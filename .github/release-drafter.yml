@@ -8,7 +8,7 @@ name-template: 'v$RESOLVED_VERSION 🌈'
 tag-template: 'v$RESOLVED_VERSION'
 
 # リリースノートのカテゴリを定義します。
-# 各カテゴリには対応するラベルが設定されています。
+# プルリクエストのラベルに基づいて、リリース時に変更が分類されます。
 # 例えば、featureラベルは「🚀 Features」カテゴリに対応しています。
 categories:
   - title: '🚀 Features'
@@ -59,8 +59,8 @@ template: |
 
   $CHANGES
 
-# 自動ラベル付けの設定です。ブランチ名やファイル名に基づいてラベルを自動的に付けることができます。
-# 例えば、nextjsラベルはsrc/**/*やpackage.jsonなどのファイルに変更があった場合に自動的に付けられます。
+# プルリクエスト作成時の自動ラベル付け設定です。ブランチ名やファイル名に基づいてラベルを自動的に付けることができます。
+# 例えば、documentationラベルは.mdファイルに変更があった場合に自動的に付けられます。
 autolabeler:
   - label: feature
     branch:
@@ -90,3 +90,6 @@ autolabeler:
   - label: github
     files:
       - '.github/**/*'
+  - label: dependancies
+    branch:
+      - '/^dependancies[/-].+/'
