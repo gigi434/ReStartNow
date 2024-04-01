@@ -19,7 +19,7 @@
     "@mui/material": "^5.13.1",
     "@prisma/client": "^4.16.1",
     "@reduxjs/toolkit": "^2.2.2",
-    "@sentry/nextjs": "^7.101.1",
+    "@sentry/nextjs": "^7.109.0",
     "@tanstack/react-query": "^5.22.2",
     "@tanstack/react-query-devtools": "^5.24.0",
     "@types/node": "20.1.7",
