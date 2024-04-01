@@ -29,7 +29,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    ".storybook/themes.ts"
+    ".storybook/themes.ts",
+    "./jest.setup.js"
   ],
   "exclude": ["node_modules"]
 }
