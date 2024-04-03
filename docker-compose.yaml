@@ -18,8 +18,8 @@ services:
       # Storybook
       - "6006:6006"
     volumes:
-      - "./app/frontend:/home/node/nextjs"
-      - "frontend_node_modules:/home/node/nextjs/node_modules"
+      - "./app/frontend:/home/node/workspace"
+      - "frontend_node_modules:/home/node/workspace/node_modules"
     tty: true
     stdin_open: true
     
