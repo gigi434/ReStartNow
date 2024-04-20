@@ -8,7 +8,7 @@ import { ErrorBoundaryClass } from '@/src/utils'
 import { store } from '@/src/store'
 import { AxiosErrorHandleProvider } from '@/src/utils'
 import { Analytics } from '@vercel/analytics/react'
-
+import { Snackbars } from '@/src/components'
 type AppProviderProps = {
   children: React.ReactNode
 }
@@ -29,6 +29,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
               {process.env.NODE_ENV !== 'test' && <ReactQueryDevtools />}
               {children}
               <Analytics />
+              <Snackbars />
             </AxiosErrorHandleProvider>
           </QueryClientProvider>
         </ErrorBoundaryClass>

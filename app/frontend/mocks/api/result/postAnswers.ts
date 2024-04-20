@@ -39,5 +39,7 @@ export const mockPostAnswers = rest.post<BodyType>(
       // 妊娠届出時と出生届出時ともに面談を行っていないなら全額受給金額を返す
       return await res(ctx.json({ amount: 100000 }))
     }
+
+    return res(ctx.status(400), ctx.json({ message: 'Missing Resources' }));
   }
 )

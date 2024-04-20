@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios'
 import type { Answer } from '@prisma/client'
 import { useMutation } from '@tanstack/react-query'
-
+import { useSnackbar } from '@/src/hooks'
 type PostResultByQuestionsResult = Pick<Answer, 'answers'> & {
   subsidyId: number
 }
@@ -35,9 +35,16 @@ export async function postResultByQuestions({
 }
 
 export function usePostResult() {
+  const { showSnackbar } = useSnackbar()
   return useMutation({
     mutationKey: ['result'],
     mutationFn: (arg: PostResultByQuestionsResult) =>
       postResultByQuestions(arg),
+    onSuccess: () => {
+      showSnackbar({ message: 'Answer Submitted', severity: 'success' })
+    },
+    onError: () => {
+      showSnackbar({ message: 'Submission Error', severity: 'error' })
+    },
   })
 }

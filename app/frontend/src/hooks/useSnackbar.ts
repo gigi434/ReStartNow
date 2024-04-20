@@ -1,27 +1,36 @@
-// スナックバーを表示させるカスタムフック
+import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import {
+  addNotification,
+  removeNotification,
+  addNotificationProps,
+} from '@/src/slice/notificationSlice'
 import { RootState } from '@/src/store'
-import { show, hide } from '@/src/slice'
-import React from 'react'
+import { AlertColor } from '@mui/material'
 
 export const useSnackbar = () => {
   const dispatch = useDispatch()
-  const snackbar = useSelector((state: RootState) => state.snackbar)
+  const notifications = useSelector(
+    (state: RootState) => state.notifications.notifications
+  )
 
-  /** スナックバーを表示するコールバック関数 */
-  const openSnackbar = (message: string) => {
-    dispatch(show(message))
-  }
-  /** スナックバーを非表示にするコールバック関数 */
-  const closeSnackbar = (
-    event: React.SyntheticEvent | Event,
-    reason?: string
-  ) => {
-    if (reason === 'clickaway') {
-      return
-    }
-    dispatch(hide())
-  }
+  const showSnackbar = useCallback(
+    ({ message, severity }: addNotificationProps) => {
+      dispatch(addNotification({ message, severity }))
+    },
+    [dispatch]
+  )
 
-  return { snackbar, openSnackbar, closeSnackbar }
+  const hideSnackbar = useCallback(
+    (id: number) => {
+      dispatch(removeNotification(id))
+    },
+    [dispatch]
+  )
+
+  return {
+    notifications,
+    showSnackbar,
+    hideSnackbar,
+  }
 }
