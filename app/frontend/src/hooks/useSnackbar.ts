@@ -6,7 +6,6 @@ import {
   addNotificationProps,
 } from '@/src/slice/notificationSlice'
 import { RootState } from '@/src/store'
-import { AlertColor } from '@mui/material'
 
 export const useSnackbar = () => {
   const dispatch = useDispatch()
