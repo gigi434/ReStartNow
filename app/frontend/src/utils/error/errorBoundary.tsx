@@ -64,8 +64,7 @@ export class ErrorBoundaryClass extends Component<
               <CardContent>
                 <details className="error-details">
                   <summary>エラー詳細</summary>
-                  {this.state.errorInfo &&
-                    this.state.errorInfo.componentStack.toString()}
+                  {this.state.errorInfo && this.state.errorInfo.componentStack}
                 </details>
               </CardContent>
             </Collapse>
