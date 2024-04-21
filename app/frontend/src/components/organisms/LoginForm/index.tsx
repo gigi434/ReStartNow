@@ -1,16 +1,6 @@
-import {
-  Stack,
-  TextField,
-  Button,
-  Box,
-  Grid,
-  Link,
-  Snackbar,
-  Alert,
-} from '@mui/material'
+import { Stack, TextField, Button, Box, Grid, Link } from '@mui/material'
 import { useForm, SubmitHandler, Controller } from 'react-hook-form'
 import React from 'react'
-import { useSnackbar } from '@/src/hooks/useSnackbar'
 import axios from 'axios'
 type Inputs = {
   mailAddress: string
@@ -21,7 +11,6 @@ type Inputs = {
  * ログインフォーム
  */
 export function LoginForm() {
-  const { snackbar, openSnackbar, closeSnackbar } = useSnackbar()
   const {
     control,
     handleSubmit,
@@ -60,11 +49,7 @@ export function LoginForm() {
         email: data.mailAddress,
         password: data.password,
       })
-    } catch (error) {
-      openSnackbar(
-        'ログインに失敗しました。メールアドレスかパスワードどちらかが間違えています。'
-      )
-    }
+    } catch (error) {}
   }
 
   return (
@@ -151,18 +136,6 @@ export function LoginForm() {
           </Grid>
         </Stack>
       </Box>
-
-      {/* ログインが失敗した際に表示されるスナックバー */}
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={6000}
-        onClose={closeSnackbar}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-      >
-        <Alert onClose={closeSnackbar} severity="error" sx={{ width: '100%' }}>
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
     </>
   )
 }

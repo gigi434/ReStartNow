@@ -6,13 +6,11 @@ import {
   Button,
   TextField,
   Link,
-  Snackbar,
-  Alert,
 } from '@mui/material'
 import { Divider, PasswordChangeValidationTexts } from '@/src/components'
 import React from 'react'
 import { useForm, Controller, SubmitHandler } from 'react-hook-form'
-import { useSnackbar, usePasswordValidation } from '@/src/hooks'
+import { usePasswordValidation } from '@/src/hooks'
 import axios from 'axios'
 
 // フォームで扱うデータ型を定義します。
@@ -30,7 +28,6 @@ export function PasswordChangeForm() {
     watch,
   } = useForm<Inputs>()
   const watchAll = watch()
-  const { snackbar, openSnackbar, closeSnackbar } = useSnackbar()
   const { isValid, validationResults } = usePasswordValidation(
     watchAll.newPassword
   )
@@ -63,11 +60,7 @@ export function PasswordChangeForm() {
         currentPassword,
         newPassword,
       })
-    } catch (error) {
-      openSnackbar(
-        '認証に失敗しました。メールアドレスかパスワードどちらかが間違えています。'
-      )
-    }
+    } catch (error) {}
   }
 
   return (
@@ -188,17 +181,6 @@ export function PasswordChangeForm() {
           </Stack>
         </Container>
       </section>
-      {/* メールアドレスかパスワードが間違えていた際に表示されるスナックバー */}
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={6000}
-        onClose={closeSnackbar}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-      >
-        <Alert onClose={closeSnackbar} severity="error" sx={{ width: '100%' }}>
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
     </>
   )
 }

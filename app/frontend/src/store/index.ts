@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
 import {
-  snackbarReducer,
+  notificationReducer,
   informationFilterReducer,
   regionReducer,
   subsidySearchReducer,
@@ -8,7 +8,7 @@ import {
 
 export const store = configureStore({
   reducer: {
-    snackbar: snackbarReducer,
+    notifications: notificationReducer,
     informationFilter: informationFilterReducer,
     region: regionReducer,
     subsidySearch: subsidySearchReducer,
