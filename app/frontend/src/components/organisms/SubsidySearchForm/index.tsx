@@ -1,116 +1,123 @@
 import { Stack, TextField, Typography, Autocomplete } from '@mui/material'
 import { useForm, Controller } from 'react-hook-form'
-import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { updateSubsidySearch } from '@/src/slice'
-import { RootState } from '@/src/store'
-import { Subsidy } from '@prisma/client'
+import React, { useState } from 'react'
 import { CustomSubsidy } from '@/src/utils'
+import { useRouter } from 'next/router'
 
-// フォームで扱うデータ型を定義する
 type Inputs = {
-  /** 助成金の名前 */
-  name: string | ''
-  /** 申請先 */
-  applicationAddress: string | ''
-  /** 受給額 */
-  amountReceived: string | ''
-  /** 受給期限 */
-  deadlineForReceipt: number | ''
+  name: string | null
 }
 
 type SubsidySearchFormProps = {
   subsidies: CustomSubsidy[]
 }
 
-/** 助成金の検索フォーム */
 export function SubsidySearchForm({ subsidies }: SubsidySearchFormProps) {
-  const subsidySearch = useSelector((state: RootState) => state.subsidySearch)
-  const dispatch = useDispatch()
+  const router = useRouter()
+  const [inputValue, setInputValue] = useState('')
   const {
     control,
     formState: { errors },
-  } = useForm<Inputs>()
-  // 引数として受け取ったsubsidiesをフラット化する関数
-  function flattenSubsidiesArray(subsidies: CustomSubsidy[]) {
-    return subsidies.map((subsidy) => {
-      const { subsidyName, ...rest } = subsidy
-      return {
-        ...rest,
-        ...subsidyName,
-      }
-    })
+  } = useForm<Inputs>({
+    defaultValues: {
+      name: null,
+    },
+  })
+
+  const onSubsidyChange = (newValue: string | null) => {
+    const newQuery = { ...router.query }
+    // フォームに値がないならクエリパラメータを削除する
+    if (newValue === null || newValue === '') {
+      delete newQuery.subsidyName
+    } else {
+      newQuery.subsidyName = newValue
+    }
+    router.push(
+      {
+        pathname: router.pathname,
+        query: newQuery,
+      },
+      undefined,
+      { shallow: true }
+    )
   }
 
-  const onSubsidyChange = (_prevValue: any, newValue: CustomSubsidy | null) => {
-    dispatch(updateSubsidySearch(newValue))
-  }
-  // データ型に応じて文字列型に変換するコールバック関数
-  const formatOption = (option: any): string => {
-    if (typeof option === 'number') {
-      return option.toString()
+  // フォームに値を入力後エンターキーを押した際に呼ばれるコールバック関数
+  const handleKeyDown = (
+    event: React.KeyboardEvent,
+    filteredOptions: string[]
+  ) => {
+    if (
+      event.key === 'Enter' &&
+      filteredOptions.length > 0 &&
+      !event.defaultPrevented
+    ) {
+      event.preventDefault()
+      // エンターキーを押したら選択肢の一番を選択する
+      onSubsidyChange(filteredOptions[0])
     }
-
-    if (option instanceof Date) {
-      return option.toLocaleDateString()
-    }
-
-    if (typeof option === 'object' && option !== null) {
-      return option.name || '' // ここでオブジェクトのnameプロパティを取得しています。
-    }
-
-    return option || ''
   }
 
-  const renderAutocomplete = (name: keyof Inputs, label: string) => (
-    <Controller
-      key={label}
-      name={name}
-      control={control}
-      render={({ field }) => (
-        <Autocomplete
-          options={Array.from(
-            new Set(
-              flattenSubsidiesArray(subsidies).map((subsidy) =>
-                formatOption(subsidy.name)
-              )
-            )
-          )}
-          value={subsidySearch.subsidy?.subsidyName?.name || null}
-          onChange={(event, newValue) => {
-            const selectedSubsidy = subsidies.find(
-              (subsidy) => subsidy.subsidyName.name === newValue
-            )
-            onSubsidyChange(event, selectedSubsidy || null)
-            field.onChange(newValue)
-          }}
-          getOptionLabel={(option) => formatOption(option)}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label={label}
-              variant="standard"
-              error={errors[name] !== undefined}
-            />
-          )}
-          renderOption={(props, option) => {
-            return (
-              <li {...props} key={formatOption(option)}>
-                {formatOption(option)}
-              </li>
-            )
-          }}
-        />
-      )}
-    />
-  )
+  // 選択肢の中から入力された値の部分一致している選択肢を抽出する
+  const filterOptions = (
+    options: string[],
+    { inputValue }: { inputValue: string }
+  ) => {
+    return options.filter((option) =>
+      option.toLowerCase().includes(inputValue.toLowerCase())
+    )
+  }
 
   return (
-    <Stack component="form" noValidate spacing={3}>
+    <Stack
+      component="form"
+      noValidate
+      spacing={3}
+      onSubmit={(e) => e.preventDefault()}
+    >
       <Typography variant="h6" component="h2">
         助成金検索
       </Typography>
-      {renderAutocomplete('name', '助成金名')}
+      <Controller
+        name="name"
+        control={control}
+        rules={{ required: '助成金名を入力してください' }}
+        render={({ field }) => (
+          <Autocomplete
+            options={subsidies.map((subsidy) => subsidy.subsidyName.name)}
+            value={
+              field.value || router.isReady
+                ? (router.query.subsidyName as string)
+                : null
+            }
+            onChange={(event, newValue) => {
+              onSubsidyChange(newValue)
+              field.onChange(newValue)
+            }}
+            onInputChange={(event, newInputValue) => {
+              setInputValue(newInputValue)
+            }}
+            onKeyDown={(event) => {
+              const filtered = filterOptions(
+                subsidies.map((subsidy) => subsidy.subsidyName.name),
+                { inputValue }
+              )
+              handleKeyDown(event, filtered)
+            }}
+            filterOptions={filterOptions}
+            isOptionEqualToValue={(option, value) => option === value}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="助成金名"
+                variant="standard"
+                error={!!errors.name}
+                helperText={errors.name ? errors.name.message : ''}
+              />
+            )}
+          />
+        )}
+      />
     </Stack>
   )
 }

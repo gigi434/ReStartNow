@@ -3,7 +3,6 @@ import {
   notificationReducer,
   informationFilterReducer,
   regionReducer,
-  subsidySearchReducer,
 } from '@/src/slice'
 
 export const store = configureStore({
@@ -11,7 +10,6 @@ export const store = configureStore({
     notifications: notificationReducer,
     informationFilter: informationFilterReducer,
     region: regionReducer,
-    subsidySearch: subsidySearchReducer,
   },
   devTools: process.env.NODE_ENV !== 'production',
 })
