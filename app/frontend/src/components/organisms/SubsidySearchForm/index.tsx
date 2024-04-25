@@ -27,7 +27,6 @@ export function SubsidySearchForm({ subsidies }: SubsidySearchFormProps) {
   const onSubsidyChange = (subsidy: CustomSubsidy | null) => {
     const newQuery = { ...router.query }
 
-    //
     if (!subsidy) {
       delete newQuery.subsidy
     } else {
