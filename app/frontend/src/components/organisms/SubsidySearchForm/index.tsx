@@ -5,7 +5,7 @@ import { CustomSubsidy } from '@/src/utils'
 import { useRouter } from 'next/router'
 
 type Inputs = {
-  name: string | null
+  subsidy: CustomSubsidy | null
 }
 
 type SubsidySearchFormProps = {
@@ -20,17 +20,18 @@ export function SubsidySearchForm({ subsidies }: SubsidySearchFormProps) {
     formState: { errors },
   } = useForm<Inputs>({
     defaultValues: {
-      name: null,
+      subsidy: null,
     },
   })
 
-  const onSubsidyChange = (newValue: string | null) => {
+  const onSubsidyChange = (subsidy: CustomSubsidy | null) => {
     const newQuery = { ...router.query }
-    // フォームに値がないならクエリパラメータを削除する
-    if (newValue === null || newValue === '') {
-      delete newQuery.subsidyName
+
+    //
+    if (!subsidy) {
+      delete newQuery.subsidy
     } else {
-      newQuery.subsidyName = newValue
+      newQuery.subsidy = subsidy.subsidyName.id.toString()
     }
     router.push(
       {
@@ -42,29 +43,25 @@ export function SubsidySearchForm({ subsidies }: SubsidySearchFormProps) {
     )
   }
 
-  // フォームに値を入力後エンターキーを押した際に呼ばれるコールバック関数
   const handleKeyDown = (
     event: React.KeyboardEvent,
-    filteredOptions: string[]
+    filteredOptions: CustomSubsidy[]
   ) => {
     if (
       event.key === 'Enter' &&
       filteredOptions.length > 0 &&
       !event.defaultPrevented
     ) {
-      event.preventDefault()
-      // エンターキーを押したら選択肢の一番を選択する
       onSubsidyChange(filteredOptions[0])
     }
   }
 
-  // 選択肢の中から入力された値の部分一致している選択肢を抽出する
   const filterOptions = (
-    options: string[],
+    options: CustomSubsidy[],
     { inputValue }: { inputValue: string }
   ) => {
     return options.filter((option) =>
-      option.toLowerCase().includes(inputValue.toLowerCase())
+      option.subsidyName.name.toLowerCase().includes(inputValue.toLowerCase())
     )
   }
 
@@ -79,17 +76,13 @@ export function SubsidySearchForm({ subsidies }: SubsidySearchFormProps) {
         助成金検索
       </Typography>
       <Controller
-        name="name"
+        name="subsidy"
         control={control}
-        rules={{ required: '助成金名を入力してください' }}
         render={({ field }) => (
           <Autocomplete
-            options={subsidies.map((subsidy) => subsidy.subsidyName.name)}
-            value={
-              field.value || router.isReady
-                ? (router.query.subsidyName as string)
-                : null
-            }
+            options={subsidies}
+            getOptionLabel={(option) => option.subsidyName.name}
+            value={field.value}
             onChange={(event, newValue) => {
               onSubsidyChange(newValue)
               field.onChange(newValue)
@@ -98,21 +91,20 @@ export function SubsidySearchForm({ subsidies }: SubsidySearchFormProps) {
               setInputValue(newInputValue)
             }}
             onKeyDown={(event) => {
-              const filtered = filterOptions(
-                subsidies.map((subsidy) => subsidy.subsidyName.name),
-                { inputValue }
-              )
+              const filtered = filterOptions(subsidies, { inputValue })
               handleKeyDown(event, filtered)
             }}
-            filterOptions={filterOptions}
-            isOptionEqualToValue={(option, value) => option === value}
+            filterOptions={(options, state) => filterOptions(options, state)}
+            isOptionEqualToValue={(option, value) =>
+              option?.subsidyName.id === value?.subsidyName.id
+            }
             renderInput={(params) => (
               <TextField
                 {...params}
                 label="助成金名"
                 variant="standard"
-                error={!!errors.name}
-                helperText={errors.name ? errors.name.message : ''}
+                error={!!errors.subsidy}
+                helperText={errors.subsidy ? errors.subsidy.message : ''}
               />
             )}
           />

@@ -1,10 +1,7 @@
 import React from 'react'
-import TableSortLabel from '@mui/material/TableSortLabel'
 import { visuallyHidden } from '@mui/utils'
-import { useTheme } from '@mui/material'
 import { Prisma } from '@prisma/client'
 import Link from 'next/link'
-import { Link as MuiLink } from '@mui/material'
 import { CustomSubsidy } from '@/src/utils'
 import {
   Box,
@@ -16,6 +13,9 @@ import {
   TableHead,
   TableRow,
   TablePagination,
+  Link as MuiLink,
+  TableSortLabel,
+  useTheme,
 } from '@mui/material'
 import { useRouter } from 'next/router'
 
@@ -146,7 +146,7 @@ export function SubsidySearchTable({
   subsidies: CustomSubsidy[]
 }) {
   const router = useRouter()
-  const subsidyNameQuery = router.query.subsidyName as string
+  const subsidyNameQuery = router.query.subsidy as string
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] =
     React.useState<keyof CustomSubsidy>('subsidyName')
@@ -175,7 +175,8 @@ export function SubsidySearchTable({
   }
 
   const filteredSubsidies = subsidies.filter((subsidy) =>
-    subsidy.subsidyName.name
+    subsidy.subsidyName.id
+      .toString()
       .toLowerCase()
       .includes(subsidyNameQuery?.toLowerCase() || '')
   )
