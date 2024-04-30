@@ -5,7 +5,7 @@ import { NotificationMessage } from '@/src/slice'
 import IconButton from '@mui/material/IconButton'
 import CloseIcon from '@mui/icons-material/Close'
 
-type SnackbarProps = {
+export type SnackbarProps = {
   notification: NotificationMessage
   onClose: (id: number) => void
 }
