@@ -1,4 +1,4 @@
-FROM node:18.3.0-slim
+FROM mcr.microsoft.com/devcontainers/typescript-node:20-bullseye
 
 ENV HOME=/home/node
 ENV APP_HOME="$HOME/nestjs"

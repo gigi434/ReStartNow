@@ -77,3 +77,15 @@ export const Error: Story = {
     },
   },
 }
+export const OpenIsFalse: Story = {
+  ...Template,
+  args: {
+    notification: {
+      id: 1,
+      open: false,
+      message:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris hendrerit nisl ac risus sagittis vestibulum.',
+      severity: 'error',
+    },
+  },
+}
