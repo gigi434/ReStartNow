@@ -3,8 +3,8 @@ version: "3"
 services:
   frontend:
     build:
-      context: .
-      dockerfile: docker/frontend/Dockerfile
+      context: ./docker/frontend
+      dockerfile: Dockerfile
     container_name: nextjs_container
     environment:
       - DB_CONTAINER_NAME=${DB_CONTAINER_NAME}
@@ -18,15 +18,16 @@ services:
       # Storybook
       - "6006:6006"
     volumes:
-      - "./app/frontend:/home/node/workspace"
-      - "frontend_node_modules:/home/node/workspace/node_modules"
+      - ".:/home/node/workspace"
+      - "frontend_node_modules:/home/node/workspace/app/frontend/node_modules"
+    working_dir: /home/node/workspace/app/frontend
     tty: true
     stdin_open: true
     
   backend:
     build:
-      context: .
-      dockerfile: docker/backend/Dockerfile
+      context: ./docker/backend
+      dockerfile: Dockerfile
     container_name: nestjs_container
     ports:
       # Nestjs
@@ -45,8 +46,9 @@ services:
       # - REDIS_PORT=${REDIS_PORT}
       # - REDIS_SECRET=${REDIS_SECRET}
     volumes:
-      - "./app/backend:/home/node/nestjs"
-      - "backend_node_modules:/home/node/nestjs/node_modules"
+      - ".:/home/node/workspace"
+      - "backend_node_modules:/home/node/workspace/app/backend/node_modules"
+    working_dir: /home/node/workspace/app/backend
     tty: true
     stdin_open: true
 
