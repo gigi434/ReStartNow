@@ -1,3 +1,8 @@
+/*
+https://redux.js.org/usage/writing-tests#setting-up-a-reusable-test-render-function
+テスト用に使用する再利用可能なredux-provider
+*/
+
 import React, { PropsWithChildren } from 'react'
 import { render, renderHook } from '@testing-library/react'
 import type { RenderOptions } from '@testing-library/react'
@@ -13,6 +18,12 @@ interface ExtendedRenderOptions extends Omit<RenderOptions, 'queries'> {
   store?: AppStore
 }
 
+function createWrapper(store: AppStore) {
+  return function Wrapper({ children }: PropsWithChildren<{}>): JSX.Element {
+    return <Provider store={store}>{children}</Provider>
+  }
+}
+
 export function renderWithProviders(
   ui: React.ReactElement,
   {
@@ -22,27 +33,22 @@ export function renderWithProviders(
     ...renderOptions
   }: ExtendedRenderOptions = {}
 ) {
-  function Wrapper({ children }: PropsWithChildren<{}>): JSX.Element {
-    return <Provider store={store}>{children}</Provider>
+  return {
+    store,
+    ...render(ui, { wrapper: createWrapper(store), ...renderOptions }),
   }
-  return { store, ...render(ui, { wrapper: Wrapper, ...renderOptions }) }
 }
 
 export function renderHookWithProviders<Result, Props>(
   render: (initialProps: Props) => Result,
   {
     preloadedState = {},
-    // Automatically create a store instance if no store was passed in
     store = setupStore(preloadedState),
     ...renderOptions
   }: ExtendedRenderOptions = {}
 ) {
-  function Wrapper({ children }: PropsWithChildren<{}>): JSX.Element {
-    return <Provider store={store}>{children}</Provider>
-  }
-
   return {
     store,
-    ...renderHook(render, { wrapper: Wrapper, ...renderOptions }),
+    ...renderHook(render, { wrapper: createWrapper(store), ...renderOptions }),
   }
 }
