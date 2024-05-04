@@ -3,7 +3,7 @@ import { Provider } from 'react-redux'
 import { NotificationState } from '@/src/slice'
 import { Snackbars } from '@/src/components'
 import type { Meta, StoryObj } from '@storybook/react'
-import { store } from '@/src/store'
+import { setupStore } from '@/src/store'
 
 export const MockedState: NotificationState = {
   notifications: [
@@ -18,6 +18,7 @@ export const MockedState: NotificationState = {
 }
 
 const createMock = (state: NotificationState) => {
+  const store = setupStore()
   return {
     ...store,
     getState: () => ({

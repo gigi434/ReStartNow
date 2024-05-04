@@ -3,7 +3,7 @@ https://redux.js.org/usage/writing-tests#setting-up-a-reusable-test-render-funct
 テスト用に使用する再利用可能なredux-provider
 */
 
-import React, { PropsWithChildren } from 'react'
+import { PropsWithChildren } from 'react'
 import { render, renderHook } from '@testing-library/react'
 import type { RenderOptions } from '@testing-library/react'
 import { Provider } from 'react-redux'
