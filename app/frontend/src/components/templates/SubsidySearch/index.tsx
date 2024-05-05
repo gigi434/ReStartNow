@@ -3,7 +3,7 @@ import {
   Header,
   Footer,
   SubsidySearchForm,
-  CustomTable,
+  SubsidySearchTable,
 } from '@/src/components'
 import {
   Box,
@@ -15,7 +15,6 @@ import {
   useTheme,
 } from '@mui/material'
 import { ErrorBoundaryClass } from '@/src/utils/error'
-import { Subsidy } from '@prisma/client'
 import { CustomSubsidy } from '@/src/utils'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { useRouter } from 'next/router'
@@ -107,7 +106,7 @@ export function SubsidySearch({ subsidies }: SubsidySearchProps) {
               <Typography variant="h6">助成金一覧</Typography>
               {/* 助成金一覧 */}
               <ErrorBoundaryClass>
-                <CustomTable subsidies={subsidies} />
+                <SubsidySearchTable subsidies={subsidies} />
               </ErrorBoundaryClass>
             </Stack>
           </Grid>

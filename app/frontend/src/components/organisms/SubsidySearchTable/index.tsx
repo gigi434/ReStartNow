@@ -1,22 +1,23 @@
 import React from 'react'
-import Box from '@mui/material/Box'
-import Table from '@mui/material/Table'
-import TableBody from '@mui/material/TableBody'
-import TableCell from '@mui/material/TableCell'
-import TableContainer from '@mui/material/TableContainer'
-import TableHead from '@mui/material/TableHead'
-import TablePagination from '@mui/material/TablePagination'
-import TableRow from '@mui/material/TableRow'
-import TableSortLabel from '@mui/material/TableSortLabel'
-import Paper from '@mui/material/Paper'
 import { visuallyHidden } from '@mui/utils'
-import { useTheme } from '@mui/material'
 import { Prisma } from '@prisma/client'
-import { useSelector } from 'react-redux'
-import { RootState } from '@/src/store'
 import Link from 'next/link'
-import { Link as MuiLink } from '@mui/material'
 import { CustomSubsidy } from '@/src/utils'
+import {
+  Box,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TablePagination,
+  Link as MuiLink,
+  TableSortLabel,
+  useTheme,
+} from '@mui/material'
+import { useRouter } from 'next/router'
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -103,25 +104,6 @@ interface EnhancedTableProps {
   orderBy: string
 }
 
-/**
- * 助成金検索フォームにより検索する値を含んだ助成金レコードを表示するためのコールバック関数
- */
-function filterSubsidies(
-  subsidies: CustomSubsidy[],
-  filters: RootState['subsidySearch']
-) {
-  const actualFilterName = filters.subsidy?.subsidyName?.name
-
-  // 助成金の名前だけでフィルタリングする
-  const matchedSubsidiesRecord = subsidies.filter((subsidy) => {
-    return (
-      !actualFilterName || subsidy.subsidyName.name.includes(actualFilterName)
-    )
-  })
-
-  return matchedSubsidiesRecord
-}
-
 function EnhancedTableHead(props: EnhancedTableProps) {
   const theme = useTheme()
   const { onRequestSort, order, orderBy } = props
@@ -158,12 +140,13 @@ function EnhancedTableHead(props: EnhancedTableProps) {
   )
 }
 
-export function CustomTable({
+export function SubsidySearchTable({
   subsidies = [],
 }: {
   subsidies: CustomSubsidy[]
 }) {
-  const subsidySearch = useSelector((state: RootState) => state.subsidySearch)
+  const router = useRouter()
+  const subsidyNameQuery = router.query.subsidy as string
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] =
     React.useState<keyof CustomSubsidy>('subsidyName')
@@ -191,7 +174,12 @@ export function CustomTable({
     setPage(0)
   }
 
-  const filteredSubsidies = filterSubsidies(subsidies, subsidySearch)
+  const filteredSubsidies = subsidies.filter((subsidy) =>
+    subsidy.subsidyName.id
+      .toString()
+      .toLowerCase()
+      .includes(subsidyNameQuery?.toLowerCase() || '')
+  )
 
   const visibleRows = React.useMemo(
     () =>

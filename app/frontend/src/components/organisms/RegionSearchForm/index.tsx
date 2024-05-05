@@ -1,12 +1,10 @@
+import React, { useState, useEffect } from 'react'
 import { Stack, TextField, Autocomplete, Typography } from '@mui/material'
 import { useForm, Controller } from 'react-hook-form'
-import React, { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { setPrefecture, setMunicipality } from '@/src/slice'
-import { RootState } from '@/src/store'
-import { Municipality, Prefecture } from '@prisma/client'
+import { useRouter } from 'next/router'
+import { Prefecture, Municipality } from '@prisma/client'
 
-type Inputs = {
+type ReactHookFormInputs = {
   prefectures: Prefecture | null
   municipalities: Municipality | null
 }
@@ -16,59 +14,96 @@ type RegionSearchFormProps = {
   municipalities: Municipality[]
 }
 
-/**
- * 助成金一覧の表示に対応している助成金が存在する市町区村を検索して表示するテンプレート
- */
 export function RegionSearchForm({
   prefectures,
   municipalities,
 }: RegionSearchFormProps) {
-  const dispatch = useDispatch()
-  const region = useSelector((state: RootState) => state.region)
-
+  const router = useRouter()
   const {
     control,
     setValue,
     formState: { errors },
-  } = useForm<Inputs>()
+  } = useForm<ReactHookFormInputs>({
+    defaultValues: {
+      prefectures: null,
+      municipalities: null,
+    },
+  })
 
-  // 都道府県を選択したときの市区町村の選択肢
-  const [municipalitiesOptions, setMunicipalityOptions] = useState<
+  const [municipalitiesOptions, setMunicipalitiesOptions] = useState<
     Municipality[]
   >([])
 
-  const onPrefectureChange = (_: any, newValue: Prefecture | null) => {
-    const relatedMunicipalities = municipalities.filter(
-      (municipalities) => municipalities.prefectureId === newValue?.id
-    )
-    setMunicipalityOptions(relatedMunicipalities) // 都道府県に値が入力されたときに都道府県に属する市町区村だけをオートコンプリートで表示する
-    setValue('municipalities', null) // 都道府県の値が変更されたときにReactHookFormの市町区村の値を空にする
-    dispatch(setMunicipality(null))
-    dispatch(setPrefecture(newValue))
+  // クエリパラメータを読み込んでフォームに値を設定する
+  useEffect(() => {
+    const queryPrefecture = Number(router.query.prefecture)
+    const queryMunicipality = Number(router.query.municipality)
+
+    const selectedPrefecture = prefectures.find((p) => p.id === queryPrefecture)
+    if (selectedPrefecture) {
+      const filteredMunicipalities = municipalities.filter(
+        (m) => m.prefectureId === selectedPrefecture.id
+      )
+      setMunicipalitiesOptions(filteredMunicipalities)
+      const selectedMunicipality =
+        filteredMunicipalities.find((m) => m.id === queryMunicipality) || null
+      setValue('prefectures', selectedPrefecture)
+      setValue('municipalities', selectedMunicipality)
+    }
+  }, [router.isReady, router.query, municipalities, prefectures, setValue])
+
+  // クエリパラメーターを更新するためのコールバック関数
+  // 例えばパラメーターを削除する際にprefecture=となるため、この関数オブジェクトを呼ぶ
+  function updateRouterQuery(changes: { [key: string]: number | null }) {
+    const newQuery = { ...router.query }
+    Object.entries(changes).forEach(([key, value]) => {
+      if (value === null) {
+        delete newQuery[key]
+      } else {
+        newQuery[key] = value.toString()
+      }
+    })
+
+    router.push({ pathname: router.pathname, query: newQuery }, undefined, {
+      shallow: true,
+    })
   }
 
-  // 市区町村が変更されたときに選択状態を更新する
-  const onMunicipalitiesChange = (_: any, newValue: Municipality | null) => {
-    dispatch(setMunicipality(newValue)) // 市区町村の選択状態を更新
+  const onPrefectureChange = (newValue: Prefecture | null) => {
+    const newMunicipalities = newValue
+      ? municipalities.filter((m) => m.prefectureId === newValue.id)
+      : []
+    setMunicipalitiesOptions(newMunicipalities)
+    setValue('municipalities', null)
+
+    updateRouterQuery({ prefecture: newValue?.id || null, municipality: null })
+  }
+
+  const onMunicipalitiesChange = (newValue: Municipality | null) => {
+    updateRouterQuery({ municipality: newValue?.id || null })
   }
 
   return (
-    <Stack component="form" noValidate spacing={2}>
-      {/* フォームの見出し */}
+    <Stack
+      component="form"
+      noValidate
+      spacing={2}
+      onSubmit={(e) => e.preventDefault()}
+    >
       <Typography variant="h6" component="h2">
         地域検索
       </Typography>
-      {/* 都道府県のインプット */}
       <Controller
         name="prefectures"
         control={control}
         render={({ field }) => (
           <Autocomplete
             options={prefectures}
-            value={region.prefecture} // 都道府県名を設定
-            getOptionLabel={(option) => option.name} // 都道府県名を表示
+            value={field.value}
+            getOptionLabel={(option) => option.name}
+            isOptionEqualToValue={(option, value) => option.id === value?.id}
             onChange={(event, newValue) => {
-              onPrefectureChange(event, newValue)
+              onPrefectureChange(newValue)
               field.onChange(newValue)
             }}
             renderInput={(params) => (
@@ -76,31 +111,24 @@ export function RegionSearchForm({
                 {...params}
                 label="都道府県"
                 variant="standard"
-                error={errors.prefectures !== undefined}
-                helperText={errors.prefectures?.message}
+                error={!!errors.prefectures}
+                helperText={errors.prefectures?.message || ''}
               />
             )}
-            renderOption={(props, option) => {
-              return (
-                <li {...props} key={option.name}>
-                  {option.name}
-                </li>
-              )
-            }}
           />
         )}
       />
-      {/* 市町区村のインプット */}
       <Controller
         name="municipalities"
         control={control}
         render={({ field }) => (
           <Autocomplete
             options={municipalitiesOptions}
-            value={region.municipality} // 内部状態を参照
-            getOptionLabel={(option) => option.name} // 都道府県名を表示
+            value={field.value}
+            getOptionLabel={(option) => option.name}
+            isOptionEqualToValue={(option, value) => option.id === value?.id}
             onChange={(event, newValue) => {
-              onMunicipalitiesChange(event, newValue)
+              onMunicipalitiesChange(newValue)
               field.onChange(newValue)
             }}
             renderInput={(params) => (
@@ -108,17 +136,10 @@ export function RegionSearchForm({
                 {...params}
                 label="市区町村"
                 variant="standard"
-                error={errors.municipalities !== undefined}
-                helperText={errors.municipalities?.message}
+                error={!!errors.municipalities}
+                helperText={errors.municipalities?.message || ''}
               />
             )}
-            renderOption={(props, option) => {
-              return (
-                <li {...props} key={option.name}>
-                  {option.name}
-                </li>
-              )
-            }}
           />
         )}
       />
