@@ -50,6 +50,7 @@
     "@storybook/blocks": "^7.1.1",
     "@storybook/nextjs": "^7.1.1",
     "@storybook/react": "^7.1.1",
+    "@storybook/react-dom-shim": "^8.0.10",
     "@storybook/testing-library": "^0.2.0",
     "@testing-library/jest-dom": "^6.4.2",
     "@testing-library/react": "^14.2.2",
