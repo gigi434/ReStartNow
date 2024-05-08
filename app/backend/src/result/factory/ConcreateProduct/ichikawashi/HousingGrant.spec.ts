@@ -42,8 +42,8 @@ const mockDto: HousingGrantDto = {
   numberOfHouseholdMembers: 1,
   financialAssets: 0,
   isReceivingSimilarSubsidy: true,
-  isNotGangMember: false,
-  isNotReceivingWelfare: false,
+  isNotGangMember: true,
+  isNotReceivingWelfare: true,
   monthlyRent: 30000,
 }
 
