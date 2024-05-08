@@ -7,7 +7,7 @@ import {
 } from '@/src/slice'
 
 const rootReducer = combineReducers({
-  notifications: notificationReducer,
+  notification: notificationReducer,
   informationFilter: informationFilterReducer,
   region: regionReducer,
   subsidySearch: subsidySearchReducer,

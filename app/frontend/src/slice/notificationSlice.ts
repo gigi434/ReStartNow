@@ -8,12 +8,18 @@ export type NotificationMessage = {
   open: boolean
 }
 
+export type NotificationState = {
+  notifications: NotificationMessage[]
+}
+
 export type addNotificationProps = Pick<
   NotificationMessage,
   'message' | 'severity'
 >
 
-const initialState: NotificationMessage[] = []
+const initialState: NotificationState = {
+  notifications: [],
+}
 
 export const notificationSlice = createSlice({
   name: 'notifications',
@@ -26,10 +32,12 @@ export const notificationSlice = createSlice({
         severity: action.payload.severity,
         open: true,
       }
-      state.push(newNotification)
+      state.notifications.push(newNotification)
     },
     removeNotification: (state, action: PayloadAction<number>) => {
-      state = state.filter((notification) => notification.id !== action.payload)
+      state.notifications = state.notifications.filter(
+        (notification) => notification.id !== action.payload
+      )
     },
   },
 })

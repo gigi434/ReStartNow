@@ -9,7 +9,9 @@ import { RootState } from '@/src/store'
 
 export const useSnackbar = () => {
   const dispatch = useDispatch()
-  const notifications = useSelector((state: RootState) => state.notifications)
+  const notifications = useSelector(
+    (state: RootState) => state.notification.notifications
+  )
 
   const showSnackbar = useCallback(
     ({ message, severity }: addNotificationProps) => {
