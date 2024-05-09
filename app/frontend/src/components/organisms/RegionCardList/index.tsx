@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Grid } from '@mui/material'
 import { BasicPagination, LinkCard } from '@/src/components'
-import { useSelector } from 'react-redux'
-import { RootState } from '@/src/store'
+import { useRouter } from 'next/router'
 import type { Municipality } from '@prisma/client'
 
 type RegionCardListProps = {
@@ -10,43 +9,42 @@ type RegionCardListProps = {
 }
 
 export function RegionCardList({ municipalities }: RegionCardListProps) {
-  const region = useSelector((state: RootState) => state.region)
+  const router = useRouter()
   const [page, setPage] = useState(1)
-  const [relatedMunicipalities, setRelatedMunicipalities] =
-    useState<Municipality[]>(municipalities)
-  // 一度に表示するカード一覧表示数
+  const [relatedMunicipalities, setRelatedMunicipalities] = useState<
+    Municipality[]
+  >([])
+  // 一度に表示するカードの数
   const cardsPerPage = 8
-  // 検索条件を加味したカード表示数
+  // ページネーションを計算
   const totalCards = relatedMunicipalities.length
-  // 検索条件を加味したカードページ数
   const totalPages = Math.ceil(totalCards / cardsPerPage)
-  // 現在表示している始まりのカードのインデックス
   const startIndex = (page - 1) * cardsPerPage
-  // 現在表示している終わりのカードのインデックス
   const endIndex = startIndex + cardsPerPage
 
   useEffect(() => {
-    // もし市町区村の検索条件があれば、その市町区村だけを表示する
-    if (region.municipality) {
-      setRelatedMunicipalities(
-        municipalities?.filter(
-          (municipality) => municipality.id === region.municipality?.id
-        ) || []
-      )
-      // もし都道府県の検索条件に値があれば、その値を含む市町区村を表示する
-    } else if (region.prefecture) {
-      setRelatedMunicipalities(
-        municipalities?.filter(
-          (municipality) => municipality.prefectureId === region.prefecture?.id
-        ) || []
-      )
-      // もし検索条件がなければ、すべての市町区村を表示する
-    } else {
-      setRelatedMunicipalities(municipalities || [])
-    }
-  }, [region, municipalities])
+    // クエリパラメータから都道府県IDと市町区村IDを取得
+    const queryPrefecture = Number(router.query.prefecture)
+    const queryMunicipality = Number(router.query.municipality)
 
-  /** ページャーのページ番号を変更するためのコールバック関数 */
+    let filteredMunicipalities = municipalities
+
+    if (queryMunicipality) {
+      // 市町区村IDに基づいてフィルタリング
+      filteredMunicipalities = municipalities.filter(
+        (m) => m.id === queryMunicipality
+      )
+    } else if (queryPrefecture) {
+      // 都道府県IDに基づいてフィルタリング
+      filteredMunicipalities = municipalities.filter(
+        (m) => m.prefectureId === queryPrefecture
+      )
+    }
+
+    setRelatedMunicipalities(filteredMunicipalities)
+  }, [router.isReady, router.query, municipalities])
+
+  // ページ変更ハンドラ
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
     value: number
@@ -66,12 +64,12 @@ export function RegionCardList({ municipalities }: RegionCardListProps) {
       <Grid container spacing={2} sx={{ flexGrow: 1 }} minHeight={'440px'}>
         {relatedMunicipalities
           .slice(startIndex, endIndex)
-          .map((relatedMunicipality) => (
-            <Grid item key={relatedMunicipality.name} xs={6} sm={6} md={3}>
+          .map((municipality) => (
+            <Grid item key={municipality.name} xs={6} sm={6} md={3}>
               <LinkCard
-                image={`${relatedMunicipality.municipalSymbolPath}.png`}
-                title={relatedMunicipality.name}
-                href={`/subsidies/${relatedMunicipality.id}`}
+                image={`${municipality.municipalSymbolPath}.png`}
+                title={municipality.name}
+                href={`/subsidies/${municipality.id}`}
                 clickable={true}
               />
             </Grid>

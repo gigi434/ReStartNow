@@ -21,6 +21,18 @@ const Template: Story = {
 export const Default: Story = {
   ...Template,
 }
+export const SearchInForm: Story = {
+  ...Template,
+  parameters: {
+    nextjs: {
+      router: {
+        pathname: '/subsidies/[municipalityId]',
+        asPath: '/subsidies/603',
+        query: { subsidyName: '住居確保給付金' },
+      },
+    },
+  },
+}
 
 export const FetchedError: Story = {
   ...Template,

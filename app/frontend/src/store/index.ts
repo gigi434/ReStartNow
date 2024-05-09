@@ -1,16 +1,9 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit'
-import {
-  notificationReducer,
-  informationFilterReducer,
-  regionReducer,
-  subsidySearchReducer,
-} from '@/src/slice'
+import { notificationReducer, informationFilterReducer } from '@/src/slice'
 
 const rootReducer = combineReducers({
   notification: notificationReducer,
   informationFilter: informationFilterReducer,
-  region: regionReducer,
-  subsidySearch: subsidySearchReducer,
 })
 
 export const setupStore = (preloadedState?: Partial<RootState>) => {
