@@ -1,0 +1,11 @@
+{
+  "rules": {
+    "n/prefer-global/process": "off",
+    "import/extensions": "off",
+    "@typescript-eslint/naming-convention": "off",
+    "@typescript-eslint/indent": ["error", 2],
+    "@typescript-eslint/object-curly-spacing": ["error", "always"],
+    "@typescript-eslint/semi": ["error", "never"],
+    "arrow-parens": ["error", "always"]
+  }
+}

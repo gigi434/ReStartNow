@@ -8,8 +8,11 @@
   "description": "",
   "type": "module",
   "scripts": {
-    "playwright:e2e:dev": "dotenv -e .env.development.local -- npx playwright test",
-    "playwright:e2e:test": "dotenv -e .env.test.local -- npx playwright test"
+    "playwright:dev": "dotenv -e .env.development.local -- npx playwright test",
+    "playwright:ui": "dotenv -e .env.development.local -- npx playwright test --ui",
+    "playwright:codegen": "dotenv -e .env.development.local -- npx playwright codegen",
+    "playwright:test": "dotenv -e .env.test.local -- npx playwright test",
+    "xo:fix": "xo --fix"
   },
   "dependencies": {
     "dotenv-cli": "^7.4.2"
@@ -20,6 +23,7 @@
     "@types/node": "^20.12.13",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5",
+    "xo": "^0.58.0",
     "zod": "^3.23.8"
   }
 }
