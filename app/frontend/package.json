@@ -34,9 +34,9 @@
     "date-fns-tz": "^2.0.0",
     "eslint": "8.40.0",
     "eslint-config-next": "13.4.2",
-    "next": "^13.4.7",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
+    "next": "13.4.7",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
     "react-hook-form": "^7.44.3",
     "react-redux": "^8.1.0",
     "typescript": "5.0.4"
