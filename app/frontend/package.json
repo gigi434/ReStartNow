@@ -4,13 +4,15 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "test": "jest",
-    "test:watch": "jest --watchAll"
+    "test:watch": "jest --watchAll",
+    "build:dev": "cat .env.dev.local > .env.local && next build",
+    "build:stg": "next build",
+    "build:prod": "next build"
   },
   "dependencies": {
     "@emotion/react": "^11.11.4",

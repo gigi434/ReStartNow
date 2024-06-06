@@ -16,12 +16,13 @@ test.describe('Search for supported regions', () => {
     page,
   }) => {
     await page.getByRole('button', { name: '診断する' }).click()
-    await page.getByLabel('Open').nth(1).click()
+    await page.getByLabel('都道府県').click()
     await page.getByRole('option', { name: '千葉県' }).click()
-    await page.getByLabel('Open').nth(2).click()
+    await page.getByLabel('市区町村').click()
     await page.getByRole('option', { name: '市川市' }).click()
-    await page.getByRole('button', { name: '市川市 市川市' }).click()
     // 「市川市」が地域一覧に表示されていることを確認
-    await expect(page.getByText('市川市')).toBeVisible()
+    await expect(
+      page.getByRole('button', { name: '市川市 市川市' }),
+    ).toBeVisible()
   })
 })
