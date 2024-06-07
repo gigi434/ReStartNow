@@ -1,0 +1,29 @@
+{
+  "name": "test",
+  "version": "1.0.0",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "test": "npx playwright test",
+    "test:dev": "dotenv -e .env.development.local -- npx playwright test",
+    "test:ui": "dotenv -e .env.development.local -- npx playwright test --ui",
+    "test:codegen": "dotenv -e .env.development.local -- npx playwright codegen",
+    "xo:fix": "xo --fix"
+  },
+  "dependencies": {
+    "dotenv-cli": "^7.4.2"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.44.1",
+    "@t3-oss/env-core": "^0.10.1",
+    "@types/node": "^20.12.13",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5",
+    "xo": "^0.58.0",
+    "zod": "^3.23.8"
+  }
+}

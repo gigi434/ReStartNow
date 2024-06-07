@@ -1,34 +1,14 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## 環境変数
 
-## Getting Started
+Next.js では自動で環境変数が読み込まれる
+[参照](https://nextjs.org/docs/pages/building-your-application/configuring/environment-variables)
 
-First, run the development server:
+例えば、開発環境では.env.development.local ファイルが優先され、最終的に.env ファイルが読み込まれる。
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+問題として、自動テストで開発環境用の環境変数ファイルを使用する際、本番環境用の環境変数ファイルを読み込んでしまう。
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+そのため、事前に下記環境変数ファイルを作成し、開発環境用の内容を.env.local ファイルにコピーすることで対応する。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- .env.dev.local
+- .env.stag.local
+- .env.prod.local

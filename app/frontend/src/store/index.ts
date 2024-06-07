@@ -1,12 +1,19 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { configureStore, combineReducers } from '@reduxjs/toolkit'
 import { notificationReducer, informationFilterReducer } from '@/src/slice'
 
-export const store = configureStore({
-  reducer: {
-    notifications: notificationReducer,
-    informationFilter: informationFilterReducer,
-  },
-  devTools: process.env.NODE_ENV !== 'production',
+const rootReducer = combineReducers({
+  notification: notificationReducer,
+  informationFilter: informationFilterReducer,
 })
 
-export type RootState = ReturnType<typeof store.getState>
+export const setupStore = (preloadedState?: Partial<RootState>) => {
+  return configureStore({
+    reducer: rootReducer,
+    preloadedState,
+    devTools: process.env.NODE_ENV !== 'production',
+  })
+}
+
+export type RootState = ReturnType<typeof rootReducer>
+export type AppStore = ReturnType<typeof setupStore>
+export type AppDispatch = AppStore['dispatch']

@@ -10,7 +10,7 @@ import { RootState } from '@/src/store'
 export const useSnackbar = () => {
   const dispatch = useDispatch()
   const notifications = useSelector(
-    (state: RootState) => state.notifications.notifications
+    (state: RootState) => state.notification.notifications
   )
 
   const showSnackbar = useCallback(
