@@ -35,7 +35,7 @@
     "date-fns": "^2.30.0",
     "date-fns-tz": "^2.0.0",
     "eslint": "8.40.0",
-    "eslint-config-next": "13.4.2",
+    "eslint-config-next": "14.2.4",
     "next": "13.4.7",
     "react": "18.2.0",
     "react-dom": "18.2.0",
